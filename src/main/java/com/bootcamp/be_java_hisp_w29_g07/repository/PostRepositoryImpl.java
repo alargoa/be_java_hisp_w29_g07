@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class PostRepositoryImpl implements  IPostRepository{
@@ -23,7 +24,9 @@ public class PostRepositoryImpl implements  IPostRepository{
 
     @Override
     public List<Post> getPromoPostCount(Integer userId) {
-        return List.of();
+        return posts.stream()
+                .filter(post -> post.getUserId().equals(userId))
+                .collect(Collectors.toList());
     }
 
     private void loadPostsJson() throws IOException {
