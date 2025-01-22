@@ -10,7 +10,9 @@ import java.util.List;
 public class FollowRepositoryImpl implements IFollowRepository {
     private List<Follow> followList = new ArrayList<>();
 
-    public FollowRepositoryImpl(List<Follow> followList) {
-        this.followList = followList;
+    public FollowRepositoryImpl() {
+
     }
+
+
 }
