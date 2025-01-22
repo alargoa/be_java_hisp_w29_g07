@@ -2,6 +2,7 @@ package com.bootcamp.be_java_hisp_w29_g07.service;
 
 import com.bootcamp.be_java_hisp_w29_g07.Enum.UserType;
 import com.bootcamp.be_java_hisp_w29_g07.constants.ErrorMessages;
+import com.bootcamp.be_java_hisp_w29_g07.dto.MessageDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.SellerFollowerCountDTO;
 import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 import com.bootcamp.be_java_hisp_w29_g07.exception.BadRequestException;
@@ -40,5 +41,15 @@ public class FollowServiceImpl implements IFollowService{
                 userFound.get().getUsername(),
                 followerCount
         );
+    }
+
+    @Override
+    public MessageDTO unfollowUserById(Integer userId, Integer userIdToUnfollow) {
+        Boolean isUnfollowed = followRepository.unfollowUserById(userId, userIdToUnfollow);
+        if (!isUnfollowed) {
+            throw new NotFoundException(String.format(ErrorMessages.USER_IS_NOT_FOLLOWING_USER, userId, userIdToUnfollow));
+        }
+
+        return new MessageDTO(String.format(ErrorMessages.USER_HAS_UNFOLLOWED_USER, userId, userIdToUnfollow));
     }
 }

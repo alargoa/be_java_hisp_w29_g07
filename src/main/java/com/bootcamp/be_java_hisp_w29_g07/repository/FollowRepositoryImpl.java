@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class FollowRepositoryImpl implements IFollowRepository {
@@ -57,6 +58,22 @@ public class FollowRepositoryImpl implements IFollowRepository {
         return this.followList.stream()
                 .filter(f -> f.getFollowed().getId().equals(userId))
                 .count();
+    }
+
+    @Override
+    public Boolean unfollowUserById(Integer userId, Integer userIdToUnfollow) {
+        Optional<Follow> optionalFollow = followList.stream()
+                .filter(
+                        f -> f.getFollower().getId().equals(userId)
+                                && f.getFollowed().getId().equals(userIdToUnfollow))
+                .findFirst();
+
+        if (optionalFollow.isEmpty()) {
+            return false;
+        }
+
+        followList.remove(optionalFollow.get());
+        return true;
     }
 
 }

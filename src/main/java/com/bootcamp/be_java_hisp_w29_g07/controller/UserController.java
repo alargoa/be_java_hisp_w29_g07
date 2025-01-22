@@ -1,12 +1,14 @@
 package com.bootcamp.be_java_hisp_w29_g07.controller;
 
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.SellerFollowerCountDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.MessageDTO;
 import com.bootcamp.be_java_hisp_w29_g07.service.IFollowService;
 import com.bootcamp.be_java_hisp_w29_g07.service.IUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,4 +29,8 @@ public class UserController {
         return new ResponseEntity<>(this.followService.getSellerFollowerCount(userId), HttpStatus.OK);
     }
 
+    @PostMapping("/{userId}/unfollow/{userIdToUnfollow}")
+    public ResponseEntity<MessageDTO> unfollowUserById(@PathVariable Integer userId, @PathVariable Integer userIdToUnfollow) {
+        return new ResponseEntity<>(followService.unfollowUserById(userId, userIdToUnfollow), HttpStatus.OK);
+    }
 }
