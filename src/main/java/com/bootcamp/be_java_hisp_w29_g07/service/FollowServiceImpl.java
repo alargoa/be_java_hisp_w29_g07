@@ -28,7 +28,7 @@ public class FollowServiceImpl implements IFollowService{
     public SellerFollowerCountDTO getSellerFollowerCount(Integer userId) {
         Optional<User> userFound = this.userRepository.getUserById(userId);
         if (userFound.isEmpty()) {
-            throw new NotFoundException(ErrorMessages.USER_NOT_FOUND_MSG);
+            throw new NotFoundException(String.format(ErrorMessages.USER_NOT_FOUND_MSG, userId));
         }
         if (!userFound.get().getUserType().equals(UserType.SELLER)) {
             throw new BadRequestException(ErrorMessages.USER_NOT_SELLER_MSG);
