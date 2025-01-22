@@ -40,4 +40,7 @@ public class PostRepositoryImpl implements  IPostRepository{
         posts = postsJson;
     }
 
+    public List<Post> findPostByUser(long userId) {
+        List<Post> postsByUser = posts.stream().filter(post -> post.)
+    }
 }
