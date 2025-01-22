@@ -33,7 +33,7 @@ public class PostServiceImpl implements IPostService {
         long count = 0L;
 
         if(user.isEmpty()) {
-            throw new NotFoundException(ErrorMessages.USER_NOT_FOUND_MSG);
+            throw new NotFoundException(String.format(ErrorMessages.USER_NOT_FOUND_MSG, userId));
         }
         if (user.get().getUserType().getId().equals(UserType.USER.getId())) {
             throw new BadRequestException(ErrorMessages.USER_NOT_SELLER_MSG);
