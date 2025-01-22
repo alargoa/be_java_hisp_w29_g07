@@ -14,4 +14,11 @@ public class ExceptionController {
         ExceptionDTO exceptionDTO = new ExceptionDTO(e.getMessage());
         return new ResponseEntity<>(exceptionDTO, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(ConflictException.class)
+    public  ResponseEntity<ExceptionDTO> handleConflicException(ConflictException e)
+    {
+        ExceptionDTO exceptionDTO = new ExceptionDTO(e.getMessage());
+        return  new ResponseEntity<>(exceptionDTO, HttpStatus.CONFLICT);
+    }
 }
