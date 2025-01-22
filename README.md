@@ -4,6 +4,6 @@
 #### Resources -> classDiagram.md
 ### Seeds:
 #### Resources -> Users.json
-#### Resources -> Posts.Ωjson
+#### Resources -> Posts.json
 ### Postman collection: 
 #### Resources -> Sprint1Collection
