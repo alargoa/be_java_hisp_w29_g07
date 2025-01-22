@@ -1,110 +1,132 @@
-[{
-  "user_id": 2,
-  "post_id": 1,
-  "date": "01-05-2021",
-  "product": {
-    "product_id": 1,
-    "product_name": "Headset RGB Inalámbrico",
-    "type": "Gamer",
-    "brand": "Razer",
-    "color": "Green with RGB",
-    "notes": "Sin Batería"
-  },
-  "category": 120,
-  "price": 2800.69
-  },
+[
   {
-    "user_id": 1,
-  "post_id": 2,
-  "date": "29-04-2021",
-  "product": {
-    "product_id": 2,
-    "productName": "Silla Gamer",
-    "type": "Gamer",
-    "brand": "Racer",
-    "color": "Red & Black",
-    "notes": "Special Edition"
-  },
-  "category": 100,
-  "price": 15000.50
-  },
-  {
-    "user_id": 3,
-    "post_id": 3,
-    "date": "29-04-2021",
+    "userId": 2,
+    "id": 1,
+    "date": "01-01-2024",
     "product": {
-      "product_id": 3,
-      "productName": "Silla Gamer",
+      "id": 1,
+      "name": "Headset RGB Inalámbrico",
+      "type": "Gamer",
+      "brand": "Razer",
+      "color": "Green with RGB",
+      "notes": "Sin Batería"
+    },
+    "category": {
+      "id": 1,
+      "name": "Electronics"
+    },
+    "price": 2800.69
+  },
+  {
+    "userId": 1,
+    "id": 2,
+    "date": "01-01-2024",
+    "product": {
+      "id": 2,
+      "name": "Silla Gamer",
       "type": "Gamer",
       "brand": "Racer",
       "color": "Red & Black",
       "notes": "Special Edition"
     },
-    "category": 100,
+    "category": {
+      "id": 1,
+      "name": "Electronics"
+    },
     "price": 15000.50
   },
   {
-    "user_id": 5,
-    "post_id": 4,
-    "date": "23-04-2023",
+    "userId": 3,
+    "id": 3,
+    "date": "01-01-2024",
     "product": {
-      "product_id": 4,
-      "productName": "Keyboard",
+      "id": 3,
+      "name": "Silla Gamer",
+      "type": "Gamer",
+      "brand": "Racer",
+      "color": "Red & Black",
+      "notes": "Special Edition"
+    },
+    "category": {
+      "id": 1,
+      "name": "Electronics"
+    },
+    "price": 15000.50
+  },
+  {
+    "userId": 5,
+    "id": 4,
+    "date": "01-01-2024",
+    "product": {
+      "id": 4,
+      "name": "Keyboard",
       "type": "Office",
       "brand": "Racer",
       "color": "Red & Black",
       "notes": "Special Edition"
     },
-    "category": 100,
+    "category": {
+      "id": 2,
+      "name": "Office"
+    },
     "price": 15120.50
   },
   {
-    "user_id": 1,
-    "post_id": 5,
-    "date": "23-04-2023",
+    "userId": 1,
+    "id": 5,
+    "date": "01-01-2024",
     "product": {
-      "product_id": 5,
-      "productName": "Graphic Card",
+      "id": 5,
+      "name": "Graphic Card",
       "type": "Gamer",
       "brand": "Nvidia",
       "color": "Red & Black",
       "notes": "Special Edition"
     },
-    "category": 100,
+    "category": {
+      "id": 1,
+      "name": "Electronics"
+    },
     "price": 35000.50
   },
   {
-    "user_id": 2,
-    "post_id": 6,
-    "date": "23-08-2023",
+    "userId": 2,
+    "id": 6,
+    "date": "01-01-2024",
     "product": {
-      "product_id": 6,
-      "productName": "Graphic Card",
+      "id": 6,
+      "name": "Graphic Card",
       "type": "Gamer",
       "brand": "Nvidia",
       "color": "Red & Black",
       "notes": "Special Edition"
     },
-    "category": 100,
+    "category": {
+      "id": 1,
+      "name": "Electronics"
+    },
     "price": 35000.50,
-    "has_promo": true,
+    "hasPromo": true,
     "discount": 0.25
   },
   {
-    "user_id": 5,
-    "post_id": 7,
-    "date": "12-08-2023",
+    "userId": 5,
+    "id": 7,
+    "date": "01-01-2024",
     "product": {
-      "product_id": 6,
-      "productName": "Graphic Card",
+      "id": 6,
+      "name": "Graphic Card",
       "type": "Gamer",
       "brand": "Asus TUF",
       "color": "Red & Black",
       "notes": "Special Edition"
     },
-    "category": 100,
+    "category": {
+      "id": 1,
+      "name": "Electronics"
+    },
     "price": 26500.50,
-    "has_promo": true,
+    "hasPromo": true,
     "discount": 0.25
   }
 ]
