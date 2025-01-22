@@ -18,7 +18,6 @@ public class UserRepositoryImpl implements IUserRepository{
 
     public UserRepositoryImpl() throws IOException {
         loadUsersJson();
-        users.forEach(System.out::println);
     }
 
     @Override
