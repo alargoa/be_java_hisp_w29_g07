@@ -2,7 +2,6 @@ package com.bootcamp.be_java_hisp_w29_g07.controller;
 
 import com.bootcamp.be_java_hisp_w29_g07.dto.PostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.service.IPostService;
-import com.bootcamp.be_java_hisp_w29_g07.service.PostServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +32,7 @@ public class PostController {
     @GetMapping("/findAll")
     public ResponseEntity<?> getAll() {
 
-        return new ResponseEntity<>(postService.getAll(), HttpStatus.OK);
+        return new ResponseEntity<>(postService.findAll(), HttpStatus.OK);
     }
 
 
