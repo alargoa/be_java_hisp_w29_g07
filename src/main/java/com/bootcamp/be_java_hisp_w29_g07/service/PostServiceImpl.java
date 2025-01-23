@@ -58,9 +58,9 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
-    public PromoCountPostDTO getPromoPostCount(Integer userId) {
+    public PromoCountPostDTO findPromoPostCount(Integer userId) {
         Optional<User> user = userRepository.getUserById(userId);
-        long count = postRepository.getPromoPostCount(userId);
+        long count = postRepository.findPromoPostCount(userId);
 
         if (user.isEmpty()) {
             throw new NotFoundException(String.format(ErrorMessages.USER_NOT_FOUND_MSG, userId));
