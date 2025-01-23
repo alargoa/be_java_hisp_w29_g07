@@ -2,6 +2,8 @@ package com.bootcamp.be_java_hisp_w29_g07.service;
 
 import com.bootcamp.be_java_hisp_w29_g07.Enum.UserType;
 import com.bootcamp.be_java_hisp_w29_g07.constants.ErrorMessages;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.FollowerDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListFollowersDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.MessageDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.SellerFollowerCountDTO;
 import com.bootcamp.be_java_hisp_w29_g07.entity.Follow;
@@ -12,6 +14,7 @@ import com.bootcamp.be_java_hisp_w29_g07.repository.IFollowRepository;
 import com.bootcamp.be_java_hisp_w29_g07.repository.IUserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -68,5 +71,16 @@ public class FollowServiceImpl implements IFollowService {
         followRepository.saveFollow(user, userToFollow);
         return new MessageDTO(String.format("User %s follows user %s", user.getName(), userToFollow.getName()));
     }
+
+    @Override
+    public ListFollowersDTO listFollowers(Integer userId) {
+        User user =userService.findUserById(userId);
+        List<FollowerDTO> followList = followRepository.findFollowersByUserId(userId)
+                .stream()
+                .map(follow -> new FollowerDTO(follow.getFollower().getId(), follow.getFollower().getName()))
+                .toList();
+        return new ListFollowersDTO(user.getId(), user.getUsername(),followList);
+    }
+
 
 }

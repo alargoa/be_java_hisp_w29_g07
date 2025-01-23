@@ -79,4 +79,13 @@ public class FollowRepositoryImpl implements IFollowRepository {
                 .filter(f -> f.getFollowed().getId().equals(userId))
                 .count();
     }
+
+    @Override
+    public List<Follow> findFollowersByUserId(Integer userId) {
+        return this.followList
+                .stream()
+                .filter(follow -> follow.getFollower().getId().equals(userId))
+                .toList();
+    }
+
 }
