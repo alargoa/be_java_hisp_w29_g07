@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class PostRepositoryImpl implements  IPostRepository{
@@ -40,7 +41,18 @@ public class PostRepositoryImpl implements  IPostRepository{
         posts = postsJson;
     }
 
-    public List<Post> findPostByUser(long userId) {
-        List<Post> postsByUser = posts.stream().filter(post -> post.)
+    public List<Post> findPostByUser(List<Long> userFollowing, long userId) {
+        List<Post> postsByUser = new ArrayList<>();
+
+        for (Long id : userFollowing) {
+            List<Post> filteredPosts = posts.stream()
+                    .filter(post -> post.getUserId().equals(id))
+                    .collect(Collectors.toList());
+
+            // Agregas todos los Posts filtrados a la lista principal
+            postsByUser.addAll(filteredPosts);
+        }
+
+        return postsByUser;
     }
 }
