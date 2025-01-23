@@ -19,7 +19,7 @@ public class PostDTO {
     private  Integer id;
     private  Integer user_id;
     @JsonFormat(pattern = "dd-MM-yyyy")
-    private Date date;
+    private LocalDate date;
     private Product product;
     private Integer category;
     private Double price;

@@ -13,6 +13,7 @@ import com.bootcamp.be_java_hisp_w29_g07.repository.IPostRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.bootcamp.be_java_hisp_w29_g07.repository.IPostRepository;
 import com.bootcamp.be_java_hisp_w29_g07.repository.IUserRepository;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,23 +24,22 @@ import java.util.Optional;
 public class PostServiceImpl implements IPostService {
 
     private final IPostRepository postRepository;
-  //  private final IUserRepository userRepository;
-   // private final IPostRepository postRepository;
-    // private final IUserService userRepository;
+   private final IUserRepository userRepository;
     private final ObjectMapper mapper;
     private static int idCounter = 1;
 
 
-    public PostServiceImpl(IPostRepository postRepository, ObjectMapper mapper) {
+    public PostServiceImpl(IPostRepository postRepository, IUserRepository userRepository, ObjectMapper mapper) {
         this.postRepository = postRepository;
-        // this.userRepository = userRepository;
+         this.userRepository = userRepository;
         this.mapper = new ObjectMapper();
     }
 
 
     @Override
     public PostSaveDTO addPost(PostDTO post) {
-
+        mapper.registerModule(new JavaTimeModule());
+        mapper.findAndRegisterModules();
         Post post1 = mapper.convertValue(post, Post.class);
         post1.setId(postRepository.getNextId());
         postRepository.addPost(post1);

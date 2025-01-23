@@ -22,26 +22,26 @@ public class PostController {
     private ResponseEntity<?> getPromoPostCount(@RequestParam("user_id") Integer userId) {
         return new ResponseEntity<>(postService.getPromoPostCount(userId), HttpStatus.OK);
 
-
-
-    @GetMapping("/findPost/{id}")
-    public ResponseEntity<?> getPostById(@PathVariable Integer id)
-    {
-
-        return  new ResponseEntity<>(postService.findPostById(id),HttpStatus.OK);
     }
 
-    @GetMapping("/findAll")
-    public ResponseEntity<?> getAll()
-    {
+        @GetMapping("/findPost/{id}")
+        public ResponseEntity<?> getPostById2 (@PathVariable Integer id)
+        {
+            return new ResponseEntity<>(postService.findPostById(id), HttpStatus.OK);
 
-        return  new ResponseEntity<>(postService.getAll(),HttpStatus.OK);
+        }
+
+        @GetMapping("/findAll")
+        public ResponseEntity<?> getAll ()
+        {
+
+            return new ResponseEntity<>(postService.getAll(), HttpStatus.OK);
+        }
+
+
+        @PostMapping("/post")
+        public ResponseEntity<?> addPost (@RequestBody PostDTO posDto)
+        {
+            return new ResponseEntity<>(postService.addPost(posDto), HttpStatus.OK);
+        }
     }
-
-
-    @PostMapping("/post")
-    public ResponseEntity<?> addPost(@RequestBody PostDTO postDTO)
-    {
-        return  new ResponseEntity<>(postService.addPost(postDTO),HttpStatus.OK);
-    }
-}

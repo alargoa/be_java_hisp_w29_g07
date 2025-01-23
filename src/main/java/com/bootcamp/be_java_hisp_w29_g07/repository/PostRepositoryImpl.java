@@ -31,7 +31,7 @@ public class PostRepositoryImpl implements IPostRepository {
     @Override
     public List<Post> getPromoPostCount(Integer userId) {
         return posts.stream()
-                .filter(post -> post.getUserId().equals(userId))
+                .filter(post -> post.getUser_id().equals(userId))
                 .collect(Collectors.toList());
     }
 
