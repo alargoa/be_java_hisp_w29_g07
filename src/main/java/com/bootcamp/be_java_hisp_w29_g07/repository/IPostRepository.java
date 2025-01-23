@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IPostRepository {
-    Long findPromoPostCount(Integer userId);
+    Long findPromoPostCountByUserId(Integer userId);
     Post savePost(Post post);
     Optional<Post> findPostById(Integer id);
     List<Post> findAll();

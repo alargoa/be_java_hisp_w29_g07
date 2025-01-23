@@ -24,7 +24,7 @@ public class PostRepositoryImpl implements IPostRepository {
     }
 
     @Override
-    public Long findPromoPostCount(Integer userId) {
+    public Long findPromoPostCountByUserId(Integer userId) {
         return (long) posts.stream()
                 .filter(post -> post.getUser_id().equals(userId))
                 .filter(Post::getHasPromo)

@@ -17,8 +17,8 @@ public class PostController {
     }
 
     @GetMapping("promo-post/count")
-    private ResponseEntity<?> getPromoPostCount(@RequestParam("user_id") Integer userId) {
-        return new ResponseEntity<>(postService.findPromoPostCount(userId), HttpStatus.OK);
+    private ResponseEntity<?> getPromoPostCountById(@RequestParam("user_id") Integer userId) {
+        return new ResponseEntity<>(postService.findPromoPostCountByUserId(userId), HttpStatus.OK);
 
     }
 

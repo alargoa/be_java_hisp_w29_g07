@@ -81,7 +81,7 @@ public class FollowServiceImpl implements IFollowService {
     }
 
     @Override
-    public ListFollowersDTO listFollowers(Integer userId, String order) {
+    public ListFollowersDTO findListFollowersByUserId(Integer userId, String order) {
         User user = userService.findUserById(userId);
         List<FollowerDTO> followList = new ArrayList<>(followRepository.findFollowersByUserId(userId)
                 .stream()

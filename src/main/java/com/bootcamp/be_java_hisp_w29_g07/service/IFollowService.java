@@ -9,5 +9,5 @@ public interface IFollowService {
     SellerFollowerCountDTO getSellerFollowerCount(Integer userId);
     MessageDTO unfollowUserById(Integer userId, Integer userIdToUnfollow);
     MessageDTO saveFollow(Integer userId, Integer userIdToFollow);
-    ListFollowersDTO listFollowers(Integer userId, String order);
+    ListFollowersDTO findListFollowersByUserId(Integer userId, String order);
 }
