@@ -1,5 +1,6 @@
 package com.bootcamp.be_java_hisp_w29_g07.controller;
 
+import com.bootcamp.be_java_hisp_w29_g07.service.IPostService;
 import com.bootcamp.be_java_hisp_w29_g07.service.PostServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/products")
 public class PostController {
 
-    private final PostServiceImpl postService;
+    private final IPostService postService;
 
-    public PostController(PostServiceImpl postRepository) {
-        this.postService = postRepository;
+    public PostController(IPostService postService) {
+
+        this.postService = postService;
+    }
+
+    @GetMapping("promo-post/count")
+    private ResponseEntity<?> getPromoPostCount(@RequestParam("user_id") Integer userId) {
+        return new ResponseEntity<>(postService.getPromoPostCount(userId), HttpStatus.OK);
     }
 }
