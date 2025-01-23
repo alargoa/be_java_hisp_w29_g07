@@ -11,23 +11,48 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
-public class PostRepositoryImpl implements  IPostRepository{
+public class PostRepositoryImpl implements IPostRepository {
     private List<Post> posts = new ArrayList<>();
+    private static int idCounter = 1;
 
     public PostRepositoryImpl() throws IOException {
         loadPostsJson();
-        posts.forEach(System.out::println);
     }
 
     @Override
     public List<Post> getPromoPostCount(Integer userId) {
         return posts.stream()
-                .filter(post -> post.getUserId().equals(userId))
+                .filter(post -> post.getUser_id().equals(userId))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Post savePost(Post post) {
+        posts.add(post);
+        return post;
+    }
+
+    @Override
+    public Optional<Post> findPostById(Integer id) {
+        return posts.stream()
+                .filter(post -> post.getId().equals(id))
+                .findFirst();
+    }
+
+    @Override
+    public List<Post> findAll() {
+        return posts;
+    }
+
+    @Override
+    public Integer findNextId() {
+        return idCounter++;
+    }
+
 
     private void loadPostsJson() throws IOException {
         File file;
@@ -41,6 +66,9 @@ public class PostRepositoryImpl implements  IPostRepository{
         });
 
         posts = postsJson;
+        if (!posts.isEmpty()) {
+            idCounter = posts.stream().mapToInt(Post::getId).max().orElse(0) + 1;
+        }
     }
 
 }
