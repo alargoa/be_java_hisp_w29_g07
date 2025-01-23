@@ -30,15 +30,13 @@ public class UserController {
         this.followService = followService;
     }
 
-
-
     @GetMapping("/{userId}/followers/count")
     public ResponseEntity<SellerFollowerCountDTO> getSellerFollowerCount(@PathVariable Integer userId) {
         return new ResponseEntity<>(this.followService.getSellerFollowerCount(userId), HttpStatus.OK);
     }
 
     @PostMapping("/{userId}/follow/{userIdToFollow}")
-    public ResponseEntity<MessageDTO> addFollow(@PathVariable Integer userId, @PathVariable Integer userIdToFollow){
+    public ResponseEntity<MessageDTO> addFollow(@PathVariable Integer userId, @PathVariable Integer userIdToFollow) {
         return new ResponseEntity<>(followService.saveFollow(userId, userIdToFollow), HttpStatus.OK);
     }
 }

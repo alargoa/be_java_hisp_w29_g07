@@ -24,24 +24,21 @@ public class PostController {
 
     }
 
-        @GetMapping("/findPost/{id}")
-        public ResponseEntity<?> findPostById (@PathVariable Integer id)
-        {
-            return new ResponseEntity<>(postService.findPostById(id), HttpStatus.OK);
+    @GetMapping("/findPost/{id}")
+    public ResponseEntity<?> findPostById(@PathVariable Integer id) {
+        return new ResponseEntity<>(postService.findPostById(id), HttpStatus.OK);
 
-        }
-
-        @GetMapping("/findAll")
-        public ResponseEntity<?> getAll ()
-        {
-
-            return new ResponseEntity<>(postService.getAll(), HttpStatus.OK);
-        }
-
-
-        @PostMapping("/post")
-        public ResponseEntity<?> addPost (@RequestBody PostDTO posDto)
-        {
-            return new ResponseEntity<>(postService.addPost(posDto), HttpStatus.OK);
-        }
     }
+
+    @GetMapping("/findAll")
+    public ResponseEntity<?> getAll() {
+
+        return new ResponseEntity<>(postService.getAll(), HttpStatus.OK);
+    }
+
+
+    @PostMapping("/post")
+    public ResponseEntity<?> addPost(@RequestBody PostDTO posDto) {
+        return new ResponseEntity<>(postService.addPost(posDto), HttpStatus.OK);
+    }
+}

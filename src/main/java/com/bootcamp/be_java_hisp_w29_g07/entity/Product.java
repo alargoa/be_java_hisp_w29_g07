@@ -1,5 +1,6 @@
 package com.bootcamp.be_java_hisp_w29_g07.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,8 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Product {
-    private Integer product_id;
-    private String product_name;
+    @JsonProperty("product_id")
+    private Integer id;
+    @JsonProperty("product_name")
+    private String name;
     private String type;
     private String brand;
     private String color;

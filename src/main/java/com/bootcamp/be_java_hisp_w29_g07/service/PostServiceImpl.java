@@ -28,13 +28,11 @@ public class PostServiceImpl implements IPostService {
     private final ObjectMapper mapper;
     private static int idCounter = 1;
 
-
     public PostServiceImpl(IPostRepository postRepository, IUserRepository userRepository, ObjectMapper mapper) {
         this.postRepository = postRepository;
          this.userRepository = userRepository;
         this.mapper = new ObjectMapper();
     }
-
 
     @Override
     public PostSaveDTO addPost(PostDTO post) {
@@ -61,8 +59,6 @@ public class PostServiceImpl implements IPostService {
         return posts.stream()
                 .map(p -> mapper.convertValue(p, PostDTO.class))
                 .toList();
-
-
     }
 
     @Override

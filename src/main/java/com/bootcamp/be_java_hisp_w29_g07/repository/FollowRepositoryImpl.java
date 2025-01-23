@@ -79,7 +79,4 @@ public class FollowRepositoryImpl implements IFollowRepository {
                 .filter(f -> f.getFollowed().getId().equals(userId))
                 .count();
     }
-
-
-
 }

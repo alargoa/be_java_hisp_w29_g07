@@ -21,11 +21,6 @@ public class PostRepositoryImpl implements IPostRepository {
 
     public PostRepositoryImpl() throws IOException {
         loadPostsJson();
-        posts.forEach(System.out::println);
-
-        if (!posts.isEmpty()) {
-            idCounter = posts.stream().mapToInt(Post::getId).max().orElse(0) + 1;
-        }
     }
 
     @Override
@@ -37,9 +32,7 @@ public class PostRepositoryImpl implements IPostRepository {
 
     @Override
     public Post savePost(Post post) {
-
         posts.add(post);
-
         return post;
     }
 
@@ -73,8 +66,9 @@ public class PostRepositoryImpl implements IPostRepository {
         });
 
         posts = postsJson;
-
-
+        if (!posts.isEmpty()) {
+            idCounter = posts.stream().mapToInt(Post::getId).max().orElse(0) + 1;
+        }
     }
 
 }
