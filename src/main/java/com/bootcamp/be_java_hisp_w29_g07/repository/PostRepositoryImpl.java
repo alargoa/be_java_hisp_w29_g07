@@ -44,7 +44,7 @@ public class PostRepositoryImpl implements IPostRepository {
     }
 
     @Override
-    public List<Post> saveAll() {
+    public List<Post> findAll() {
         return posts;
     }
 

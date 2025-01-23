@@ -51,6 +51,16 @@ public class FollowServiceImpl implements IFollowService {
     }
 
     @Override
+    public MessageDTO unfollowUserById(Integer userId, Integer userIdToUnfollow) {
+        Boolean isUnfollowed = followRepository.deleteFollowUserById(userId, userIdToUnfollow);
+        if (!isUnfollowed) {
+            throw new NotFoundException(String.format(ErrorMessages.USER_IS_NOT_FOLLOWING_USER, userId, userIdToUnfollow));
+        }
+
+        return new MessageDTO(String.format(ErrorMessages.USER_HAS_UNFOLLOWED_USER, userId, userIdToUnfollow));
+    }
+
+    @Override
     public MessageDTO saveFollow(Integer userId, Integer userIdToFollow) {
 
         User user = userService.findUserById(userId);
