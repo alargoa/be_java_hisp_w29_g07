@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface IPostRepository {
     List<Post> getPromoPostCount(Integer userId);
+
+    List<Post> findPostByUser(List<Long> userFollowing, long userId);
 }
