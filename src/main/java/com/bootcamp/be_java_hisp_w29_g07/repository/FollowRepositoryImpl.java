@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class FollowRepositoryImpl implements IFollowRepository {
@@ -49,7 +50,27 @@ public class FollowRepositoryImpl implements IFollowRepository {
                 new User(11, "akumar", "Anil", "Kumar", "anil.kumar@example.com", UserType.USER),
                 new User(12, "klee", "Karen", "Lee", "karen.lee@example.com", UserType.SELLER),
                 LocalDate.now()));
+    }
 
+    @Override
+    public Follow saveFollow(User user, User userToFollow) {
+        Follow follow = new Follow((this.followList.size() + 1), user, userToFollow, LocalDate.now());
+        followList.add(follow);
+        return follow;
+    }
+
+    @Override
+    public List<Follow> findAll() {
+        return followList;
+    }
+
+    @Override
+    public Optional<Follow> findFollow(User user, User userToFollow) {
+        return findAll()
+                .stream()
+                .filter(follow -> follow.getFollower().getId().equals(user.getId()))
+                .filter(follow -> follow.getFollowed().getId().equals(userToFollow.getId()))
+                .findFirst();
     }
 
     @Override
@@ -66,4 +87,5 @@ public class FollowRepositoryImpl implements IFollowRepository {
                 .filter(followed -> followed.getId().equals(userId))
                 .toList();
     }
+
 }
