@@ -17,5 +17,5 @@ public interface IFollowRepository {
     List<Follow> findAll();
     Optional<Follow> findFollow(User user, User userToFollow);
     Long countByFollowedId(Integer userId);
-    List<Follow> findFollowersById(Integer userId);
+    List<Follow> findFollowersByUserId(Integer userId);
 }
