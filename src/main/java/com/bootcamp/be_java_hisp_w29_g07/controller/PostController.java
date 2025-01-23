@@ -31,7 +31,7 @@ public class PostController {
     @GetMapping("/findAll")
     public ResponseEntity<?> getAll() {
 
-        return new ResponseEntity<>(postService.getAll(), HttpStatus.OK);
+        return new ResponseEntity<>(postService.findAll(), HttpStatus.OK);
     }
 
 

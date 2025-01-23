@@ -36,18 +36,16 @@ public class FollowServiceImpl implements IFollowService {
 
     @Override
     public SellerFollowerCountDTO getSellerFollowerCount(Integer userId) {
-        Optional<User> userFound = this.userRepository.getUserById(userId);
-        if (userFound.isEmpty()) {
-            throw new NotFoundException(String.format(ErrorMessages.USER_NOT_FOUND_MSG, userId));
-        }
-        if (!userFound.get().getUserType().equals(UserType.SELLER)) {
+
+        User userFound = this.userService.findUserById(userId);
+        if (!userFound.getUserType().equals(UserType.SELLER)) {
             throw new BadRequestException(ErrorMessages.USER_NOT_SELLER_MSG);
         }
 
         Long followerCount = this.followRepository.countByFollowedId(userId);
         return new SellerFollowerCountDTO(
-                userFound.get().getId(),
-                userFound.get().getUsername(),
+                userFound.getId(),
+                userFound.getUsername(),
                 followerCount
         );
     }
