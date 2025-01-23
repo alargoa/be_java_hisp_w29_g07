@@ -49,10 +49,10 @@ public class FollowServiceImpl implements IFollowService{
         );
     }
     @Override
-    public MessageDTO addFollow(Integer userId, Integer  userIdToFollow) {
+    public MessageDTO saveFollow(Integer userId, Integer  userIdToFollow) {
 
-        User user = userService.findUser(userId);
-        User userToFollow = userService.findUser(userIdToFollow);
+        User user = userService.findUserById(userId);
+        User userToFollow = userService.findUserById(userIdToFollow);
 
         if(userToFollow.getUserType().equals(UserType.USER)){
             throw new BadRequestException(ErrorMessages.USER_NOT_SELLER_MSG);

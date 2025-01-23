@@ -19,7 +19,7 @@ public class UserServiceImpl implements IUserService{
     }
 
     @Override
-    public User findUser(Integer userId) {
+    public User findUserById(Integer userId) {
         Optional<User> user = userRepository.getUserById(userId);
         if (user.isEmpty()){
             throw new BadRequestException(String.format(ErrorMessages.USER_NOT_FOUND_MSG, userId));
