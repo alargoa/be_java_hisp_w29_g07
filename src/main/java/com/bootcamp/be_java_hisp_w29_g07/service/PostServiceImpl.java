@@ -2,6 +2,8 @@ package com.bootcamp.be_java_hisp_w29_g07.service;
 
 import com.bootcamp.be_java_hisp_w29_g07.Enum.UserType;
 import com.bootcamp.be_java_hisp_w29_g07.constants.ErrorMessages;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListPostDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.PostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.PromoPostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.entity.Post;
 import com.bootcamp.be_java_hisp_w29_g07.entity.User;
@@ -12,10 +14,12 @@ import com.bootcamp.be_java_hisp_w29_g07.entity.Post;
 import com.bootcamp.be_java_hisp_w29_g07.exception.NotFoundException;
 import com.bootcamp.be_java_hisp_w29_g07.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -32,15 +36,19 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
-    public List<Post> listPostByUser(long userId) {
-        List<Long> userFollowing = followRepository.userFollowed(userId);
+    public ListPostDTO listPostByUser(Integer userId) {
+        List<Integer> userFollowing = followRepository.userFollowed(userId);
         if (userFollowing.isEmpty()) { throw new NotFoundException(String.format(ErrorMessages.USER_HAS_NOT_FOLLOWED_MSG, userId)); }
 
         List<Post> posts = postRepository.findPostByUser(userFollowing, userId);
-        System.out.println(posts);
         if (posts.isEmpty()) { throw new NotFoundException(String.format(ErrorMessages.USER_HAS_NOT_POSTS_MSG, userId)); }
 
-        return posts;
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.findAndRegisterModules();
+        List<PostDTO> postDTOS = posts.stream().map(post -> mapper.convertValue(post, PostDTO.class)).collect(Collectors.toList());
+        System.out.println(postDTOS);
+        return new ListPostDTO(userId, postDTOS);
     }
 
     @Override

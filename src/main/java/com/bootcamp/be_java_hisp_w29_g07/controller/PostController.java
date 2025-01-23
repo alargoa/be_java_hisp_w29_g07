@@ -1,5 +1,6 @@
 package com.bootcamp.be_java_hisp_w29_g07.controller;
 
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.PostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.service.IPostService;
 import com.bootcamp.be_java_hisp_w29_g07.entity.Post;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class PostController {
     }
 
     @GetMapping("/followed/{userId}/list")
-    public ResponseEntity<List<Post>> listFollowedPosts(@PathVariable long userId) {
+    public ResponseEntity<?> listFollowedPosts(@PathVariable Integer userId) {
         return new ResponseEntity<>(postService.listPostByUser(userId), HttpStatus.OK);
     }
 }
