@@ -12,5 +12,5 @@ public interface IPostService {
     PromoPostDTO getPromoPostCount(Integer userId);
     PostSaveDTO addPost(PostDTO post);
     Optional<PostDTO> findPostById(Integer id);
-    List<PostDTO> getAll();
+    List<PostDTO> findAll();
 }
