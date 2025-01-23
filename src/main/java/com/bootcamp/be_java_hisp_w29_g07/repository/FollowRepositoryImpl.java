@@ -61,10 +61,10 @@ public class FollowRepositoryImpl implements IFollowRepository {
     }
 
     @Override
-    public List<Long> userFollow(Long userId) {
+    public List<Long> userFollowed(Long userId) {
         return followList.stream()
-                .filter(follow -> follow.getFollower().getId().equals(userId))
-                .map(follow -> follow.getFollowed().getId().longValue())
+                .filter(f -> f.getFollower().getId().longValue() == userId)
+                .map(f -> f.getFollowed().getId().longValue())
                 .collect(Collectors.toList());
     }
 }

@@ -31,14 +31,14 @@ public class PostServiceImpl implements IPostService {
         this.followRepository = new FollowRepositoryImpl();
     }
 
+    @Override
     public List<Post> listPostByUser(long userId) {
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        List<Long> userFollowing = followRepository.userFollow(userId);
-        if (userFollowing.isEmpty()) { throw new NotFoundException("User don't have followings"); }
+        List<Long> userFollowing = followRepository.userFollowed(userId);
+        if (userFollowing.isEmpty()) { throw new NotFoundException(String.format(ErrorMessages.USER_HAS_NOT_FOLLOWED_MSG, userId)); }
 
         List<Post> posts = postRepository.findPostByUser(userFollowing, userId);
-        if (posts.isEmpty()) { throw new NotFoundException("Posts not found"); }
+        System.out.println(posts);
+        if (posts.isEmpty()) { throw new NotFoundException(String.format(ErrorMessages.USER_HAS_NOT_POSTS_MSG, userId)); }
 
         return posts;
     }

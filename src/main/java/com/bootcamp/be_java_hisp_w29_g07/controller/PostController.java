@@ -23,7 +23,7 @@ public class PostController {
         return new ResponseEntity<>(postService.getPromoPostCount(userId), HttpStatus.OK);
     }
 
-    @GetMapping("/products/followed/{userId}/list")
+    @GetMapping("/followed/{userId}/list")
     public ResponseEntity<List<Post>> listFollowedPosts(@PathVariable long userId) {
         return new ResponseEntity<>(postService.listPostByUser(userId), HttpStatus.OK);
     }

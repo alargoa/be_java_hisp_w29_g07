@@ -45,13 +45,10 @@ public class PostRepositoryImpl implements  IPostRepository{
 
     public List<Post> findPostByUser(List<Long> userFollowing, long userId) {
         List<Post> postsByUser = new ArrayList<>();
-
         for (Long id : userFollowing) {
             List<Post> filteredPosts = posts.stream()
-                    .filter(post -> post.getUserId().equals(id))
-                    .collect(Collectors.toList());
-
-            // Agregas todos los Posts filtrados a la lista principal
+                    .filter(post -> post.getUserId().longValue() == id)
+                    .toList();
             postsByUser.addAll(filteredPosts);
         }
 
