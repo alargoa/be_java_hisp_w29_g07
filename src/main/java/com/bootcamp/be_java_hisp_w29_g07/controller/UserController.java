@@ -2,7 +2,6 @@ package com.bootcamp.be_java_hisp_w29_g07.controller;
 
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.MessageDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.SellerFollowerCountDTO;
-import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 import com.bootcamp.be_java_hisp_w29_g07.service.IFollowService;
 import com.bootcamp.be_java_hisp_w29_g07.service.IUserService;
 import org.springframework.http.HttpStatus;
@@ -28,8 +27,6 @@ public class UserController {
 
     @PostMapping("/{userId}/follow/{userIdToFollow}")
     public ResponseEntity<MessageDTO> addFollow(@PathVariable Integer userId, @PathVariable Integer userIdToFollow){
-        User userFollow = userService.findUser(userId);
-        User userToFollow = userService.findUser(userIdToFollow);
-        return new ResponseEntity<>(followService.addFollow(userFollow, userToFollow), HttpStatus.OK);
+        return new ResponseEntity<>(followService.addFollow(userId, userIdToFollow), HttpStatus.OK);
     }
 }

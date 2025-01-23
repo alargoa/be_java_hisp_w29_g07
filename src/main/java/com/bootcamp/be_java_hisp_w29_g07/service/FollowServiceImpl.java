@@ -19,10 +19,16 @@ public class FollowServiceImpl implements IFollowService{
 
     private final IFollowRepository followRepository;
     private final IUserRepository userRepository;
+    private final IUserService userService;
 
-    public FollowServiceImpl(IFollowRepository followRepository, IUserRepository userRepository) {
+    public FollowServiceImpl(
+            IFollowRepository followRepository,
+            IUserRepository userRepository,
+            IUserService userService
+    ) {
         this.followRepository = followRepository;
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -43,7 +49,11 @@ public class FollowServiceImpl implements IFollowService{
         );
     }
     @Override
-    public MessageDTO addFollow(User user, User userToFollow) {
+    public MessageDTO addFollow(Integer userId, Integer  userIdToFollow) {
+
+        User user = userService.findUser(userId);
+        User userToFollow = userService.findUser(userIdToFollow);
+
         if(userToFollow.getUserType().equals(UserType.USER)){
             throw new BadRequestException(ErrorMessages.USER_NOT_SELLER_MSG);
         }
