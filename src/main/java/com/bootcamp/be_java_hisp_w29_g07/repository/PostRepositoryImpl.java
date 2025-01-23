@@ -24,7 +24,9 @@ public class PostRepositoryImpl implements  IPostRepository{
 
     @Override
     public List<Post> getPromoPostCount(Integer userId) {
-        return List.of();
+        return posts.stream()
+                .filter(post -> post.getUserId().equals(userId))
+                .collect(Collectors.toList());
     }
 
     private void loadPostsJson() throws IOException {

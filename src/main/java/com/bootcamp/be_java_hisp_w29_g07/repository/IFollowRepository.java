@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface IFollowRepository {
     List<Long> userFollow(Long userId);
+    Long countByFollowedId(Integer userId);
 }
