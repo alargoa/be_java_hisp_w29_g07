@@ -17,17 +17,20 @@ public class PostController {
     }
 
     @GetMapping("promo-post/count")
-    private ResponseEntity<?> getPromoPostCount(@RequestParam("user_id") Integer userId) {
-        return new ResponseEntity<>(postService.getPromoPostCount(userId), HttpStatus.OK);
+    private ResponseEntity<?> getPromoPostCountById(@RequestParam("user_id") Integer userId) {
+        return new ResponseEntity<>(postService.findPromoPostCountByUserId(userId), HttpStatus.OK);
+
     }
 
     @GetMapping("/findPost/{id}")
     public ResponseEntity<?> findPostById(@PathVariable Integer id) {
         return new ResponseEntity<>(postService.findPostById(id), HttpStatus.OK);
+
     }
 
     @GetMapping("/findAll")
     public ResponseEntity<?> getAll() {
+
         return new ResponseEntity<>(postService.findAll(), HttpStatus.OK);
     }
 
