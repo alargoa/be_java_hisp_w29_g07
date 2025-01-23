@@ -1,5 +1,6 @@
 package com.bootcamp.be_java_hisp_w29_g07.service;
 
+import com.bootcamp.be_java_hisp_w29_g07.Enum.OrderType;
 import com.bootcamp.be_java_hisp_w29_g07.Enum.UserType;
 import com.bootcamp.be_java_hisp_w29_g07.constants.ErrorMessages;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.FollowerDTO;
@@ -14,8 +15,7 @@ import com.bootcamp.be_java_hisp_w29_g07.repository.IFollowRepository;
 import com.bootcamp.be_java_hisp_w29_g07.repository.IUserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class FollowServiceImpl implements IFollowService {
@@ -71,13 +71,21 @@ public class FollowServiceImpl implements IFollowService {
     }
 
     @Override
-    public ListFollowersDTO listFollowers(Integer userId) {
-        User user =userService.findUserById(userId);
-        List<FollowerDTO> followList = followRepository.findFollowersByUserId(userId)
+    public ListFollowersDTO listFollowers(Integer userId, String order) {
+        User user = userService.findUserById(userId);
+        List<FollowerDTO> followList = new ArrayList<>(followRepository.findFollowersByUserId(userId)
                 .stream()
                 .map(follow -> new FollowerDTO(follow.getFollower().getId(), follow.getFollower().getName()))
-                .toList();
-        return new ListFollowersDTO(user.getId(), user.getUsername(),followList);
+                .toList());
+
+        if (order != null) {
+            if (order.equals(OrderType.ASC.getOrderType())) {
+                followList.sort(Comparator.comparing(FollowerDTO::getUser_name));
+            } else {
+                followList.sort(Comparator.comparing(FollowerDTO::getUser_name).reversed());
+            }
+        }
+        return new ListFollowersDTO(user.getId(), user.getUsername(), followList);
     }
 
 
