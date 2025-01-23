@@ -21,25 +21,20 @@ public class PostRepositoryImpl implements IPostRepository {
 
     public PostRepositoryImpl() throws IOException {
         loadPostsJson();
-        posts.forEach(System.out::println);
-
-        if (!posts.isEmpty()) {
-            idCounter = posts.stream().mapToInt(Post::getId).max().orElse(0) + 1;
-        }
     }
 
     @Override
-    public List<Post> getPromoPostCount(Integer userId) {
-        return posts.stream()
+    public Long findPromoPostCountByUserId(Integer userId) {
+        return (long) posts.stream()
                 .filter(post -> post.getUser_id().equals(userId))
-                .collect(Collectors.toList());
+                .filter(Post::getHasPromo)
+                .toList()
+                .size();
     }
 
     @Override
-    public Post addPost(Post post) {
-
+    public Post savePost(Post post) {
         posts.add(post);
-
         return post;
     }
 
@@ -51,12 +46,12 @@ public class PostRepositoryImpl implements IPostRepository {
     }
 
     @Override
-    public List<Post> getAll() {
+    public List<Post> findAll() {
         return posts;
     }
 
     @Override
-    public Integer getNextId() {
+    public Integer findNextId() {
         return idCounter++;
     }
 
@@ -73,8 +68,9 @@ public class PostRepositoryImpl implements IPostRepository {
         });
 
         posts = postsJson;
-
-
+        if (!posts.isEmpty()) {
+            idCounter = posts.stream().mapToInt(Post::getId).max().orElse(0) + 1;
+        }
     }
 
 }
