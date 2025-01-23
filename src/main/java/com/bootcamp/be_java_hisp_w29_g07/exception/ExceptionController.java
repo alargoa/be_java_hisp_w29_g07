@@ -16,8 +16,7 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(ConflictException.class)
-    public  ResponseEntity<ExceptionDTO> handleConflicException(ConflictException e)
-    {
+    public  ResponseEntity<ExceptionDTO> handleConflicException(ConflictException e) {
         ExceptionDTO exceptionDTO = new ExceptionDTO(e.getMessage());
         return  new ResponseEntity<>(exceptionDTO, HttpStatus.CONFLICT);
     }

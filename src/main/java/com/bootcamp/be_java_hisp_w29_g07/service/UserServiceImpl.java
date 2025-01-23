@@ -1,5 +1,9 @@
 package com.bootcamp.be_java_hisp_w29_g07.service;
 
+import com.bootcamp.be_java_hisp_w29_g07.entity.User;
+import com.bootcamp.be_java_hisp_w29_g07.exception.BadRequestException;
+import com.bootcamp.be_java_hisp_w29_g07.repository.IUserRepository;
+import com.bootcamp.be_java_hisp_w29_g07.repository.UserRepositoryImpl;
 import com.bootcamp.be_java_hisp_w29_g07.constants.ErrorMessages;
 import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 import com.bootcamp.be_java_hisp_w29_g07.exception.BadRequestException;
