@@ -91,7 +91,8 @@ public class FollowServiceImpl implements IFollowService {
         if (order != null) {
             if (order.equals(OrderType.ASC.getOrderType())) {
                 followList.sort(Comparator.comparing(FollowerDTO::getUser_name));
-            } else {
+            }
+            if (order.equals(OrderType.DESC.getOrderType())) {
                 followList.sort(Comparator.comparing(FollowerDTO::getUser_name).reversed());
             }
         }
