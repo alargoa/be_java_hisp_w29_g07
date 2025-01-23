@@ -41,8 +41,8 @@ public class PostServiceImpl implements IPostService {
         mapper.registerModule(new JavaTimeModule());
         mapper.findAndRegisterModules();
         Post post1 = mapper.convertValue(post, Post.class);
-        post1.setId(postRepository.getNextId());
-        postRepository.addPost(post1);
+        post1.setId(postRepository.findNextId());
+        postRepository.savePost(post1);
 
         return new PostSaveDTO("El post fue creado con exito", post1);
 
@@ -57,7 +57,7 @@ public class PostServiceImpl implements IPostService {
 
     @Override
     public List<PostDTO> getAll() {
-        List<Post> posts = postRepository.getAll();
+        List<Post> posts = postRepository.saveAll();
         return posts.stream()
                 .map(p -> mapper.convertValue(p, PostDTO.class))
                 .toList();

@@ -11,5 +11,4 @@ public interface IFollowService {
     SellerFollowerCountDTO getSellerFollowerCount(Integer userId);
     MessageDTO saveFollow(Integer userId, Integer userIdToFollow);
 
-    List<FollowResponseDTO> iFollow(Integer id);
 }

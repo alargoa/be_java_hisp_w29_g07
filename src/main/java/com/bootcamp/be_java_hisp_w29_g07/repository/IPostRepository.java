@@ -8,10 +8,10 @@ import java.util.Optional;
 public interface IPostRepository {
     List<Post> getPromoPostCount(Integer userId);
 
-    Post addPost(Post post);
+    Post savePost(Post post);
 
     Optional<Post> findPostById(Integer id);
-    List<Post> getAll();
+    List<Post> saveAll();
 
-    Integer getNextId();
+    Integer findNextId();
 }

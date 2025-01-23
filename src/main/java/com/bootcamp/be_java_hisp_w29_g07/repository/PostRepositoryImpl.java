@@ -36,7 +36,7 @@ public class PostRepositoryImpl implements IPostRepository {
     }
 
     @Override
-    public Post addPost(Post post) {
+    public Post savePost(Post post) {
 
         posts.add(post);
 
@@ -51,12 +51,12 @@ public class PostRepositoryImpl implements IPostRepository {
     }
 
     @Override
-    public List<Post> getAll() {
+    public List<Post> saveAll() {
         return posts;
     }
 
     @Override
-    public Integer getNextId() {
+    public Integer findNextId() {
         return idCounter++;
     }
 

@@ -77,14 +77,7 @@ public class FollowServiceImpl implements IFollowService{
 
 
 
-    @Override
-    public List<FollowResponseDTO> iFollow(Integer id) {
-        ObjectMapper mapper = new ObjectMapper();
-        List<User> listFollow = followRepository.iFollow(id);
-        return listFollow.stream().map(f -> mapper.convertValue(f, FollowResponseDTO.class))
-                .toList();
-    }
-    // private IFollowService followRepository;
+
 
 
 }
