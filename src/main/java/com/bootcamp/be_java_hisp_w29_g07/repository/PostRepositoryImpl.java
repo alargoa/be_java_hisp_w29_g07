@@ -11,20 +11,52 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public class PostRepositoryImpl implements  IPostRepository{
+public class PostRepositoryImpl implements IPostRepository {
     private List<Post> posts = new ArrayList<>();
+    private static int idCounter = 1;
 
     public PostRepositoryImpl() throws IOException {
         loadPostsJson();
         posts.forEach(System.out::println);
+
+        if (!posts.isEmpty()) {
+            idCounter = posts.stream().mapToInt(Post::getId).max().orElse(0) + 1;
+        }
     }
 
     @Override
     public List<Post> getPromoPostCount(Integer userId) {
         return List.of();
     }
+
+    @Override
+    public Post addPost(Post post) {
+
+        posts.add(post);
+
+        return post;
+    }
+
+    @Override
+    public Optional<Post> findPostById(Integer id) {
+        return posts.stream()
+                .filter(post -> post.getId().equals(id))
+                .findFirst();
+    }
+
+    @Override
+    public List<Post> getAll() {
+        return posts;
+    }
+
+    @Override
+    public Integer getNextId() {
+        return idCounter++;
+    }
+
 
     private void loadPostsJson() throws IOException {
         File file;
@@ -38,6 +70,8 @@ public class PostRepositoryImpl implements  IPostRepository{
         });
 
         posts = postsJson;
+
+
     }
 
 }

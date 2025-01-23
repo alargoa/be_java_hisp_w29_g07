@@ -9,4 +9,11 @@ import java.util.Optional;
 
 public interface IPostRepository {
     List<Post> getPromoPostCount(Integer userId);
+
+    Post addPost(Post post);
+
+    Optional<Post> findPostById(Integer id);
+    List<Post> getAll();
+
+    Integer getNextId();
 }
