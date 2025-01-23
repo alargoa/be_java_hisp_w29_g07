@@ -12,6 +12,7 @@ public interface IFollowRepository {
     List<Follow> findAll();
     Optional<Follow> findFollow(User user, User userToFollow);
     Long countByFollowedId(Integer userId);
+    List<Follow> findFollowedByUserId(Integer userId);
     Boolean deleteFollowUserById(Integer userId, Integer userIdToUnfollow);
     List<Follow> findFollowersByUserId(Integer userId);
 }
