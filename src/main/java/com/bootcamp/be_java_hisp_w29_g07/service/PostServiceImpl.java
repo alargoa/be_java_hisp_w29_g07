@@ -51,7 +51,7 @@ public class PostServiceImpl implements IPostService {
 
     @Override
     public List<PostDTO> findAll() {
-        List<Post> posts = postRepository.saveAll();
+        List<Post> posts = postRepository.findAll();
         return posts.stream()
                 .map(p -> mapper.convertValue(p, PostDTO.class))
                 .toList();

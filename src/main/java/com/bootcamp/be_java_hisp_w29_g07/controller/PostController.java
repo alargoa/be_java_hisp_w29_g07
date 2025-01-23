@@ -13,7 +13,6 @@ public class PostController {
     private final IPostService postService;
 
     public PostController(IPostService postService) {
-
         this.postService = postService;
     }
 
