@@ -1,6 +1,8 @@
-<div align="center">
+
+# <img src="https://user-images.githubusercontent.com/74038190/213844263-a8897a51-32f4-4b3b-b5c2-e1528b89f6f3.png" width="50px" /> &nbsp; <div align="center">
 <a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=450&size=30&pause=1000&color=2798F7&width=435&lines=Welcome!+We+are+Group+7" alt="Typing SVG" /></a>
-</div>
+</div>; <img src="https://user-images.githubusercontent.com/74038190/213844263-a8897a51-32f4-4b3b-b5c2-e1528b89f6f3.png" width="50px" />
+
 
 # Project be_java_hisp_w29_g07
 
