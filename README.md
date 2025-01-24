@@ -4,7 +4,7 @@
 
 # Project be_java_hisp_w29_g07
 
-Welcome to the **be_java_hisp_w29_g07** project. This repository contains sprint 1 one of bootcamp java wave29.
+Welcome to the **be_java_hisp_w29_g07** project. This repository contains Sprint 1 of Bootcamp Java Wave 29.
 
 ---
 
@@ -21,7 +21,6 @@ Welcome to the **be_java_hisp_w29_g07** project. This repository contains sprint
 ## 📋 Completed Sprints
 - [x] **Sprint 1**
 
-
 ---
 
 ## 🌱 Seeds
@@ -32,8 +31,8 @@ Welcome to the **be_java_hisp_w29_g07** project. This repository contains sprint
 ---
 
 ## 🛠️ Postman Collection
-- **[Postman Collection](./src/main/resources/postman_collection.json)**  
 
+- **[Postman Collection](./src/main/resources/postman_collection.json)**  
 
 ---
 
