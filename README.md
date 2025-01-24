@@ -4,7 +4,7 @@ Welcome to the **be_java_hisp_w29_g07** project. This repository contains all do
 
 ---
 
-## Table of Contents
+## 📚 Table of Contents
 
 - [Related Documents](#related-documents)
 - [Seeds](#seeds)
@@ -14,38 +14,38 @@ Welcome to the **be_java_hisp_w29_g07** project. This repository contains all do
 
 ---
 
-## Related Documents
+## 📄 Related Documents
 
 All necessary documents can be found in the resources folder.
 
 ---
 
-## Seeds
+## 🌱 Seeds
 
-- <span style="color:blue;">**[Users.json](./src/main/resources/users.json)**</span>  - User data.
-- <span style="color:green;">**[Posts.json](./src/main/resources/posts.json)**</span>  - Post data.
-
----
-
-## Postman Collection
-
-Access the collection in <span style="color:purple;">**Resources**</span> -> <span style="color:orange;">**Sprint1Collection**</span>.
+- **[Users.json](./src/main/resources/users.json)**  - User data.
+- **[Posts.json](./src/main/resources/posts.json)**  - Post data.
 
 ---
 
-## Swagger
+## 🛠️ Postman Collection
+
+Access the collection in **Resources** -> **Sprint1Collection**.
+
+---
+
+## 📊 Swagger
 
 You can access the API documentation through the following URL:
 
-- <span style="color:teal;">**[Swagger UI](http://localhost:8080/swagger-ui/index.html#/)**</span>
-  
+- **[Swagger UI](http://localhost:8080/swagger-ui/index.html#/)**
+
 ---
 
-## Class Diagram
+## 📈 Class Diagram
 
 To view the class diagram, check the following file:
 
-- <span style="color:darkred;">**[classDiagram.md](./src/main/resources/classDiagram.md)**</span>
+- **[classDiagram.md](./src/main/resources/classDiagram.md)**
 
 ### Class Diagram
 
