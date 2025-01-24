@@ -7,7 +7,7 @@ classDiagram
         -String name
         -String lastname
         -String email
-        -Enum type
+        -Enum userType
     }
     class Follow {
         -Integer id
@@ -28,7 +28,7 @@ classDiagram
         -Integer userId
         -LocalDate date
         -Product product
-        -Category category
+        -Integer category
         -Double price
         -Boolean hasPromo
         -Double discount

@@ -72,7 +72,7 @@ public class FollowServiceImpl implements IFollowService{
             throw new BadRequestException(Messages.USER_ALREADY_FOLLOW_SELLER);
         }
         followRepository.saveFollow(user, userToFollow);
-        return new MessageDTO(String.format("User %s follows user %s", user.getName(), userToFollow.getName()));
+        return new MessageDTO(String.format(Messages.USER_FOLLOW_SELLER, user.getName(), userToFollow.getName()));
     }
 
     @Override

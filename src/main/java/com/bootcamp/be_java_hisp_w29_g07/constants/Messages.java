@@ -14,4 +14,5 @@ public class Messages {
     public static final String POST_HAS_NO_PROMOTION = "The post does not have a promotion";
     public static final String POST_HAS_NO_DISCOUNT = "The post does not have a discount";
     public static final String POST_CREATED_SUCCESSFULLY = "Post was created successfully";
+    public static final String USER_FOLLOW_SELLER = "User %s follows user %s";
 }
