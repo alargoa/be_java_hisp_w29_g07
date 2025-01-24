@@ -1,5 +1,6 @@
 package com.bootcamp.be_java_hisp_w29_g07.service;
 
+import com.bootcamp.be_java_hisp_w29_g07.Enum.OrderType;
 import com.bootcamp.be_java_hisp_w29_g07.Enum.UserType;
 import com.bootcamp.be_java_hisp_w29_g07.constants.Messages;
 import com.bootcamp.be_java_hisp_w29_g07.dto.PostDTO;
@@ -17,8 +18,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+
+import static com.bootcamp.be_java_hisp_w29_g07.Enum.OrderType.DATE_ASC;
+import static com.bootcamp.be_java_hisp_w29_g07.Enum.OrderType.DATE_DESC;
 
 @Service
 public class PostServiceImpl implements IPostService {
@@ -61,7 +67,7 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
-    public ListPostDTO findListUsersFollowedPostsByUserId(Integer userId) {
+    public ListPostDTO findListUsersFollowedPostsByUserId(Integer userId, String order) {
         List<Integer> userFollowing = followRepository.findFollowedByUserId(userId).stream()
                 .map(f -> f.getFollowed().getId()).toList();
         if (userFollowing.isEmpty()) {
@@ -73,7 +79,13 @@ public class PostServiceImpl implements IPostService {
             throw new NotFoundException(String.format(Messages.USER_HAS_NOT_POSTS_MSG, userId));
         }
 
-        List<PostDTO> postDTOS = posts.stream().map(post -> mapper.convertValue(post, PostDTO.class)).toList();
+        List<Post> orderedPosts = new ArrayList<>(posts);
+        switch (order.toLowerCase()) {
+            case "date_asc" -> orderedPosts.sort(Comparator.comparing(Post::getDate));
+            case "date_desc" -> orderedPosts.sort(Comparator.comparing(Post::getDate).reversed());
+        }
+
+        List<PostDTO> postDTOS = orderedPosts.stream().map(post -> mapper.convertValue(post, PostDTO.class)).toList();
         return new ListPostDTO(userId, postDTOS);
     }
 

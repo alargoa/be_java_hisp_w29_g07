@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IPostService {
-    ListPostDTO findListUsersFollowedPostsByUserId(Integer userId);
+    ListPostDTO findListUsersFollowedPostsByUserId(Integer userId, String order);
     PromoCountPostDTO findPromoPostCountByUserId(Integer userId);
     PostSaveDTO addPost(PostDTO post);
     Optional<PostDTO> findPostById(Integer id);
