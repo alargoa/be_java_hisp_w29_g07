@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -63,7 +64,7 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
-    public ListPostDTO findListUsersFollowedPostsByUserId(Integer userId) {
+    public ListPostDTO findListUsersFollowedPostsByUserId(Integer userId, String order) {
         List<Integer> userFollowing = followRepository.findFollowedByUserId(userId).stream()
                 .map(f -> f.getFollowed().getId()).toList();
         if (userFollowing.isEmpty()) {
@@ -75,8 +76,25 @@ public class PostServiceImpl implements IPostService {
             throw new NotFoundException(String.format(Messages.USER_HAS_NOT_POSTS_MSG, userId));
         }
 
-        List<PostDTO> postDTOS = posts.stream().map(post -> mapper.convertValue(post, PostDTO.class)).toList();
+        List<Post> orderedPosts = this.applySorting(posts, order);
+        List<PostDTO> postDTOS = orderedPosts.stream().map(post -> mapper.convertValue(post, PostDTO.class)).toList();
         return new ListPostDTO(userId, postDTOS);
+    }
+
+    private List<Post> applySorting(List<Post> posts, String order) {
+        if (order == null) {
+            order = "date_asc";
+        }
+
+        return switch (order.toLowerCase()) {
+            case "date_asc" -> posts.stream()
+                    .sorted(Comparator.comparing(Post::getDate))
+                    .toList();
+            case "date_desc" -> posts.stream()
+                    .sorted(Comparator.comparing(Post::getDate).reversed())
+                    .toList();
+            default -> posts;
+        };
     }
 
     @Override
