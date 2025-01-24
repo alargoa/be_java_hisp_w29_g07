@@ -13,6 +13,6 @@ public interface IFollowService {
     MessageDTO unfollowUserById(Integer userId, Integer userIdToUnfollow);
     MessageDTO saveFollow(Integer userId, Integer userIdToFollow);
 
-    ListFollowedDTO findListFollowedByUserId(Integer userId);
+    ListFollowedDTO findListFollowedByUserId(Integer userId, String order);
     ListFollowersDTO findListFollowersByUserId(Integer userId, String order);
 }
