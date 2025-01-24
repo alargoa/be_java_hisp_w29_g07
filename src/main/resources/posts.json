@@ -15,9 +15,9 @@
     "price": 2800.69
   },
   {
-    "user_id": 1,
+    "user_id": 4,
     "post_id": 2,
-    "date": "10-01-2025",
+    "date": "11-01-2025",
     "product": {
       "product_id": 2,
       "product_name": "Silla Gamer",

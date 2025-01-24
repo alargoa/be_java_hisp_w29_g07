@@ -1,6 +1,6 @@
 package com.bootcamp.be_java_hisp_w29_g07.service;
 
-import com.bootcamp.be_java_hisp_w29_g07.dto.request.PostDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.PostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListPostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.PostSaveDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.PromoCountPostDTO;
