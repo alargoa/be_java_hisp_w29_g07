@@ -57,8 +57,9 @@ public class PostRepositoryImpl implements IPostRepository {
     }
 
     @Override
-    public List<Post> findPostsByUser(List<Integer> userFollowing) {
-        return posts.stream().filter(post -> userFollowing.contains(post.getUser_id()) && post.getDate().isAfter(LocalDate.now().minusWeeks(2)))
+    public List<Post> findPostsByUserIdsAndLastTwoWeeks(List<Integer> userFollowing) {
+        return posts.stream().filter(post -> userFollowing.contains(post.getUser_id()) &&
+                        post.getDate().isAfter(LocalDate.now().minusWeeks(2)))
                 .toList();
     }
 

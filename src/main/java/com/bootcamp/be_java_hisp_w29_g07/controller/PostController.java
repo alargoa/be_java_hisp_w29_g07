@@ -42,6 +42,6 @@ public class PostController {
 
     @GetMapping("/followed/{userId}/list")
     public ResponseEntity<?> findListUsersFollowedPosts(@PathVariable Integer userId) {
-        return new ResponseEntity<>(postService.findListUsersFollowedPosts(userId), HttpStatus.OK);
+        return new ResponseEntity<>(postService.findListUsersFollowedPostsByUserId(userId), HttpStatus.OK);
     }
 }

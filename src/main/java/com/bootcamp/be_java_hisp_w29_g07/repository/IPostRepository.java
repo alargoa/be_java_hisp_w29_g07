@@ -11,5 +11,5 @@ public interface IPostRepository {
     Optional<Post> findPostById(Integer id);
     List<Post> findAll();
     Integer findNextId();
-    List<Post> findPostsByUser(List<Integer> userFollowing);
+    List<Post> findPostsByUserIdsAndLastTwoWeeks(List<Integer> userFollowing);
 }

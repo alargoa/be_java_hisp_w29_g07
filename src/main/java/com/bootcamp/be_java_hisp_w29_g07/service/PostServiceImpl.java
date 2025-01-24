@@ -61,20 +61,17 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
-    public ListPostDTO findListUsersFollowedPosts(Integer userId) {
+    public ListPostDTO findListUsersFollowedPostsByUserId(Integer userId) {
         List<Integer> userFollowing = followRepository.findFollowedByUserId(userId).stream()
                 .map(f -> f.getFollowed().getId()).toList();
         if (userFollowing.isEmpty()) {
             throw new NotFoundException(String.format(Messages.USER_HAS_NOT_FOLLOWED_MSG, userId));
         }
 
-        List<Post> posts = postRepository.findPostsByUser(userFollowing);
+        List<Post> posts = postRepository.findPostsByUserIdsAndLastTwoWeeks(userFollowing);
         if (posts.isEmpty()) {
             throw new NotFoundException(String.format(Messages.USER_HAS_NOT_POSTS_MSG, userId));
         }
-
-        mapper.registerModule(new JavaTimeModule());
-        mapper.findAndRegisterModules();
 
         List<PostDTO> postDTOS = posts.stream().map(post -> mapper.convertValue(post, PostDTO.class)).toList();
         return new ListPostDTO(userId, postDTOS);
