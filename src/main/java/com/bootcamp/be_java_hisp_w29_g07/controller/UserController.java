@@ -43,7 +43,7 @@ public class UserController {
     public ResponseEntity<ListFollowersDTO> findListFollowersByUserId(@PathVariable Integer userId, @RequestParam(value = "order", required = false) String order){
         return new ResponseEntity<>(followService.findListFollowersByUserId(userId, order), HttpStatus.OK);
     }
-    //TODO:
+    @Operation(summary = "List of a users followers by id")
     @GetMapping("{userId}/followed/list")
     public ResponseEntity<ListFollowedDTO> findListFollowedByUserId(@PathVariable Integer userId, @RequestParam(value = "order", required = false) String order){
         return new ResponseEntity<>(followService.findListFollowedByUserId(userId, order), HttpStatus.OK);
