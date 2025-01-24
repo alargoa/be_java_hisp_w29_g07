@@ -1,6 +1,8 @@
 package com.bootcamp.be_java_hisp_w29_g07.controller;
 
-import com.bootcamp.be_java_hisp_w29_g07.dto.PostDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.request.PostDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.request.PromoPostDTOIn;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.PromoPostDTOOut;
 import com.bootcamp.be_java_hisp_w29_g07.service.IPostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +40,11 @@ public class PostController {
     @PostMapping("/post")
     public ResponseEntity<?> addPost(@RequestBody PostDTO posDto) {
         return new ResponseEntity<>(postService.addPost(posDto), HttpStatus.OK);
+    }
+
+    @PostMapping("/promo-post")
+    private ResponseEntity<PromoPostDTOOut> createPromoPost(@RequestBody PromoPostDTOIn promoPostDTOIn) {
+        return new ResponseEntity<>(postService.createPromoPost(promoPostDTOIn), HttpStatus.OK);
     }
 
     @GetMapping("/followed/{userId}/list")

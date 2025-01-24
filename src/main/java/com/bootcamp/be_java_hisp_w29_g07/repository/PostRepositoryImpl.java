@@ -13,7 +13,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 public class PostRepositoryImpl implements IPostRepository {
@@ -27,7 +26,7 @@ public class PostRepositoryImpl implements IPostRepository {
     @Override
     public Long findPromoPostCountByUserId(Integer userId) {
         return (long) posts.stream()
-                .filter(post -> post.getUser_id().equals(userId))
+                .filter(post -> post.getUserId().equals(userId))
                 .filter(Post::getHasPromo)
                 .toList()
                 .size();
@@ -35,6 +34,7 @@ public class PostRepositoryImpl implements IPostRepository {
 
     @Override
     public Post savePost(Post post) {
+        post.setId(findNextId());
         posts.add(post);
         return post;
     }
@@ -58,7 +58,7 @@ public class PostRepositoryImpl implements IPostRepository {
 
     @Override
     public List<Post> findPostsByUserIdsAndLastTwoWeeks(List<Integer> userFollowing) {
-        return posts.stream().filter(post -> userFollowing.contains(post.getUser_id()) &&
+        return posts.stream().filter(post -> userFollowing.contains(post.getUserId()) &&
                         post.getDate().isAfter(LocalDate.now().minusWeeks(2)))
                 .toList();
     }
