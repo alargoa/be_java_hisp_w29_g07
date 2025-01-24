@@ -23,8 +23,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-import static com.bootcamp.be_java_hisp_w29_g07.Enum.OrderType.DATE_ASC;
-import static com.bootcamp.be_java_hisp_w29_g07.Enum.OrderType.DATE_DESC;
 
 @Service
 public class PostServiceImpl implements IPostService {
