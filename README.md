@@ -1,3 +1,7 @@
+<div align="center">
+<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=450&size=30&pause=1000&color=2798F7&width=435&lines=Welcome!+We+are+Group+7" alt="Typing SVG" /></a>
+</div>
+
 # Project be_java_hisp_w29_g07
 
 Welcome to the **be_java_hisp_w29_g07** project. This repository contains all documents and resources related to the development of the application.
