@@ -76,12 +76,21 @@ public class FollowServiceImpl implements IFollowService{
     }
 
     @Override
-    public ListFollowedDTO findListFollowedByUserId(Integer userId) {
+    public ListFollowedDTO findListFollowedByUserId(Integer userId, String order) {
         User user = userService.findUserById(userId);
         List<FollowedDTO> followList =  new ArrayList<>(followRepository.findFollowedByUserId(userId)
                 .stream()
                 .map(follow -> new FollowedDTO(follow.getFollowed().getId(), follow.getFollowed().getName()))
                 .toList());
+
+        if (order != null) {
+            if (order.equals(OrderType.ASC.getOrderType())) {
+                followList.sort(Comparator.comparing(FollowedDTO::getUserName));
+            }
+            if (order.equals(OrderType.DESC.getOrderType())) {
+                followList.sort(Comparator.comparing(FollowedDTO::getUserName).reversed());
+            }
+        }
 
         return new ListFollowedDTO(user.getId(), user.getUsername(), followList);
     }
