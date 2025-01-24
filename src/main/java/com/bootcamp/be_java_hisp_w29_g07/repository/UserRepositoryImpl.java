@@ -12,19 +12,41 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type User repository.
+ */
 @Repository
 public class UserRepositoryImpl implements IUserRepository{
+    /**
+     * The Users.
+     */
     private List<User> users = new ArrayList<>();
 
+    /**
+     * Instantiates a new User repository.
+     *
+     * @throws IOException the io exception
+     */
     public UserRepositoryImpl() throws IOException {
         loadUsersJson();
     }
 
+    /**
+     * Gets user by id.
+     *
+     * @param userId the user id
+     * @return the user by id
+     */
     @Override
     public Optional<User> getUserById(Integer userId) {
         return users.stream().filter(u -> u.getId().equals(userId)).findFirst();
     }
 
+    /**
+     * Load users json.
+     *
+     * @throws IOException the io exception
+     */
     private void loadUsersJson() throws IOException {
         File file;
         ObjectMapper objectMapper = new ObjectMapper();

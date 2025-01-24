@@ -24,15 +24,41 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * The type Post service.
+ */
 @Service
 public class PostServiceImpl implements IPostService {
 
+    /**
+     * The Post repository.
+     */
     private final IPostRepository postRepository;
+    /**
+     * The User repository.
+     */
     private final IUserRepository userRepository;
+    /**
+     * The Follow repository.
+     */
     private final IFollowRepository followRepository;
+    /**
+     * The Mapper.
+     */
     private final ObjectMapper mapper;
+    /**
+     * The User service.
+     */
     private final IUserService userService;
 
+    /**
+     * Instantiates a new Post service.
+     *
+     * @param postRepository   the post repository
+     * @param userRepository   the user repository
+     * @param followRepository the follow repository
+     * @param userService      the user service
+     */
     public PostServiceImpl(
             IPostRepository postRepository,
             IUserRepository userRepository,
@@ -48,6 +74,12 @@ public class PostServiceImpl implements IPostService {
         this.userService = userService;
     }
 
+    /**
+     * Add post post save dto.
+     *
+     * @param post the post
+     * @return the post save dto
+     */
     @Override
     public PostSaveDTO addPost(PostDTO post) {
         User user = userService.findUserById(post.getUser_id());
@@ -66,12 +98,23 @@ public class PostServiceImpl implements IPostService {
                 mapper.convertValue(postCreated, PostDTO.class));
     }
 
+    /**
+     * Find post by id optional.
+     *
+     * @param id the id
+     * @return the optional
+     */
     @Override
     public Optional<PostDTO> findPostById(Integer id) {
         Optional<Post> posId = postRepository.findPostById(id);
         return posId.map(post -> mapper.convertValue(post, PostDTO.class));
     }
 
+    /**
+     * Find all list.
+     *
+     * @return the list
+     */
     @Override
     public List<PostDTO> findAll() {
         List<Post> posts = postRepository.findAll();
@@ -80,6 +123,13 @@ public class PostServiceImpl implements IPostService {
                 .toList();
     }
 
+    /**
+     * Find list users followed posts by user id list post dto.
+     *
+     * @param userId the user id
+     * @param order  the order
+     * @return the list post dto
+     */
     @Override
     public ListPostDTO findListUsersFollowedPostsByUserId(Integer userId, String order) {
         // Validates that the user exists
@@ -101,6 +151,13 @@ public class PostServiceImpl implements IPostService {
         return new ListPostDTO(userId, postDTOS);
     }
 
+    /**
+     * Apply sorting list.
+     *
+     * @param posts the posts
+     * @param order the order
+     * @return the list
+     */
     private List<Post> applySorting(List<Post> posts, String order) {
         if (Objects.isNull(order)){
             order = "date_desc";
@@ -117,6 +174,12 @@ public class PostServiceImpl implements IPostService {
         };
     }
 
+    /**
+     * Find promo post count by user id promo count post dto.
+     *
+     * @param userId the user id
+     * @return the promo count post dto
+     */
     @Override
     public PromoCountPostDTO findPromoPostCountByUserId(Integer userId) {
         Optional<User> user = userRepository.getUserById(userId);
@@ -134,6 +197,12 @@ public class PostServiceImpl implements IPostService {
         return new PromoCountPostDTO(user.get().getId(), user.get().getUsername(), (int) count);
     }
 
+    /**
+     * Create promo post promo post dto out.
+     *
+     * @param promoPostDTOIn the promo post dto in
+     * @return the promo post dto out
+     */
     @Override
     public PromoPostDTOOut createPromoPost(PromoPostDTOIn promoPostDTOIn) {
         User user = userService.findUserById(promoPostDTOIn.getUser_id());

@@ -4,10 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * The type Category.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Category {
+    /**
+     * The Id.
+     */
     public Integer id;
+    /**
+     * The Name.
+     */
     public String name;
 }

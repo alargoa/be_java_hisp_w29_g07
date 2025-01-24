@@ -8,16 +8,33 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * The type User service.
+ */
 @Service
 public class UserServiceImpl implements IUserService{
 
+    /**
+     * The User repository.
+     */
     private final IUserRepository userRepository;
 
+    /**
+     * Instantiates a new User service.
+     *
+     * @param userRepository the user repository
+     */
     public UserServiceImpl (IUserRepository userRepository){
 
         this.userRepository = userRepository;
     }
 
+    /**
+     * Find user by id user.
+     *
+     * @param userId the user id
+     * @return the user
+     */
     @Override
     public User findUserById(Integer userId) {
         Optional<User> user = userRepository.getUserById(userId);

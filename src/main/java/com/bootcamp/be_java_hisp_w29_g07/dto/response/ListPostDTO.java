@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * The type List post dto.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

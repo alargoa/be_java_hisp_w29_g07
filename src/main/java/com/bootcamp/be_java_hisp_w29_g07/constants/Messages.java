@@ -1,5 +1,8 @@
 package com.bootcamp.be_java_hisp_w29_g07.constants;
 
+/**
+ * The type Messages.
+ */
 public class Messages {
 
     public static final String USER_NOT_FOUND_MSG = "User with id %d not found";
