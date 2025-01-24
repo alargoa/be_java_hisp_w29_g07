@@ -9,10 +9,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Follow repository.
+ */
 @Repository
 public class FollowRepositoryImpl implements IFollowRepository {
+    /**
+     * The Follow list.
+     */
     private List<Follow> followList = new ArrayList<>();
 
+    /**
+     * Save follow follow.
+     *
+     * @param user         the user
+     * @param userToFollow the user to follow
+     * @return the follow
+     */
     @Override
     public Follow saveFollow(User user, User userToFollow) {
         Follow follow = new Follow((this.followList.size() + 1), user, userToFollow, LocalDate.now());
@@ -20,11 +33,23 @@ public class FollowRepositoryImpl implements IFollowRepository {
         return follow;
     }
 
+    /**
+     * Find all list.
+     *
+     * @return the list
+     */
     @Override
     public List<Follow> findAll() {
         return followList;
     }
 
+    /**
+     * Find follow optional.
+     *
+     * @param user         the user
+     * @param userToFollow the user to follow
+     * @return the optional
+     */
     @Override
     public Optional<Follow> findFollow(User user, User userToFollow) {
         return findAll()
@@ -34,6 +59,12 @@ public class FollowRepositoryImpl implements IFollowRepository {
                 .findFirst();
     }
 
+    /**
+     * Count by followed id long.
+     *
+     * @param userId the user id
+     * @return the long
+     */
     @Override
     public Long countByFollowedId(Integer userId) {
         return this.followList.stream()
@@ -41,6 +72,12 @@ public class FollowRepositoryImpl implements IFollowRepository {
                 .count();
     }
 
+    /**
+     * Find followed by user id list.
+     *
+     * @param userId the user id
+     * @return the list
+     */
     @Override
     public List<Follow> findFollowedByUserId(Integer userId) {
         return this.followList
@@ -49,6 +86,12 @@ public class FollowRepositoryImpl implements IFollowRepository {
                 .toList();
     }
 
+    /**
+     * Find followers by user id list.
+     *
+     * @param userId the user id
+     * @return the list
+     */
     @Override
     public List<Follow> findFollowersByUserId(Integer userId) {
         return this.followList
@@ -57,6 +100,13 @@ public class FollowRepositoryImpl implements IFollowRepository {
                 .toList();
     }
 
+    /**
+     * Delete follow user by id boolean.
+     *
+     * @param userId           the user id
+     * @param userIdToUnfollow the user id to unfollow
+     * @return the boolean
+     */
     @Override
     public Boolean deleteFollowUserById(Integer userId, Integer userIdToUnfollow) {
         Optional<Follow> optionalFollow = followList.stream()

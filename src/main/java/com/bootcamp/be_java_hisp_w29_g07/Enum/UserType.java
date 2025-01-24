@@ -1,5 +1,8 @@
 package com.bootcamp.be_java_hisp_w29_g07.Enum;
 
+/**
+ * The enum User type.
+ */
 public enum UserType {
 
     USER(1, "User"),

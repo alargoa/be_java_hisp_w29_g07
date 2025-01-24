@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+/**
+ * The type Post dto.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

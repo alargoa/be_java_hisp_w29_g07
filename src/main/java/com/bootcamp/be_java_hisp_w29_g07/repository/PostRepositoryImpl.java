@@ -14,15 +14,35 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Post repository.
+ */
 @Repository
 public class PostRepositoryImpl implements IPostRepository {
+    /**
+     * The Posts.
+     */
     private List<Post> posts = new ArrayList<>();
+    /**
+     * The constant idCounter.
+     */
     private static int idCounter = 1;
 
+    /**
+     * Instantiates a new Post repository.
+     *
+     * @throws IOException the io exception
+     */
     public PostRepositoryImpl() throws IOException {
         loadPostsJson();
     }
 
+    /**
+     * Find promo post count by user id long.
+     *
+     * @param userId the user id
+     * @return the long
+     */
     @Override
     public Long findPromoPostCountByUserId(Integer userId) {
         return (long) posts.stream()
@@ -32,6 +52,12 @@ public class PostRepositoryImpl implements IPostRepository {
                 .size();
     }
 
+    /**
+     * Save post post.
+     *
+     * @param post the post
+     * @return the post
+     */
     @Override
     public Post savePost(Post post) {
         post.setId(findNextId());
@@ -39,6 +65,12 @@ public class PostRepositoryImpl implements IPostRepository {
         return post;
     }
 
+    /**
+     * Find post by id optional.
+     *
+     * @param id the id
+     * @return the optional
+     */
     @Override
     public Optional<Post> findPostById(Integer id) {
         return posts.stream()
@@ -46,16 +78,32 @@ public class PostRepositoryImpl implements IPostRepository {
                 .findFirst();
     }
 
+    /**
+     * Find all list.
+     *
+     * @return the list
+     */
     @Override
     public List<Post> findAll() {
         return posts;
     }
 
+    /**
+     * Find next id integer.
+     *
+     * @return the integer
+     */
     @Override
     public Integer findNextId() {
         return idCounter++;
     }
 
+    /**
+     * Find posts by user ids and last two weeks list.
+     *
+     * @param userFollowing the user following
+     * @return the list
+     */
     @Override
     public List<Post> findPostsByUserIdsAndLastTwoWeeks(List<Integer> userFollowing) {
         return posts.stream().filter(post -> userFollowing.contains(post.getUserId()) &&
@@ -63,6 +111,11 @@ public class PostRepositoryImpl implements IPostRepository {
                 .toList();
     }
 
+    /**
+     * Load posts json.
+     *
+     * @throws IOException the io exception
+     */
     private void loadPostsJson() throws IOException {
         File file;
         ObjectMapper objectMapper = new ObjectMapper();
