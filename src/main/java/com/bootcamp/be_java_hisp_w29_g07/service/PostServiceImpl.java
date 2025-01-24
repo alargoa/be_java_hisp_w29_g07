@@ -31,18 +31,35 @@ public class PostServiceImpl implements IPostService {
     private final IUserRepository userRepository;
     private final IFollowRepository followRepository;
     private final ObjectMapper mapper;
+    private final IUserService userService;
 
-    public PostServiceImpl(IPostRepository postRepository, IUserRepository userRepository, IFollowRepository followRepository) {
+    public PostServiceImpl(
+            IPostRepository postRepository,
+            IUserRepository userRepository,
+            IFollowRepository followRepository,
+            IUserService userService
+    ) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.followRepository = followRepository;
         this.mapper = new ObjectMapper();
         this.mapper.registerModule(new JavaTimeModule());
         this.mapper.findAndRegisterModules();
+        this.userService = userService;
     }
 
     @Override
     public PostSaveDTO addPost(PostDTO post) {
+        User user = userService.findUserById(post.getUser_id());
+        if(user.getUserType().equals(UserType.USER)){
+            throw new BadRequestException(Messages.USER_NOT_SELLER_MSG);
+        }
+        if(Objects.isNull(post.getHas_promo()) || post.getHas_promo()  ){
+            throw new BadRequestException(Messages.POST_CANNOT_HAVE_PROMOTION);
+        }
+        if(Objects.isNull(post.getDiscount()) || post.getDiscount() > 0.0){
+            throw new BadRequestException(Messages.POST_CANNOT_HAVE_DISCOUNT);
+        }
         Post postCreated = mapper.convertValue(post, Post.class);
         postRepository.savePost(postCreated);
         return new PostSaveDTO(Messages.POST_CREATED_SUCCESSFULLY,
@@ -65,6 +82,9 @@ public class PostServiceImpl implements IPostService {
 
     @Override
     public ListPostDTO findListUsersFollowedPostsByUserId(Integer userId, String order) {
+        // Validates that the user exists
+        userService.findUserById(userId);
+
         List<Integer> userFollowing = followRepository.findFollowedByUserId(userId).stream()
                 .map(f -> f.getFollowed().getId()).toList();
         if (userFollowing.isEmpty()) {
@@ -82,8 +102,8 @@ public class PostServiceImpl implements IPostService {
     }
 
     private List<Post> applySorting(List<Post> posts, String order) {
-        if (order == null) {
-            order = "date_asc";
+        if (Objects.isNull(order)){
+            order = "date_desc";
         }
 
         return switch (order.toLowerCase()) {
@@ -116,7 +136,10 @@ public class PostServiceImpl implements IPostService {
 
     @Override
     public PromoPostDTOOut createPromoPost(PromoPostDTOIn promoPostDTOIn) {
-
+        User user = userService.findUserById(promoPostDTOIn.getUser_id());
+        if(user.getUserType().equals(UserType.USER)){
+            throw new BadRequestException(Messages.USER_NOT_SELLER_MSG);
+        }
         if (!promoPostDTOIn.getHas_promo()) {
             throw new BadRequestException(Messages.POST_HAS_NO_PROMOTION);
         }

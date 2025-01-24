@@ -47,6 +47,11 @@ public class FollowServiceImpl implements IFollowService{
 
     @Override
     public MessageDTO unfollowUserById(Integer userId, Integer userIdToUnfollow) {
+        // Validates that the user exists
+        userService.findUserById(userId);
+        // Validates that the user to unfollow exists
+        userService.findUserById(userIdToUnfollow);
+
         Boolean isUnfollowed = followRepository.deleteFollowUserById(userId, userIdToUnfollow);
         if (!isUnfollowed) {
             throw new NotFoundException(String.format(Messages.USER_IS_NOT_FOLLOWING_USER, userId, userIdToUnfollow));
@@ -56,11 +61,14 @@ public class FollowServiceImpl implements IFollowService{
     }
 
     @Override
-    public MessageDTO saveFollow(Integer userId, Integer  userIdToFollow) {
-
+    public MessageDTO saveFollow(Integer userId, Integer userIdToFollow) {
+        // Validates that the user exists
         User user = userService.findUserById(userId);
         User userToFollow = userService.findUserById(userIdToFollow);
 
+        if(user.getUserType().equals(UserType.SELLER)){
+            throw new BadRequestException(Messages.SELLER_CANNOT_FOLLOW_SELLER);
+        }
         if(userToFollow.getUserType().equals(UserType.USER)){
             throw new BadRequestException(Messages.USER_NOT_SELLER_MSG);
         }
@@ -77,6 +85,7 @@ public class FollowServiceImpl implements IFollowService{
 
     @Override
     public ListFollowedDTO findListFollowedByUserId(Integer userId, String order) {
+        // Validates that the user exists
         User user = userService.findUserById(userId);
         List<FollowedDTO> followList =  new ArrayList<>(followRepository.findFollowedByUserId(userId)
                 .stream()
@@ -90,6 +99,7 @@ public class FollowServiceImpl implements IFollowService{
 
     @Override
     public ListFollowersDTO findListFollowersByUserId(Integer userId, String order) {
+        // Validates that the user exists
         User user = userService.findUserById(userId);
         List<FollowerDTO> followList = new ArrayList<>(followRepository.findFollowersByUserId(userId)
                 .stream()
@@ -102,7 +112,7 @@ public class FollowServiceImpl implements IFollowService{
     }
 
     private <T> List<T> orderList(List<T> list, String order, Comparator<T> comparator) {
-        if (order != null) {
+        if (Objects.nonNull(order)) {
             if (order.equals(OrderType.ASC.getOrderType())) {
                 list.sort(comparator);
             } else if (order.equals(OrderType.DESC.getOrderType())) {
