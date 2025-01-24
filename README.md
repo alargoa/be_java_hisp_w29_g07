@@ -18,7 +18,7 @@ Welcome to the **be_java_hisp_w29_g07** project. This repository contains sprint
 
 ---
 
-## :portapapeles: Completed Sprints
+## 📋 Completed Sprints
 - [x] **Sprint 1**
 
 
