@@ -9,10 +9,10 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 public class PostRepositoryImpl implements IPostRepository {
@@ -26,7 +26,7 @@ public class PostRepositoryImpl implements IPostRepository {
     @Override
     public Long findPromoPostCountByUserId(Integer userId) {
         return (long) posts.stream()
-                .filter(post -> post.getUser_id().equals(userId))
+                .filter(post -> post.getUserId().equals(userId))
                 .filter(Post::getHasPromo)
                 .toList()
                 .size();
@@ -34,6 +34,7 @@ public class PostRepositoryImpl implements IPostRepository {
 
     @Override
     public Post savePost(Post post) {
+        post.setId(findNextId());
         posts.add(post);
         return post;
     }
@@ -55,6 +56,12 @@ public class PostRepositoryImpl implements IPostRepository {
         return idCounter++;
     }
 
+    @Override
+    public List<Post> findPostsByUserIdsAndLastTwoWeeks(List<Integer> userFollowing) {
+        return posts.stream().filter(post -> userFollowing.contains(post.getUserId()) &&
+                        post.getDate().isAfter(LocalDate.now().minusWeeks(2)))
+                .toList();
+    }
 
     private void loadPostsJson() throws IOException {
         File file;
@@ -72,5 +79,4 @@ public class PostRepositoryImpl implements IPostRepository {
             idCounter = posts.stream().mapToInt(Post::getId).max().orElse(0) + 1;
         }
     }
-
 }

@@ -5,10 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostSaveDTO {
-    private String message;
-    private PostDTO post;
+public class ListPostDTO {
+    private Integer user_id;
+    private List<PostDTO> posts;
 }

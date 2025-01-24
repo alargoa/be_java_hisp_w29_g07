@@ -3,7 +3,7 @@ package com.bootcamp.be_java_hisp_w29_g07.service;
 import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 import com.bootcamp.be_java_hisp_w29_g07.exception.NotFoundException;
 import com.bootcamp.be_java_hisp_w29_g07.repository.IUserRepository;
-import com.bootcamp.be_java_hisp_w29_g07.constants.ErrorMessages;
+import com.bootcamp.be_java_hisp_w29_g07.constants.Messages;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -22,7 +22,7 @@ public class UserServiceImpl implements IUserService{
     public User findUserById(Integer userId) {
         Optional<User> user = userRepository.getUserById(userId);
         if (user.isEmpty()){
-            throw new NotFoundException(String.format(ErrorMessages.USER_NOT_FOUND_MSG, userId));
+            throw new NotFoundException(String.format(Messages.USER_NOT_FOUND_MSG, userId));
         }
         return user.get();
 

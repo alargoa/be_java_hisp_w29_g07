@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public class FollowRepositoryImpl implements IFollowRepository {
-    private final List<Follow> followList = new ArrayList<>();
+    private List<Follow> followList = new ArrayList<>();
 
     @Override
     public Follow saveFollow(User user, User userToFollow) {
@@ -39,6 +39,14 @@ public class FollowRepositoryImpl implements IFollowRepository {
         return this.followList.stream()
                 .filter(f -> f.getFollowed().getId().equals(userId))
                 .count();
+    }
+
+    @Override
+    public List<Follow> findFollowedByUserId(Integer userId) {
+        return this.followList
+                .stream()
+                .filter(follow -> follow.getFollower().getId().equals(userId))
+                .toList();
     }
 
     @Override

@@ -7,20 +7,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class Post {
+    @JsonProperty("post_id")
     private Integer id;
-    private Integer user_id;
+    @JsonProperty("user_id")
+    private Integer userId;
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate date;
     private Product product;
     private Integer category;
     private Double price;
+    @JsonProperty("has_promo")
     private Boolean hasPromo = false;
     private Double discount = 0.0;
-
 }

@@ -1,5 +1,6 @@
 package com.bootcamp.be_java_hisp_w29_g07.controller;
 
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListFollowedDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListFollowersDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.MessageDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.SellerFollowerCountDTO;
@@ -41,6 +42,11 @@ public class UserController {
     @GetMapping("{userId}/followers/list")
     public ResponseEntity<ListFollowersDTO> findListFollowersByUserId(@PathVariable Integer userId, @RequestParam(value = "order", required = false) String order){
         return new ResponseEntity<>(followService.findListFollowersByUserId(userId, order), HttpStatus.OK);
+    }
+    //TODO:
+    @GetMapping("{userId}/followed/list")
+    public ResponseEntity<ListFollowedDTO> findListFollowedByUserId(@PathVariable Integer userId, @RequestParam(value = "order", required = false) String order){
+        return new ResponseEntity<>(followService.findListFollowedByUserId(userId, order), HttpStatus.OK);
     }
 
     @Operation( summary = "Unfollow a user")
