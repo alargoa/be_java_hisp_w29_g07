@@ -1,6 +1,6 @@
 package com.bootcamp.be_java_hisp_w29_g07.controller;
 
-import com.bootcamp.be_java_hisp_w29_g07.dto.PostDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.request.PostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.service.IPostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
