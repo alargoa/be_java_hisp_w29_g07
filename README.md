@@ -4,13 +4,13 @@
 
 # Project be_java_hisp_w29_g07
 
-Welcome to the **be_java_hisp_w29_g07** project. This repository contains all documents and resources related to the development of the application.
+Welcome to the **be_java_hisp_w29_g07** project. This repository contains sprint 1 one of bootcamp java wave29.
 
 ---
 
 ## 📚 Table of Contents
 
-- [Related Documents](#related-documents)
+- [Completed Sprints](#completed-sprints)
 - [Seeds](#seeds)
 - [Postman Collection](#postman-collection)
 - [Swagger](#swagger)
@@ -18,22 +18,22 @@ Welcome to the **be_java_hisp_w29_g07** project. This repository contains all do
 
 ---
 
-## 📄 Related Documents
+## :portapapeles: Completed Sprints
+- [x] **Sprint 1**
 
-All necessary documents can be found in the resources folder.
 
 ---
 
 ## 🌱 Seeds
 
-- **[Users.json](./src/main/resources/users.json)**  - User data.
-- **[Posts.json](./src/main/resources/posts.json)**  - Post data.
+- **[Users](./src/main/resources/users.json)**  
+- **[Posts](./src/main/resources/posts.json)**  
 
 ---
 
 ## 🛠️ Postman Collection
+- **[Postman Collection](./src/main/resources/postman_collection.json)**  
 
-Access the collection in **Resources** -> **Sprint1Collection**.
 
 ---
 
