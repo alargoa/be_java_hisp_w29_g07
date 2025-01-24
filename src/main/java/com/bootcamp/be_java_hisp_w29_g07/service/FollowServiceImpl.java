@@ -83,14 +83,7 @@ public class FollowServiceImpl implements IFollowService{
                 .map(follow -> new FollowedDTO(follow.getFollowed().getId(), follow.getFollowed().getName()))
                 .toList());
 
-        if (order != null) {
-            if (order.equals(OrderType.ASC.getOrderType())) {
-                followList.sort(Comparator.comparing(FollowedDTO::getUserName));
-            }
-            if (order.equals(OrderType.DESC.getOrderType())) {
-                followList.sort(Comparator.comparing(FollowedDTO::getUserName).reversed());
-            }
-        }
+        followList = orderList(followList, order, Comparator.comparing(FollowedDTO::getUserName));
 
         return new ListFollowedDTO(user.getId(), user.getUsername(), followList);
     }
@@ -103,14 +96,19 @@ public class FollowServiceImpl implements IFollowService{
                 .map(follow -> new FollowerDTO(follow.getFollower().getId(), follow.getFollower().getName()))
                 .toList());
 
+        followList = orderList(followList, order, Comparator.comparing(FollowerDTO::getUser_name));
+
+        return new ListFollowersDTO(user.getId(), user.getUsername(), followList);
+    }
+
+    private <T> List<T> orderList(List<T> list, String order, Comparator<T> comparator) {
         if (order != null) {
             if (order.equals(OrderType.ASC.getOrderType())) {
-                followList.sort(Comparator.comparing(FollowerDTO::getUser_name));
-            }
-            if (order.equals(OrderType.DESC.getOrderType())) {
-                followList.sort(Comparator.comparing(FollowerDTO::getUser_name).reversed());
+                list.sort(comparator);
+            } else if (order.equals(OrderType.DESC.getOrderType())) {
+                list.sort(comparator.reversed());
             }
         }
-        return new ListFollowersDTO(user.getId(), user.getUsername(), followList);
+        return list;
     }
 }
