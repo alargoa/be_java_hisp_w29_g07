@@ -1,9 +1,9 @@
 package com.bootcamp.be_java_hisp_w29_g07.service;
 
-import com.bootcamp.be_java_hisp_w29_g07.dto.PostDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.request.PostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.PostSaveDTO;
 import com.bootcamp.be_java_hisp_w29_g07.Enum.UserType;
-import com.bootcamp.be_java_hisp_w29_g07.constants.ErrorMessages;
+import com.bootcamp.be_java_hisp_w29_g07.constants.Messages;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.PromoCountPostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.entity.Post;
 import com.bootcamp.be_java_hisp_w29_g07.entity.User;
@@ -63,13 +63,13 @@ public class PostServiceImpl implements IPostService {
         long count = postRepository.findPromoPostCountByUserId(userId);
 
         if (user.isEmpty()) {
-            throw new NotFoundException(String.format(ErrorMessages.USER_NOT_FOUND_MSG, userId));
+            throw new NotFoundException(String.format(Messages.USER_NOT_FOUND_MSG, userId));
         }
         if (user.get().getUserType().getId().equals(UserType.USER.getId())) {
-            throw new BadRequestException(ErrorMessages.USER_NOT_SELLER_MSG);
+            throw new BadRequestException(Messages.USER_NOT_SELLER_MSG);
         }
         if (count == 0) {
-            throw new NotFoundException(String.format(ErrorMessages.NO_POST_FOUND, userId));
+            throw new NotFoundException(String.format(Messages.NO_POST_FOUND, userId));
         }
         return new PromoCountPostDTO(user.get().getId(), user.get().getUsername(), (int) count);
     }
