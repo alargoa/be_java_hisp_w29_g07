@@ -9,6 +9,7 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +45,7 @@ public class PostRepositoryImpl implements IPostRepository {
     }
 
     @Override
-    public List<Post> saveAll() {
+    public List<Post> findAll() {
         return posts;
     }
 
@@ -53,6 +54,11 @@ public class PostRepositoryImpl implements IPostRepository {
         return idCounter++;
     }
 
+    @Override
+    public List<Post> findPostsByUser(List<Integer> userFollowing) {
+        return posts.stream().filter(post -> userFollowing.contains(post.getUser_id()) && post.getDate().isAfter(LocalDate.now().minusWeeks(2)))
+                .toList();
+    }
 
     private void loadPostsJson() throws IOException {
         File file;
@@ -69,17 +75,5 @@ public class PostRepositoryImpl implements IPostRepository {
         if (!posts.isEmpty()) {
             idCounter = posts.stream().mapToInt(Post::getId).max().orElse(0) + 1;
         }
-    }
-
-    public List<Post> findPostByUser(List<Long> userFollowing, long userId) {
-        List<Post> postsByUser = new ArrayList<>();
-        for (Long id : userFollowing) {
-            List<Post> filteredPosts = posts.stream()
-                    .filter(post -> post.getUserId().longValue() == id)
-                    .toList();
-            postsByUser.addAll(filteredPosts);
-        }
-
-        return postsByUser;
     }
 }

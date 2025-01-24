@@ -1,32 +1,24 @@
 package com.bootcamp.be_java_hisp_w29_g07.service;
 
-import com.bootcamp.be_java_hisp_w29_g07.dto.PostDTO;
-import com.bootcamp.be_java_hisp_w29_g07.dto.response.PostSaveDTO;
 import com.bootcamp.be_java_hisp_w29_g07.Enum.UserType;
 import com.bootcamp.be_java_hisp_w29_g07.constants.ErrorMessages;
+import com.bootcamp.be_java_hisp_w29_g07.dto.PostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListPostDTO;
-import com.bootcamp.be_java_hisp_w29_g07.dto.response.PostDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.PostSaveDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.PromoPostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.entity.Post;
 import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 import com.bootcamp.be_java_hisp_w29_g07.exception.BadRequestException;
 import com.bootcamp.be_java_hisp_w29_g07.exception.NotFoundException;
-import com.bootcamp.be_java_hisp_w29_g07.entity.Follow;
-import com.bootcamp.be_java_hisp_w29_g07.entity.Post;
-import com.bootcamp.be_java_hisp_w29_g07.exception.NotFoundException;
-import com.bootcamp.be_java_hisp_w29_g07.repository.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.bootcamp.be_java_hisp_w29_g07.repository.IFollowRepository;
 import com.bootcamp.be_java_hisp_w29_g07.repository.IPostRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.bootcamp.be_java_hisp_w29_g07.repository.IUserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 
 @Service
 public class PostServiceImpl implements IPostService {
@@ -37,13 +29,13 @@ public class PostServiceImpl implements IPostService {
     private final ObjectMapper mapper;
     private final static int idCounter = 1;
 
-    public PostServiceImpl(IPostRepository postRepository, IUserRepository userRepository) {
+    public PostServiceImpl(IPostRepository postRepository, IUserRepository userRepository, IFollowRepository followRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
+        this.followRepository = followRepository;
         this.mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.findAndRegisterModules();
-        this.followRepository = new FollowRepositoryImpl();
     }
 
     @Override
@@ -62,42 +54,29 @@ public class PostServiceImpl implements IPostService {
 
     @Override
     public List<PostDTO> findAll() {
-        List<Post> posts = postRepository.saveAll();
+        List<Post> posts = postRepository.findAll();
         return posts.stream()
                 .map(p -> mapper.convertValue(p, PostDTO.class))
                 .toList();
-        this.followRepository = new FollowRepositoryImpl();
     }
 
     @Override
-    public ListPostDTO listPostByUser(Integer userId) {
-        List<Integer> userFollowing = followRepository.userFollowed(userId);
-        if (userFollowing.isEmpty()) { throw new NotFoundException(String.format(ErrorMessages.USER_HAS_NOT_FOLLOWED_MSG, userId)); }
+    public ListPostDTO findListUsersFollowedPosts(Integer userId) {
+        List<Integer> userFollowing = followRepository.findFollowedByUserId(userId).stream()
+                .map(f -> f.getFollowed().getId()).toList();
+        if (userFollowing.isEmpty()) {
+            throw new NotFoundException(String.format(ErrorMessages.USER_HAS_NOT_FOLLOWED_MSG, userId));
+        }
 
-        List<Post> posts = postRepository.findPostByUser(userFollowing, userId);
-        if (posts.isEmpty()) { throw new NotFoundException(String.format(ErrorMessages.USER_HAS_NOT_POSTS_MSG, userId)); }
+        List<Post> posts = postRepository.findPostsByUser(userFollowing);
+        if (posts.isEmpty()) {
+            throw new NotFoundException(String.format(ErrorMessages.USER_HAS_NOT_POSTS_MSG, userId));
+        }
 
-        ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.findAndRegisterModules();
-        List<PostDTO> postDTOS = posts.stream().map(post -> mapper.convertValue(post, PostDTO.class)).collect(Collectors.toList());
-        System.out.println(postDTOS);
-        return new ListPostDTO(userId, postDTOS);
-    }
 
-    @Override
-    public ListPostDTO listPostByUser(Integer userId) {
-        List<Integer> userFollowing = followRepository.userFollowed(userId);
-        if (userFollowing.isEmpty()) { throw new NotFoundException(String.format(ErrorMessages.USER_HAS_NOT_FOLLOWED_MSG, userId)); }
-
-        List<Post> posts = postRepository.findPostByUser(userFollowing, userId);
-        if (posts.isEmpty()) { throw new NotFoundException(String.format(ErrorMessages.USER_HAS_NOT_POSTS_MSG, userId)); }
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        mapper.findAndRegisterModules();
-        List<PostDTO> postDTOS = posts.stream().map(post -> mapper.convertValue(post, PostDTO.class)).collect(Collectors.toList());
-        System.out.println(postDTOS);
+        List<PostDTO> postDTOS = posts.stream().map(post -> mapper.convertValue(post, PostDTO.class)).toList();
         return new ListPostDTO(userId, postDTOS);
     }
 

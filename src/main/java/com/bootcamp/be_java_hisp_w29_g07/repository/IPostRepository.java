@@ -9,6 +9,7 @@ public interface IPostRepository {
     List<Post> getPromoPostCount(Integer userId);
     Post savePost(Post post);
     Optional<Post> findPostById(Integer id);
-    List<Post> saveAll();
+    List<Post> findAll();
     Integer findNextId();
+    List<Post> findPostsByUser(List<Integer> userFollowing);
 }
