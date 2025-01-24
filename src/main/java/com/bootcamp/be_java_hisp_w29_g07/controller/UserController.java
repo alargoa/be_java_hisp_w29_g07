@@ -32,7 +32,12 @@ public class UserController {
     }
 
     @GetMapping("{userId}/followers/list")
-    public ResponseEntity<ListFollowersDTO> listFollowers(@PathVariable Integer userId){
-        return new ResponseEntity<>(followService.listFollowers(userId), HttpStatus.OK);
+    public ResponseEntity<ListFollowersDTO> findListFollowersByUserId(@PathVariable Integer userId, @RequestParam(value = "order", required = false) String order){
+        return new ResponseEntity<>(followService.findListFollowersByUserId(userId, order), HttpStatus.OK);
+    }
+
+    @PostMapping("/{userId}/unfollow/{userIdToUnfollow}")
+    public ResponseEntity<MessageDTO> unfollowUserById(@PathVariable Integer userId, @PathVariable Integer userIdToUnfollow) {
+        return new ResponseEntity<>(followService.unfollowUserById(userId, userIdToUnfollow), HttpStatus.OK);
     }
 }

@@ -53,8 +53,24 @@ public class FollowRepositoryImpl implements IFollowRepository {
     public List<Follow> findFollowersByUserId(Integer userId) {
         return this.followList
                 .stream()
-                .filter(follow -> follow.getFollower().getId().equals(userId))
+                .filter(follow -> follow.getFollowed().getId().equals(userId))
                 .toList();
+    }
+
+    @Override
+    public Boolean deleteFollowUserById(Integer userId, Integer userIdToUnfollow) {
+        Optional<Follow> optionalFollow = followList.stream()
+                .filter(
+                        f -> f.getFollower().getId().equals(userId)
+                                && f.getFollowed().getId().equals(userIdToUnfollow))
+                .findFirst();
+
+        if (optionalFollow.isEmpty()) {
+            return false;
+        }
+
+        followList.remove(optionalFollow.get());
+        return true;
     }
 
 }
