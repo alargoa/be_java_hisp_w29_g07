@@ -88,7 +88,7 @@
     },
     "category": 2,
     "price": 35000.50,
-    "hasPromo": true,
+    "has_promo": true,
     "discount": 0.25
   },
   {
@@ -105,7 +105,7 @@
     },
     "category": 1,
     "price": 26500.50,
-    "hasPromo": true,
+    "has_promo": true,
     "discount": 0.25
   }
 ]

@@ -1,11 +1,13 @@
 package com.bootcamp.be_java_hisp_w29_g07.service;
 
+import com.bootcamp.be_java_hisp_w29_g07.dto.request.PostDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.request.PromoPostDTOIn;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.PostSaveDTO;
 import com.bootcamp.be_java_hisp_w29_g07.Enum.UserType;
 import com.bootcamp.be_java_hisp_w29_g07.constants.Messages;
-import com.bootcamp.be_java_hisp_w29_g07.dto.PostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListPostDTO;
-import com.bootcamp.be_java_hisp_w29_g07.dto.response.PostSaveDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.PromoCountPostDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.PromoPostDTOOut;
 import com.bootcamp.be_java_hisp_w29_g07.entity.Post;
 import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 import com.bootcamp.be_java_hisp_w29_g07.exception.BadRequestException;
@@ -18,6 +20,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -27,23 +30,22 @@ public class PostServiceImpl implements IPostService {
     private final IUserRepository userRepository;
     private final IFollowRepository followRepository;
     private final ObjectMapper mapper;
-    private final static int idCounter = 1;
 
     public PostServiceImpl(IPostRepository postRepository, IUserRepository userRepository, IFollowRepository followRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.followRepository = followRepository;
         this.mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        mapper.findAndRegisterModules();
+        this.mapper.registerModule(new JavaTimeModule());
+        this.mapper.findAndRegisterModules();
     }
 
     @Override
     public PostSaveDTO addPost(PostDTO post) {
-        Post post1 = mapper.convertValue(post, Post.class);
-        post1.setId(postRepository.findNextId());
-        postRepository.savePost(post1);
-        return new PostSaveDTO("Post was created successfully", post1);
+        Post postCreated = mapper.convertValue(post, Post.class);
+        postRepository.savePost(postCreated);
+        return new PostSaveDTO(Messages.POST_CREATED_SUCCESSFULLY,
+                mapper.convertValue(postCreated, PostDTO.class));
     }
 
     @Override
@@ -92,5 +94,19 @@ public class PostServiceImpl implements IPostService {
             throw new NotFoundException(String.format(Messages.NO_POST_FOUND, userId));
         }
         return new PromoCountPostDTO(user.get().getId(), user.get().getUsername(), (int) count);
+    }
+
+    @Override
+    public PromoPostDTOOut createPromoPost(PromoPostDTOIn promoPostDTOIn) {
+
+        if (!promoPostDTOIn.getHas_promo()) {
+            throw new BadRequestException(Messages.POST_HAS_NO_PROMOTION);
+        }
+        if (Objects.isNull(promoPostDTOIn.getDiscount()) || promoPostDTOIn.getDiscount() <= 0) {
+            throw new BadRequestException(Messages.POST_HAS_NO_DISCOUNT);
+        }
+
+        Post postCreated = postRepository.savePost(mapper.convertValue(promoPostDTOIn, Post.class));
+        return mapper.convertValue(postCreated, PromoPostDTOOut.class);
     }
 }
