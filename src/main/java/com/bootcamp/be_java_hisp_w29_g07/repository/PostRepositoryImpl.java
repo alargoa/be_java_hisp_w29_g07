@@ -24,10 +24,12 @@ public class PostRepositoryImpl implements IPostRepository {
     }
 
     @Override
-    public List<Post> getPromoPostCount(Integer userId) {
-        return posts.stream()
+    public Long findPromoPostCountByUserId(Integer userId) {
+        return (long) posts.stream()
                 .filter(post -> post.getUser_id().equals(userId))
-                .collect(Collectors.toList());
+                .filter(Post::getHasPromo)
+                .toList()
+                .size();
     }
 
     @Override

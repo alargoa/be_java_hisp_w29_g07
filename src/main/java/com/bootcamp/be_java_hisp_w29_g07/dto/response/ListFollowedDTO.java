@@ -4,11 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PromoPostDTO {
-    private Integer user_id;
-    private String user_name;
-    private Integer promo_products_count;
+public class ListFollowedDTO {
+    private Integer id;
+    private String userName;
+
+    private List<FollowedDTO> followed;
 }

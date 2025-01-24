@@ -1,5 +1,6 @@
 package com.bootcamp.be_java_hisp_w29_g07.repository;
 
+import com.bootcamp.be_java_hisp_w29_g07.Enum.UserType;
 import com.bootcamp.be_java_hisp_w29_g07.entity.Follow;
 import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 import org.springframework.stereotype.Repository;
@@ -11,8 +12,8 @@ import java.util.Optional;
 
 @Repository
 public class FollowRepositoryImpl implements IFollowRepository {
-    private final List<Follow> followList = new ArrayList<>();
-
+    private List<Follow> followList = new ArrayList<>();
+    
     @Override
     public Follow saveFollow(User user, User userToFollow) {
         Follow follow = new Follow((this.followList.size() + 1), user, userToFollow, LocalDate.now());
@@ -42,12 +43,22 @@ public class FollowRepositoryImpl implements IFollowRepository {
     }
 
     @Override
-    public List<Follow> findFollowersByUserId(Integer userId) {
+    public List<Follow> findFollowedByUserId(Integer userId) {
         return this.followList
                 .stream()
                 .filter(follow -> follow.getFollower().getId().equals(userId))
                 .toList();
     }
+
+
+    @Override
+    public List<Follow> findFollowersByUserId(Integer userId) {
+        return this.followList
+                .stream()
+                .filter(follow -> follow.getFollowed().getId().equals(userId))
+                .toList();
+    }
+
 
     @Override
     public Boolean deleteFollowUserById(Integer userId, Integer userIdToUnfollow) {
