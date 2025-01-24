@@ -1,35 +1,38 @@
 package com.bootcamp.be_java_hisp_w29_g07.service;
 
-import com.bootcamp.be_java_hisp_w29_g07.dto.request.PostDTO;
-import com.bootcamp.be_java_hisp_w29_g07.dto.response.PostSaveDTO;
 import com.bootcamp.be_java_hisp_w29_g07.Enum.UserType;
 import com.bootcamp.be_java_hisp_w29_g07.constants.Messages;
+import com.bootcamp.be_java_hisp_w29_g07.dto.PostDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListPostDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.PostSaveDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.PromoCountPostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.entity.Post;
 import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 import com.bootcamp.be_java_hisp_w29_g07.exception.BadRequestException;
 import com.bootcamp.be_java_hisp_w29_g07.exception.NotFoundException;
+import com.bootcamp.be_java_hisp_w29_g07.repository.IFollowRepository;
 import com.bootcamp.be_java_hisp_w29_g07.repository.IPostRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.bootcamp.be_java_hisp_w29_g07.repository.IUserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-
 @Service
 public class PostServiceImpl implements IPostService {
 
     private final IPostRepository postRepository;
     private final IUserRepository userRepository;
+    private final IFollowRepository followRepository;
     private final ObjectMapper mapper;
     private final static int idCounter = 1;
 
-    public PostServiceImpl(IPostRepository postRepository, IUserRepository userRepository) {
+    public PostServiceImpl(IPostRepository postRepository, IUserRepository userRepository, IFollowRepository followRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
+        this.followRepository = followRepository;
         this.mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.findAndRegisterModules();
@@ -55,6 +58,23 @@ public class PostServiceImpl implements IPostService {
         return posts.stream()
                 .map(p -> mapper.convertValue(p, PostDTO.class))
                 .toList();
+    }
+
+    @Override
+    public ListPostDTO findListUsersFollowedPostsByUserId(Integer userId) {
+        List<Integer> userFollowing = followRepository.findFollowedByUserId(userId).stream()
+                .map(f -> f.getFollowed().getId()).toList();
+        if (userFollowing.isEmpty()) {
+            throw new NotFoundException(String.format(Messages.USER_HAS_NOT_FOLLOWED_MSG, userId));
+        }
+
+        List<Post> posts = postRepository.findPostsByUserIdsAndLastTwoWeeks(userFollowing);
+        if (posts.isEmpty()) {
+            throw new NotFoundException(String.format(Messages.USER_HAS_NOT_POSTS_MSG, userId));
+        }
+
+        List<PostDTO> postDTOS = posts.stream().map(post -> mapper.convertValue(post, PostDTO.class)).toList();
+        return new ListPostDTO(userId, postDTOS);
     }
 
     @Override

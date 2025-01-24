@@ -1,4 +1,4 @@
-package com.bootcamp.be_java_hisp_w29_g07.dto.request;
+package com.bootcamp.be_java_hisp_w29_g07.dto;
 
 import com.bootcamp.be_java_hisp_w29_g07.entity.Product;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostDTO {
-    private  Integer id;
+    private  Integer post_id;
     private  Integer user_id;
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate date;
