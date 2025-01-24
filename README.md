@@ -1,53 +1,53 @@
-# Proyecto be_java_hisp_w29_g07
+# Project be_java_hisp_w29_g07
 
-Bienvenido al proyecto **be_java_hisp_w29_g07**. Este repositorio contiene todos los documentos y recursos relacionados con el desarrollo de la aplicación.
+Welcome to the **be_java_hisp_w29_g07** project. This repository contains all documents and resources related to the development of the application.
 
 ---
 
-## Índice
+## Table of Contents
 
-- [Documentación relacionada](#documentación-relacionada)
+- [Related Documents](#related-documents)
 - [Seeds](#seeds)
-- [Colección Postman](#colección-postman)
+- [Postman Collection](#postman-collection)
 - [Swagger](#swagger)
-- [Diagrama de Clases](#diagrama-de-clases)
+- [Class Diagram](#class-diagram)
 
 ---
 
-## Documentación relacionada
+## Related Documents
 
-Todos los documentos necesarios se pueden encontrar en la carpeta de recursos.
+All necessary documents can be found in the resources folder.
 
 ---
 
 ## Seeds
 
-- **[Users.json](./src/main/resources/users.json)**  - Datos de usuarios.
-- **[Posts.json](./src/main/resources/posts.json)**  - Datos de publicaciones.
+- <span style="color:blue;">**[Users.json](./src/main/resources/users.json)**</span>  - User data.
+- <span style="color:green;">**[Posts.json](./src/main/resources/posts.json)**</span>  - Post data.
 
 ---
 
-## Colección Postman
+## Postman Collection
 
-Accede a la colección en **Recursos** -> **Sprint1Collection**.
+Access the collection in <span style="color:purple;">**Resources**</span> -> <span style="color:orange;">**Sprint1Collection**</span>.
 
 ---
 
 ## Swagger
 
-Puedes acceder a la documentación de la API a través de la siguiente URL:
+You can access the API documentation through the following URL:
 
-- **[Swagger UI](http://localhost:8080/swagger-ui/index.html#/)**
+- <span style="color:teal;">**[Swagger UI](http://localhost:8080/swagger-ui/index.html#/)**</span>
   
 ---
 
-## Diagrama de Clases
+## Class Diagram
 
-Para visualizar el diagrama de clases, revisa el siguiente archivo:
+To view the class diagram, check the following file:
 
-- **[classDiagram.md](./src/main/resources/classDiagram.md)**
+- <span style="color:darkred;">**[classDiagram.md](./src/main/resources/classDiagram.md)**</span>
 
-### Diagrama de Clases
+### Class Diagram
 
 ```mermaid
 classDiagram
