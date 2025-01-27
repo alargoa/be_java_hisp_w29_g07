@@ -7,26 +7,26 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 /**
- * The type Follow.
+ * This class represents a follow relationship between two users.
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class Follow {
     /**
-     * The Id.
+     * The unique identifier for the follow record.
      */
     private Integer id;
     /**
-     * The Follower.
+     * The user who follows another user.
      */
     private User follower;
     /**
-     * The Followed.
+     * The user who is being followed.
      */
     private User followed;
     /**
-     * The Follow date.
+     * The date when the follow action occurred.
      */
     private LocalDate followDate;
 }
