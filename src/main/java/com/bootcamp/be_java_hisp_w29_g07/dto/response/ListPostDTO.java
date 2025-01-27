@@ -14,6 +14,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ListPostDTO {
+    /**
+     * The unique identifier for the user.
+     */
     private Integer user_id;
+    /**
+     * List of post publishes by a seller
+     */
     private List<PostDTO> posts;
 }

@@ -11,5 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class ExceptionDTO {
+    /**
+     * Message to respond
+     */
     private String message;
 }

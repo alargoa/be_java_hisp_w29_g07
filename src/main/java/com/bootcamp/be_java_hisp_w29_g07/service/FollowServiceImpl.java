@@ -3,7 +3,6 @@ package com.bootcamp.be_java_hisp_w29_g07.service;
 import com.bootcamp.be_java_hisp_w29_g07.Enum.OrderType;
 import com.bootcamp.be_java_hisp_w29_g07.Enum.UserType;
 import com.bootcamp.be_java_hisp_w29_g07.constants.Messages;
-import com.bootcamp.be_java_hisp_w29_g07.dto.response.FollowerDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListFollowersDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.MessageDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.SellerFollowerCountDTO;
@@ -137,12 +136,12 @@ public class FollowServiceImpl implements IFollowService{
     public ListFollowedDTO findListFollowedByUserId(Integer userId, String order) {
         // Validates that the user exists
         User user = userService.findUserById(userId);
-        List<FollowedDTO> followList =  new ArrayList<>(followRepository.findFollowedByUserId(userId)
+        List<UserDTO> followList =  new ArrayList<>(followRepository.findFollowedByUserId(userId)
                 .stream()
-                .map(follow -> new FollowedDTO(follow.getFollowed().getId(), follow.getFollowed().getName()))
+                .map(follow -> new UserDTO(follow.getFollowed().getId(), follow.getFollowed().getName()))
                 .toList());
 
-        followList = orderList(followList, order, Comparator.comparing(FollowedDTO::getUserName));
+        followList = orderList(followList, order, Comparator.comparing(UserDTO::getUserName));
 
         return new ListFollowedDTO(user.getId(), user.getUsername(), followList);
     }
@@ -159,12 +158,12 @@ public class FollowServiceImpl implements IFollowService{
     public ListFollowersDTO findListFollowersByUserId(Integer userId, String order) {
         // Validates that the user exists
         User user = userService.findUserById(userId);
-        List<FollowerDTO> followList = new ArrayList<>(followRepository.findFollowersByUserId(userId)
+        List<UserDTO> followList = new ArrayList<>(followRepository.findFollowersByUserId(userId)
                 .stream()
-                .map(follow -> new FollowerDTO(follow.getFollower().getId(), follow.getFollower().getName()))
+                .map(follow -> new UserDTO(follow.getFollower().getId(), follow.getFollower().getName()))
                 .toList());
 
-        followList = orderList(followList, order, Comparator.comparing(FollowerDTO::getUser_name));
+        followList = orderList(followList, order, Comparator.comparing(UserDTO::getUserName));
 
         return new ListFollowersDTO(user.getId(), user.getUsername(), followList);
     }

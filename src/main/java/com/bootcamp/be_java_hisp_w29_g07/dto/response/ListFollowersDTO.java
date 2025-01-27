@@ -13,8 +13,17 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ListFollowersDTO {
-    Integer user_id;
-    String user_name;
-    List<FollowerDTO> followers;
+    /**
+     * The unique identifier for the user.
+     */
+    private Integer user_id;
+    /**
+     * The username of the user.
+     */
+    private String user_name;
+    /**
+     * List of followed sellers
+     */
+    private List<UserDTO> followers;
 
 }
