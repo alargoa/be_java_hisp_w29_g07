@@ -9,46 +9,47 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 /**
- * The type Post.
+ * This class represents a post made by a seller about a product.
  */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class Post {
     /**
-     * The Id.
+     * The unique identifier for the post.
      */
     @JsonProperty("post_id")
     private Integer id;
     /**
-     * The User id.
+     * The ID of the user who created the post.
      */
     @JsonProperty("user_id")
     private Integer userId;
     /**
-     * The Date.
+     * The date when the post was created.
+     * This field stores the date of the post, formatted as "dd-MM-yyyy".
      */
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate date;
     /**
-     * The Product.
+     * The product associated with the post.
      */
     private Product product;
     /**
-     * The Category.
+     * The category ID of the product.
      */
     private Integer category;
     /**
-     * The Price.
+     * The price of the product.
      */
     private Double price;
     /**
-     * The Has promo.
+     * Indicates whether the post has a promotion.
      */
     @JsonProperty("has_promo")
     private Boolean hasPromo = false;
     /**
-     * The Discount.
+     * The discount applied to the product.
      */
     private Double discount = 0.0;
 }

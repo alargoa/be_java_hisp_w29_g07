@@ -5,18 +5,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * The type Category.
+ * This class represents a category of a product.
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Category {
     /**
-     * The Id.
+     * The unique identifier of the category.
      */
     public Integer id;
     /**
-     * The Name.
+     * The name of the category.
      */
     public String name;
 }
