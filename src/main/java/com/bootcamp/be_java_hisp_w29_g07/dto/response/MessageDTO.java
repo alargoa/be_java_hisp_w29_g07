@@ -11,5 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageDTO {
-    String message;
+    /**
+     * Message to respond
+     */
+    private String message;
 }

@@ -12,6 +12,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostSaveDTO {
+    /**
+     * Message to respond
+     */
     private String message;
+    /**
+     * Post created
+     */
     private PostDTO post;
 }
