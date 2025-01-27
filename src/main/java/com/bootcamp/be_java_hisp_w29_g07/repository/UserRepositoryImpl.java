@@ -13,8 +13,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * The type User repository.
- * This class implements the IUserRepository interface for managing user entities.
+ * This class is an implementation of the IUserRepository interface.
+ * It provides the data access logic for user-related operations, including retrieving
+ * a user by their ID and checking if a user exists in the data store.
  */
 @Repository
 public class UserRepositoryImpl implements IUserRepository{

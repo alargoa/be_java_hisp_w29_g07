@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * The type Follow repository implementation.
- * This class implements the IFollowRepository interface.
+ * This class is an implementation of the IPostRepository interface.
+ * It provides concrete methods for interacting with the data store to manage posts.
  */
 @Repository
 public class FollowRepositoryImpl implements IFollowRepository {

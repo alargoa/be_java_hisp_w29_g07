@@ -15,8 +15,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * The type Post repository implementation.
- * This class implements the IPostRepository interface for managing posts.
+ * This class is an implementation of the IPostRepository interface.
+ * It provides concrete methods for saving posts, finding posts by various criteria,
+ * counting promotional posts, and retrieving posts based on user-following data.
  */
 @Repository
 public class PostRepositoryImpl implements IPostRepository {
