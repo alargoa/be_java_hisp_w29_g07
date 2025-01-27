@@ -87,11 +87,6 @@ classDiagram
         -Boolean hasPromo
         -Double discount
     }
-    class Category {
-        -Integer id
-        -String name
-    }
     Post --> Product
-    Product --> Category
     Follow --> User
     Post --> User
