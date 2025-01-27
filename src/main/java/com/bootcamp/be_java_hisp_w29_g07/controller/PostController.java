@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * This class defines a set of endpoints for managing posts.
  */
@@ -64,8 +66,8 @@ public class PostController {
      * @return a {@link ResponseEntity} containing a list of all posts
      */
     @Operation(summary = "Get all posts")
-    @GetMapping("/posts")
-    public ResponseEntity<?> getAll() {
+    @GetMapping("/post/findAll")
+    public ResponseEntity<List<PostDTO>> getAll() {
         return new ResponseEntity<>(postService.findAll(), HttpStatus.OK);
     }
 
@@ -76,7 +78,7 @@ public class PostController {
      * @return a {@link ResponseEntity} confirming the addition of the post
      */
     @Operation(summary = "Add new post")
-    @PostMapping("/post/findAll")
+    @PostMapping("/post")
     public ResponseEntity<PostSaveDTO> addPost(@RequestBody PostDTO posDto) {
         return new ResponseEntity<>(postService.addPost(posDto), HttpStatus.OK);
     }
