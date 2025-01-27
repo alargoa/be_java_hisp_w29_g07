@@ -110,4 +110,17 @@ public class PostController {
     ) {
         return new ResponseEntity<>(postService.findListUsersFollowedPostsByUserId(userId, order), HttpStatus.OK);
     }
+
+    /**
+     * Retrieves a list of posts by seller's id
+     *
+     * @param sellerId seller's id
+     * @return a {@link ResponseEntity} containing the list of seller's posts
+     */
+    @Operation(summary = "List posts by seller")
+    @GetMapping("/posts/{userId}")
+    private ResponseEntity<ListPostDTO> findAllPostsBySellerId(@PathVariable(name="userId") Integer sellerId) {
+        return new ResponseEntity<>(postService.findAllPostBySellerId(sellerId), HttpStatus.OK);
+    }
+
 }

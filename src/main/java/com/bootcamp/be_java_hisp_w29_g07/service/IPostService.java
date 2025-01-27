@@ -22,4 +22,5 @@ public interface IPostService {
     PostDTO findPostById(Integer id);
     List<PostDTO> findAll();
     PromoPostDTOOut createPromoPost(PromoPostDTOIn promoPostDTOIn);
+    ListPostDTO findAllPostBySellerId(Integer sellerId);
 }
