@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * The type List followers dto.
+ * Represents the list of followers of a user.
  */
 @Data
 @AllArgsConstructor

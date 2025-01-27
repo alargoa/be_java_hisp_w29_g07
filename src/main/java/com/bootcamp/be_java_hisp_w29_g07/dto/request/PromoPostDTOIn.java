@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 /**
- * The type Promo post dto in.
+ * Represents a Post with discount from a seller
  */
 @Data
 @AllArgsConstructor

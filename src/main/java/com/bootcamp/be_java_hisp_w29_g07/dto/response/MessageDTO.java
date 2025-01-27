@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * The type Message dto.
+ * Represents a message in a response
  */
 @Data
 @AllArgsConstructor
