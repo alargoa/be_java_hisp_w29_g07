@@ -21,10 +21,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     /**
-     * The User service.
-     */
-    private final IUserService userService;
-    /**
      * The Follow service.
      */
     private final IFollowService followService;
@@ -32,11 +28,9 @@ public class UserController {
     /**
      * Constructor that instantiates a new Post controller.
      *
-     * @param userService   the user service
      * @param followService the follow service
      */
-    public UserController(IUserService userService, IFollowService followService) {
-        this.userService = userService;
+    public UserController( IFollowService followService) {
         this.followService = followService;
     }
 

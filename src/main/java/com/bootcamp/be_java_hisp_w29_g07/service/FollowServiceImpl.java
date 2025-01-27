@@ -120,8 +120,8 @@ public class FollowServiceImpl implements IFollowService{
         if(existFollow.isPresent()){
             throw new BadRequestException(Messages.USER_ALREADY_FOLLOW_SELLER);
         }
-        followRepository.saveFollow(user, userToFollow);
-        return new MessageDTO(String.format(Messages.USER_FOLLOW_SELLER, user.getName(), userToFollow.getName()));
+        Follow follow = followRepository.saveFollow(user, userToFollow);
+        return new MessageDTO(String.format(Messages.USER_FOLLOW_SELLER, follow.getFollower().getName(), follow.getFollowed().getName()));
     }
 
     /**
