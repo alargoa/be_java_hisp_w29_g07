@@ -44,4 +44,11 @@ public class UserServiceImpl implements IUserService{
         return user.get();
 
     }
+
+    @Override
+    public void verifyUserExists(Integer userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new NotFoundException(String.format(Messages.USER_NOT_FOUND_MSG, userId));
+        }
+    }
 }

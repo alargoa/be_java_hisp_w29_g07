@@ -13,4 +13,5 @@ public interface IUserService {
      * @return the user
      */
     User findUserById(Integer userId);
+    void verifyUserExists(Integer userId);
 }

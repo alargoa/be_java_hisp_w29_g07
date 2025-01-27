@@ -75,10 +75,9 @@ public class FollowServiceImpl implements IFollowService{
      */
     @Override
     public MessageDTO unfollowUserById(Integer userId, Integer userIdToUnfollow) {
-        // Validates that the user exists
-        userService.findUserById(userId);
-        // Validates that the user to unfollow exists
-        userService.findUserById(userIdToUnfollow);
+
+        userService.verifyUserExists(userId);
+        userService.verifyUserExists(userIdToUnfollow);
 
         Boolean isUnfollowed = followRepository.deleteFollowUserById(userId, userIdToUnfollow);
         if (!isUnfollowed) {
@@ -97,8 +96,8 @@ public class FollowServiceImpl implements IFollowService{
      */
     @Override
     public MessageDTO saveFollow(Integer userId, Integer userIdToFollow) {
-        // Validates that the user exists
         User user = userService.findUserById(userId);
+        userService.verifyUserExists(userId);
         User userToFollow = userService.findUserById(userIdToFollow);
 
         if(user.getUserType().equals(UserType.SELLER)){
