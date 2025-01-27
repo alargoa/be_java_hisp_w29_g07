@@ -9,5 +9,5 @@ import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 public interface IUserService {
 
     User findUserById(Integer userId);
-    void verifyUserExists(Integer userId);
+    Boolean verifyUserExists(Integer userId);
 }

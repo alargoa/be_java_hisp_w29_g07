@@ -50,9 +50,10 @@ public class UserServiceImpl implements IUserService{
     }
 
     @Override
-    public void verifyUserExists(Integer userId) {
+    public Boolean verifyUserExists(Integer userId) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException(String.format(Messages.USER_NOT_FOUND_MSG, userId));
         }
+        return true;
     }
 }
