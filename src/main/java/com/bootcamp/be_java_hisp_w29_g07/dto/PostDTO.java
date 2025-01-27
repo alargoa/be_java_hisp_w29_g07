@@ -1,4 +1,4 @@
-package com.bootcamp.be_java_hisp_w29_g07.dto.request;
+package com.bootcamp.be_java_hisp_w29_g07.dto;
 
 import com.bootcamp.be_java_hisp_w29_g07.entity.Product;
 import com.fasterxml.jackson.annotation.JsonFormat;

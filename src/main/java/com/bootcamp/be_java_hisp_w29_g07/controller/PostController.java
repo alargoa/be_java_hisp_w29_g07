@@ -1,7 +1,9 @@
 package com.bootcamp.be_java_hisp_w29_g07.controller;
 
-import com.bootcamp.be_java_hisp_w29_g07.dto.request.PostDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.PostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.request.PromoPostDTOIn;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListPostDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.PostSaveDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.PromoPostDTOOut;
 import com.bootcamp.be_java_hisp_w29_g07.service.IPostService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -64,7 +66,7 @@ public class PostController {
      * @return the all
      */
     @Operation(summary = "Get all posts")
-    @GetMapping("/findAll")
+    @GetMapping("/posts")
     public ResponseEntity<?> getAll() {
         return new ResponseEntity<>(postService.findAll(), HttpStatus.OK);
     }
@@ -76,8 +78,8 @@ public class PostController {
      * @return the response entity
      */
     @Operation(summary = "Add new post")
-    @PostMapping("/post")
-    public ResponseEntity<?> addPost(@RequestBody PostDTO posDto) {
+    @PostMapping("/post/findAll")
+    public ResponseEntity<PostSaveDTO> addPost(@RequestBody PostDTO posDto) {
         return new ResponseEntity<>(postService.addPost(posDto), HttpStatus.OK);
     }
 
@@ -100,8 +102,9 @@ public class PostController {
      * @param order  the order
      * @return the response entity
      */
+    @Operation(summary = "list of followers by user id")
     @GetMapping("/followed/{userId}/list")
-    public ResponseEntity<?> findListUsersFollowedPosts(
+    public ResponseEntity<ListPostDTO> findListUsersFollowedPosts(
             @PathVariable Integer userId,
             @RequestParam(value = "order", required = false) String order
     ) {

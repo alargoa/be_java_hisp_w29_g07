@@ -1,6 +1,6 @@
 package com.bootcamp.be_java_hisp_w29_g07.service;
 
-import com.bootcamp.be_java_hisp_w29_g07.dto.request.PostDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.PostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.request.PromoPostDTOIn;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.PostSaveDTO;
 import com.bootcamp.be_java_hisp_w29_g07.Enum.UserType;
@@ -105,9 +105,12 @@ public class PostServiceImpl implements IPostService {
      * @return the optional
      */
     @Override
-    public Optional<PostDTO> findPostById(Integer id) {
-        Optional<Post> posId = postRepository.findPostById(id);
-        return posId.map(post -> mapper.convertValue(post, PostDTO.class));
+    public PostDTO findPostById(Integer id) {
+        Optional<Post> post = postRepository.findPostById(id);
+        if (post.isEmpty()) {
+            throw new NotFoundException(Messages.POST_NOT_FOUND);
+        }
+        return mapper.convertValue(post.get(), PostDTO.class);
     }
 
     /**
@@ -132,11 +135,12 @@ public class PostServiceImpl implements IPostService {
      */
     @Override
     public ListPostDTO findListUsersFollowedPostsByUserId(Integer userId, String order) {
-        // Validates that the user exists
-        userService.findUserById(userId);
+
+        userService.verifyUserExists(userId);
 
         List<Integer> userFollowing = followRepository.findFollowedByUserId(userId).stream()
-                .map(f -> f.getFollowed().getId()).toList();
+                .map(f -> f.getFollowed().getId())
+                .toList();
         if (userFollowing.isEmpty()) {
             throw new NotFoundException(String.format(Messages.USER_HAS_NOT_FOLLOWED_MSG, userId));
         }

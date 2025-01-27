@@ -15,4 +15,5 @@ public interface IUserRepository {
      * @return the user by id
      */
     Optional<User> getUserById(Integer userId);
+    Boolean existsById(Integer userId);
 }

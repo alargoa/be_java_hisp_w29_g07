@@ -42,6 +42,11 @@ public class UserRepositoryImpl implements IUserRepository{
         return users.stream().filter(u -> u.getId().equals(userId)).findFirst();
     }
 
+    @Override
+    public boolean existsById(Integer userId) {
+        return users.stream().anyMatch(u -> u.getId().equals(userId));
+    }
+
     /**
      * Load users json.
      *

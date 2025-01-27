@@ -1,6 +1,6 @@
 package com.bootcamp.be_java_hisp_w29_g07.service;
 
-import com.bootcamp.be_java_hisp_w29_g07.dto.request.PostDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.PostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.request.PromoPostDTOIn;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListPostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.PostSaveDTO;
@@ -8,7 +8,6 @@ import com.bootcamp.be_java_hisp_w29_g07.dto.response.PromoCountPostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.PromoPostDTOOut;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * The interface Post service.
@@ -43,9 +42,9 @@ public interface IPostService {
      * Find post by id optional.
      *
      * @param id the id
-     * @return the optional
+     * @return the post dto
      */
-    Optional<PostDTO> findPostById(Integer id);
+    PostDTO findPostById(Integer id);
 
     /**
      * Find all list.
