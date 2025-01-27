@@ -14,18 +14,21 @@ import java.util.Optional;
 
 /**
  * The type User repository.
+ * This class implements the IUserRepository interface for managing user entities.
  */
 @Repository
 public class UserRepositoryImpl implements IUserRepository{
     /**
-     * The Users.
+     * The list of users.
+     * This list stores all the users in memory.
      */
     private List<User> users = new ArrayList<>();
 
     /**
      * Instantiates a new User repository.
+     * This constructor initializes the repository by loading user data from a JSON file.
      *
-     * @throws IOException the io exception
+     * @throws IOException the io exception if there is an error loading the users
      */
     public UserRepositoryImpl() throws IOException {
         loadUsersJson();
@@ -33,9 +36,11 @@ public class UserRepositoryImpl implements IUserRepository{
 
     /**
      * Gets user by id.
-     *
-     * @param userId the user id
-     * @return the user by id
+
+     *This method retrieves a user based on the provided user ID.
+     *If the user is found, it returns an Optional containing the User instance;
+     * @param userId the ID of the user to be retrieved
+     * @return an Optional containing the User instance if found, otherwise empty
      */
     @Override
     public Optional<User> getUserById(Integer userId) {
@@ -44,8 +49,10 @@ public class UserRepositoryImpl implements IUserRepository{
 
     /**
      * Load users json.
-     *
-     * @throws IOException the io exception
+
+     * This method loads user data from a JSON file located in the classpath.
+     * @throws IOException the io exception if there is an error loading the JSON file
+
      */
     private void loadUsersJson() throws IOException {
         File file;
