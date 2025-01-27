@@ -11,18 +11,17 @@ import java.util.Optional;
 
 /**
  * The type Follow repository implementation.
- * This class implements the IFollowRepository interface
+ * This class implements the IFollowRepository interface.
  */
 @Repository
 public class FollowRepositoryImpl implements IFollowRepository {
     /**
      * The Follow list.
      */
-    private List<Follow> followList = new ArrayList<>();
+    private final List<Follow> followList = new ArrayList<>();
 
     /**
-     * Save follow follow.
-     * This method creates a new Follow instance representing a user following another user.
+     * Creates a new Follow instance representing a user following another user.
      * @param user         the user who is following
      * @param userToFollow the user to be followed
      * @return the created Follow instance
@@ -35,8 +34,7 @@ public class FollowRepositoryImpl implements IFollowRepository {
     }
 
     /**
-     * Find all list.
-     * This method retrieves all the follow relationships stored in the repository.
+     * Retrieves all the follow relationships stored in the repository.
      * @return a list of all Follow instances
      */
     @Override
@@ -45,8 +43,7 @@ public class FollowRepositoryImpl implements IFollowRepository {
     }
 
     /**
-     * Find follow optional.
-     * This method searches for a specific follow relationship between two users.
+     * Searches for a specific follow relationship between two users.
      * @param user         the user who may have followed another user
      * @param userToFollow the user who may be followed
      * @return an Optional containing the Follow instance if exists, otherwise empty
@@ -61,8 +58,7 @@ public class FollowRepositoryImpl implements IFollowRepository {
     }
 
     /**
-     * Count by followed id long.
-     *This method counts how many users are being followed by a specific user
+     *Counts how many users are being followed by a specific user
      * identified by their user ID.
      * @param userId the user id of the user being followed
      * @return the count of Follow instances for the specified userId
@@ -75,8 +71,7 @@ public class FollowRepositoryImpl implements IFollowRepository {
     }
 
     /**
-     * Find followed by user id list.
-     * This method retrieves a list of Follow instances where the specified user
+     * Retrieves a list of Follow instances where the specified user
      * is the follower.
      * @param userId the user id of the follower
      * @return a list of Follow instances for the specified userId
@@ -90,8 +85,7 @@ public class FollowRepositoryImpl implements IFollowRepository {
     }
 
     /**
-     * Find followers by user id list.
-     * This method retrieves a list of Follow instances where the specified user
+     * Retrieves a list of Follow instances where the specified user
      * is being followed.
      * @param userId the user id of the followed user
      * @return a list of Follow instances for the specified userId
@@ -105,8 +99,7 @@ public class FollowRepositoryImpl implements IFollowRepository {
     }
 
     /**
-     * Delete follow user by id boolean.
-     * This method attempts to delete a follow relationship between a user and another user.
+     *Attempts to delete a follow relationship between a user and another user.
      * @param userId           the user id of the follower
      * @param userIdToUnfollow the user id of the user to unfollow
      * @return true if the follow relationship was deleted, otherwise false

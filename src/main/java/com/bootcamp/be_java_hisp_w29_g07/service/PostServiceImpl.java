@@ -114,7 +114,7 @@ public class PostServiceImpl implements IPostService {
     public PostDTO findPostById(Integer id) {
         Optional<Post> post = postRepository.findPostById(id);
         if (post.isEmpty()) {
-            throw new NotFoundException(Messages.POST_NOT_FOUND);
+            throw new NotFoundException(Messages.NO_POST_FOUND);
         }
         return mapper.convertValue(post.get(), PostDTO.class);
     }
