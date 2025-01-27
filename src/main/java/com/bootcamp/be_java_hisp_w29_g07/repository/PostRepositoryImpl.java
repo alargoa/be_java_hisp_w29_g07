@@ -33,7 +33,6 @@ public class PostRepositoryImpl implements IPostRepository {
     /**
      * Instantiates a new Post repository.
      * This constructor initializes the repository and loads posts from a JSON file.
-     *
      * @throws IOException the io exception if there is an error loading the posts
      */
     public PostRepositoryImpl() throws IOException {
@@ -42,7 +41,6 @@ public class PostRepositoryImpl implements IPostRepository {
 
     /**
      * Find promo post count by user id long.
-
      * This method counts the number of posts with promotions for a given user.
      *
      * @param userId the user id of the user whose promotional posts are counted
@@ -59,7 +57,6 @@ public class PostRepositoryImpl implements IPostRepository {
 
     /**
      * Save post post.
-
      * This method saves a new post to the repository. It assigns a unique ID
      * @param post the post to be saved
      * @return the saved Post instance
@@ -87,7 +84,6 @@ public class PostRepositoryImpl implements IPostRepository {
 
     /**
      * Find all list.
-     *
      * This method retrieves all the posts stored in the repository.
      * @return a list of all Post instances
      */
@@ -98,7 +94,6 @@ public class PostRepositoryImpl implements IPostRepository {
 
     /**
      * Find next id integer.
-
      * This method returns the next available ID for a new post.
      * @return the next unique ID
      */
@@ -109,7 +104,6 @@ public class PostRepositoryImpl implements IPostRepository {
 
     /**
      * Find posts by user ids and last two weeks list.
-     *
      * This method retrieves posts from users that the given user is following,
      * @param userFollowing a list of user IDs that the user is following
      * @return a list of Post instances from followed users that were created
@@ -124,7 +118,6 @@ public class PostRepositoryImpl implements IPostRepository {
 
     /**
      * Load posts json.
-
      * This method loads posts from a JSON file located in the classpath.
      * @throws IOException the io exception if there is an error loading the JSON file
      */

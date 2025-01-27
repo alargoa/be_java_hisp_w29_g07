@@ -23,7 +23,6 @@ public class FollowRepositoryImpl implements IFollowRepository {
     /**
      * Save follow follow.
      * This method creates a new Follow instance representing a user following another user.
-     *
      * @param user         the user who is following
      * @param userToFollow the user to be followed
      * @return the created Follow instance
@@ -37,9 +36,7 @@ public class FollowRepositoryImpl implements IFollowRepository {
 
     /**
      * Find all list.
-     *
      * This method retrieves all the follow relationships stored in the repository.
-     *
      * @return a list of all Follow instances
      */
     @Override
@@ -49,9 +46,7 @@ public class FollowRepositoryImpl implements IFollowRepository {
 
     /**
      * Find follow optional.
-     *
      * This method searches for a specific follow relationship between two users.
-     *
      * @param user         the user who may have followed another user
      * @param userToFollow the user who may be followed
      * @return an Optional containing the Follow instance if exists, otherwise empty
@@ -67,7 +62,6 @@ public class FollowRepositoryImpl implements IFollowRepository {
 
     /**
      * Count by followed id long.
-     *
      *This method counts how many users are being followed by a specific user
      * identified by their user ID.
      * @param userId the user id of the user being followed
@@ -82,7 +76,6 @@ public class FollowRepositoryImpl implements IFollowRepository {
 
     /**
      * Find followed by user id list.
-     *
      * This method retrieves a list of Follow instances where the specified user
      * is the follower.
      * @param userId the user id of the follower
@@ -98,7 +91,6 @@ public class FollowRepositoryImpl implements IFollowRepository {
 
     /**
      * Find followers by user id list.
-
      * This method retrieves a list of Follow instances where the specified user
      * is being followed.
      * @param userId the user id of the followed user

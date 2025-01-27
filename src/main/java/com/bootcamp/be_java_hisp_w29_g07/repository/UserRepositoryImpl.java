@@ -27,7 +27,6 @@ public class UserRepositoryImpl implements IUserRepository{
     /**
      * Instantiates a new User repository.
      * This constructor initializes the repository by loading user data from a JSON file.
-     *
      * @throws IOException the io exception if there is an error loading the users
      */
     public UserRepositoryImpl() throws IOException {
@@ -49,7 +48,6 @@ public class UserRepositoryImpl implements IUserRepository{
 
     /**
      * Load users json.
-
      * This method loads user data from a JSON file located in the classpath.
      * @throws IOException the io exception if there is an error loading the JSON file
 
