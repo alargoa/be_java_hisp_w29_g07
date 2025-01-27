@@ -80,7 +80,6 @@ public class PostRepositoryImpl implements IPostRepository {
     }
 
     /**
-
      * Retrieves all the posts stored in the repository.
      * @return a list of all Post instances
      */
@@ -109,6 +108,15 @@ public class PostRepositoryImpl implements IPostRepository {
         return posts.stream().filter(post -> userFollowing.contains(post.getUserId()) &&
                         post.getDate().isAfter(LocalDate.now().minusWeeks(2)))
                 .toList();
+    }
+
+    /**
+     * Retrieves all the posts stored in the repository by user's id
+     * @return a list of all Post by user's id
+     */
+    @Override
+    public List<Post> findAllPostsByUserId(Integer userId){
+        return posts.stream().filter(post -> post.getUserId().equals(userId)).toList();
     }
 
     /**

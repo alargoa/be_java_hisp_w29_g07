@@ -2,12 +2,9 @@ package com.bootcamp.be_java_hisp_w29_g07.service;
 
 import com.bootcamp.be_java_hisp_w29_g07.dto.PostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.request.PromoPostDTOIn;
-import com.bootcamp.be_java_hisp_w29_g07.dto.response.PostSaveDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.*;
 import com.bootcamp.be_java_hisp_w29_g07.Enum.UserType;
 import com.bootcamp.be_java_hisp_w29_g07.constants.Messages;
-import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListPostDTO;
-import com.bootcamp.be_java_hisp_w29_g07.dto.response.PromoCountPostDTO;
-import com.bootcamp.be_java_hisp_w29_g07.dto.response.PromoPostDTOOut;
 import com.bootcamp.be_java_hisp_w29_g07.entity.Post;
 import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 import com.bootcamp.be_java_hisp_w29_g07.exception.BadRequestException;
@@ -197,19 +194,17 @@ public class PostServiceImpl implements IPostService {
 
     @Override
     public PromoCountPostDTO findPromoPostCountByUserId(Integer userId) {
-        Optional<User> user = userRepository.getUserById(userId);
+        User user = userService.findUserById(userId);
         long count = postRepository.findPromoPostCountByUserId(userId);
 
-        if (user.isEmpty()) {
-            throw new NotFoundException(String.format(Messages.USER_NOT_FOUND_MSG, userId));
-        }
-        if (user.get().getUserType().getId().equals(UserType.USER.getId())) {
+        if(user.getUserType().equals(UserType.USER)){
             throw new BadRequestException(Messages.USER_NOT_SELLER_MSG);
         }
+
         if (count == 0) {
             throw new NotFoundException(String.format(Messages.NO_POST_FOUND, userId));
         }
-        return new PromoCountPostDTO(user.get().getId(), user.get().getUsername(), (int) count);
+        return new PromoCountPostDTO(user.getId(), user.getUsername(), (int) count);
     }
 
     /**
@@ -236,5 +231,28 @@ public class PostServiceImpl implements IPostService {
 
         Post postCreated = postRepository.savePost(mapper.convertValue(promoPostDTOIn, Post.class));
         return mapper.convertValue(postCreated, PromoPostDTOOut.class);
+    }
+
+
+    /**
+     * Retrieves a posts list by seller id
+     *
+     * @param sellerId the seller id
+     * @return a {@link ListPostDTO} containing the seller ID and posts list
+     * @throws NotFoundException if the user is not found
+     * @throws BadRequestException if the user is not a seller
+     */
+    @Override
+    public ListPostDTO findAllPostBySellerId(Integer sellerId){
+        User sellerFound = userService.findUserById(sellerId);
+        if(sellerFound.getUserType().equals(UserType.USER)){
+            throw new BadRequestException(Messages.USER_NOT_SELLER_MSG);
+        }
+
+        ListPostDTO listPostDTO = new ListPostDTO();
+        listPostDTO.setUser_id(sellerFound.getId());
+        listPostDTO.setPosts(postRepository.findAllPostsByUserId(sellerFound.getId())
+                .stream().map(p -> mapper.convertValue(p, PostDTO.class)).toList());
+        return listPostDTO;
     }
 }
