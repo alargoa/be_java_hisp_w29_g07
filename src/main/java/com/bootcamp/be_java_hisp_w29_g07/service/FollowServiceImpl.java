@@ -97,7 +97,6 @@ public class FollowServiceImpl implements IFollowService{
     @Override
     public MessageDTO saveFollow(Integer userId, Integer userIdToFollow) {
         User user = userService.findUserById(userId);
-        userService.verifyUserExists(userId);
         User userToFollow = userService.findUserById(userIdToFollow);
 
         if(user.getUserType().equals(UserType.SELLER)){

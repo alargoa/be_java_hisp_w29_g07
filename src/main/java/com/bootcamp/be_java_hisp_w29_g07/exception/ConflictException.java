@@ -1,14 +1,14 @@
 package com.bootcamp.be_java_hisp_w29_g07.exception;
 
 /**
- * The type Conflict exception.
+ * Custom exception to represent conflict errors.
  */
-public class ConflictException  extends RuntimeException {
+public class ConflictException extends RuntimeException {
 
     /**
-     * Instantiates a new Conflict exception.
+     * Creates a ConflictException with a specific error message.
      *
-     * @param message the message
+     * @param message the error message
      */
     public ConflictException(String message) {
         super(message);
