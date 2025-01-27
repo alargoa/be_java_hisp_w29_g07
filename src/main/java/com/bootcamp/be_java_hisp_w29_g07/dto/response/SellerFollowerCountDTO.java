@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * The type Seller follower count dto.
+ * Represents the response when requesting the number of followers of a seller
  */
 @AllArgsConstructor
 @NoArgsConstructor

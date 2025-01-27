@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * The type Followed dto.
+ * Represents the information of a followed user
  */
 @Data
 @AllArgsConstructor

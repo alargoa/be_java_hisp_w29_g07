@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * The type List followed dto.
+ * Represents the list of followed sellers
  */
 @Data
 @AllArgsConstructor

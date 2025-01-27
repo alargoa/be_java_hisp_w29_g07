@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * The type Exception dto.
+ * Represents the response of an exception
  */
 @AllArgsConstructor
 @NoArgsConstructor

@@ -6,36 +6,36 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * The type Product.
+ * This class represents a product that can be posted or sold by a seller.
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Product {
     /**
-     * The Id.
+     * The unique identifier for the product.
      */
     @JsonProperty("product_id")
     private Integer id;
     /**
-     * The Name.
+     * The name of the product.
      */
     @JsonProperty("product_name")
     private String name;
     /**
-     * The Type.
+     * The type of the product.
      */
     private String type;
     /**
-     * The Brand.
+     * The brand of the product.
      */
     private String brand;
     /**
-     * The Color.
+     * The color of the product.
      */
     private String color;
     /**
-     * The Notes.
+     * Additional notes or description for the product.
      */
     private String notes;
 }

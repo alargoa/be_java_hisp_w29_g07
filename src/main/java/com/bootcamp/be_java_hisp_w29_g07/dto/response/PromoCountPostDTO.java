@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * The type Promo count post dto.
+ * Represents the response when searching for discounted publications
  */
 @Data
 @AllArgsConstructor

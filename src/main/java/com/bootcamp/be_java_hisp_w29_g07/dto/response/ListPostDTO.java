@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * The type List post dto.
+ * Represents a seller's list of posts
  */
 @Data
 @AllArgsConstructor

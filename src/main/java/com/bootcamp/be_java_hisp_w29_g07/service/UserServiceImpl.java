@@ -9,20 +9,23 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 /**
- * The type User service.
+ * This class implements the {@link IUserService} interface and provides
+ * the business logic related to user operations.
+ * It interacts with the {@link IUserRepository} to fetch user data
+ * and handle exceptions when users are not found.
  */
 @Service
 public class UserServiceImpl implements IUserService{
 
     /**
-     * The User repository.
+     * The User repository for accessing user data.
      */
     private final IUserRepository userRepository;
 
     /**
-     * Instantiates a new User service.
+     * Instantiates a new User service implementation with the specified user repository.
      *
-     * @param userRepository the user repository
+     * @param userRepository the repository to interact with user data
      */
     public UserServiceImpl (IUserRepository userRepository){
 
@@ -30,10 +33,11 @@ public class UserServiceImpl implements IUserService{
     }
 
     /**
-     * Find user by id user.
+     * Finds a user by their unique ID.
      *
-     * @param userId the user id
-     * @return the user
+     * @param userId the unique identifier of the user to find
+     * @return the {@link User} object associated with the given ID
+     * @throws NotFoundException if no user is found with the specified ID
      */
     @Override
     public User findUserById(Integer userId) {

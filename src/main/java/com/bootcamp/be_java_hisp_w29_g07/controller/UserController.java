@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * The type User controller.
+ * This class defines a set of endpoints for managing users.
  */
 @RestController
 @RequestMapping("/users")
@@ -30,7 +30,7 @@ public class UserController {
     private final IFollowService followService;
 
     /**
-     * Instantiates a new User controller.
+     * Constructor that instantiates a new Post controller.
      *
      * @param userService   the user service
      * @param followService the follow service
@@ -41,10 +41,10 @@ public class UserController {
     }
 
     /**
-     * Gets seller follower count.
+     * Retrieves the count of followers for a specific user.
      *
-     * @param userId the user id
-     * @return the seller follower count
+     * @param userId the ID of the user
+     * @return a {@link ResponseEntity} containing the follower count
      */
     @Operation(summary = "Count the number of followers a user has")
     @GetMapping("/{userId}/followers/count")
@@ -54,11 +54,11 @@ public class UserController {
 
 
     /**
-     * Add follow response entity.
+     * Allows a user to follow another user.
      *
-     * @param userId         the user id
-     * @param userIdToFollow the user id to follow
-     * @return the response entity
+     * @param userId         the ID of the user initiating the follow
+     * @param userIdToFollow the ID of the user to be followed
+     * @return a {@link ResponseEntity} confirming the follow action
      */
     @Operation(summary = "Add a new follow by user")
     @PostMapping("/{userId}/follow/{userIdToFollow}")
@@ -67,41 +67,47 @@ public class UserController {
     }
 
     /**
-     * Find list followers by user id response entity.
+     * Retrieves a list of followers for a specific user, with optional sorting.
      *
-     * @param userId the user id
-     * @param order  the order
-     * @return the response entity
+     * @param userId the ID of the user
+     * @param order  the order for sorting (optional)
+     * @return a {@link ResponseEntity} containing the list of followers
      */
-    @Operation(summary = "List of a users followers by id")
+    @Operation(summary = "List of a user's followers by ID")
     @GetMapping("{userId}/followers/list")
-    public ResponseEntity<ListFollowersDTO> findListFollowersByUserId(@PathVariable Integer userId, @RequestParam(value = "order", required = false) String order){
+    public ResponseEntity<ListFollowersDTO> findListFollowersByUserId(
+            @PathVariable Integer userId,
+            @RequestParam(value = "order", required = false) String order) {
         return new ResponseEntity<>(followService.findListFollowersByUserId(userId, order), HttpStatus.OK);
     }
 
     /**
-     * Find list followed by user id response entity.
+     * Retrieves a list of users followed by a specific user, with optional sorting.
      *
-     * @param userId the user id
-     * @param order  the order
-     * @return the response entity
+     * @param userId the ID of the user
+     * @param order  the order for sorting (optional)
+     * @return a {@link ResponseEntity} containing the list of followed users
      */
-    @Operation(summary = "List of a users followers by id")
+    @Operation(summary = "List of users followed by a user")
     @GetMapping("{userId}/followed/list")
-    public ResponseEntity<ListFollowedDTO> findListFollowedByUserId(@PathVariable Integer userId, @RequestParam(value = "order", required = false) String order){
+    public ResponseEntity<ListFollowedDTO> findListFollowedByUserId(
+            @PathVariable Integer userId,
+            @RequestParam(value = "order", required = false) String order) {
         return new ResponseEntity<>(followService.findListFollowedByUserId(userId, order), HttpStatus.OK);
     }
 
     /**
-     * Unfollow user by id response entity.
+     * Allows a user to unfollow another user.
      *
-     * @param userId           the user id
-     * @param userIdToUnfollow the user id to unfollow
-     * @return the response entity
+     * @param userId           the ID of the user initiating the unfollow
+     * @param userIdToUnfollow the ID of the user to be unfollowed
+     * @return a {@link ResponseEntity} confirming the unfollow action
      */
-    @Operation( summary = "Unfollow a user")
+    @Operation(summary = "Unfollow a user")
     @PostMapping("/{userId}/unfollow/{userIdToUnfollow}")
-    public ResponseEntity<MessageDTO> unfollowUserById(@PathVariable Integer userId, @PathVariable Integer userIdToUnfollow) {
+    public ResponseEntity<MessageDTO> unfollowUserById(
+            @PathVariable Integer userId,
+            @PathVariable Integer userIdToUnfollow) {
         return new ResponseEntity<>(followService.unfollowUserById(userId, userIdToUnfollow), HttpStatus.OK);
     }
 }

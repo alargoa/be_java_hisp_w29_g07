@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 /**
- * The type Post dto.
+ * Represents a Post from a seller
  */
 @Data
 @AllArgsConstructor

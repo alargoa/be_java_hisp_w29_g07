@@ -21,5 +21,4 @@ public class Messages {
     public static final String POST_CANNOT_HAVE_PROMOTION = "The post cannot have a promotion";
     public static final String POST_CANNOT_HAVE_DISCOUNT = "The post cannot have a discount";
     public static final String SELLER_CANNOT_FOLLOW_SELLER = "A seller cannot follow another seller";
-    public static final String POST_NOT_FOUND = "Post with id %d not found";
 }
