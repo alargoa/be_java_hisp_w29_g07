@@ -41,7 +41,7 @@ public class PostServiceImpl implements IPostService {
     /**
      * The Follow repository for managing follow-related operations.
      */
-    private final IFollowRepository followRepository;
+    private final IFollowService followService;
     /**
      * The Mapper for converting between DTOs and entities.
      */
@@ -63,12 +63,12 @@ public class PostServiceImpl implements IPostService {
     public PostServiceImpl(
             IPostRepository postRepository,
             IUserRepository userRepository,
-            IFollowRepository followRepository,
+            IFollowService followService,
             IUserService userService
     ) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
-        this.followRepository = followRepository;
+        this.followService = followService;
         this.mapper = new ObjectMapper();
         this.mapper.registerModule(new JavaTimeModule());
         this.mapper.findAndRegisterModules();
@@ -143,9 +143,7 @@ public class PostServiceImpl implements IPostService {
 
         userService.verifyUserExists(userId);
 
-        List<Integer> userFollowing = followRepository.findFollowedByUserId(userId).stream()
-                .map(f -> f.getFollowed().getId())
-                .toList();
+        List<Integer> userFollowing = followService.findFollowedByUserId(userId);
         if (userFollowing.isEmpty()) {
             throw new NotFoundException(String.format(Messages.USER_HAS_NOT_FOLLOWED_MSG, userId));
         }
