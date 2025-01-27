@@ -15,33 +15,35 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * The type Post repository.
+ * This class is an implementation of the IPostRepository interface.
+ * It provides concrete methods for saving posts, finding posts by various criteria,
+ * counting promotional posts, and retrieving posts based on user-following data.
  */
 @Repository
 public class PostRepositoryImpl implements IPostRepository {
     /**
-     * The Posts.
+     * The list of posts.
      */
     private List<Post> posts = new ArrayList<>();
     /**
      * The constant idCounter.
+     * This counter is used to assign unique IDs to new posts.
      */
     private static int idCounter = 1;
 
     /**
-     * Instantiates a new Post repository.
-     *
-     * @throws IOException the io exception
+     * Initializes the repository and loads posts from a JSON file.
+     * @throws IOException the io exception if there is an error loading the posts
      */
     public PostRepositoryImpl() throws IOException {
         loadPostsJson();
     }
 
     /**
-     * Find promo post count by user id long.
+     * Counts the number of posts with promotions for a given user.
      *
-     * @param userId the user id
-     * @return the long
+     * @param userId the user id of the user whose promotional posts are counted
+     * @return the count of promotional posts by the specified user
      */
     @Override
     public Long findPromoPostCountByUserId(Integer userId) {
@@ -53,10 +55,9 @@ public class PostRepositoryImpl implements IPostRepository {
     }
 
     /**
-     * Save post post.
-     *
-     * @param post the post
-     * @return the post
+     * Saves a new post to the repository. It assigns a unique ID
+     * @param post the post to be saved
+     * @return the saved Post instance
      */
     @Override
     public Post savePost(Post post) {
@@ -66,10 +67,10 @@ public class PostRepositoryImpl implements IPostRepository {
     }
 
     /**
-     * Find post by id optional.
-     *
-     * @param id the id
-     * @return the optional
+     * retrieves a post by its ID.
+     * If the post is found, it returns an Optional containing the Post instance;
+     * @param id the id of the post to find
+     * @return an Optional containing the Post instance if found, otherwise empty
      */
     @Override
     public Optional<Post> findPostById(Integer id) {
@@ -79,9 +80,9 @@ public class PostRepositoryImpl implements IPostRepository {
     }
 
     /**
-     * Find all list.
-     *
-     * @return the list
+
+     * Retrieves all the posts stored in the repository.
+     * @return a list of all Post instances
      */
     @Override
     public List<Post> findAll() {
@@ -89,9 +90,8 @@ public class PostRepositoryImpl implements IPostRepository {
     }
 
     /**
-     * Find next id integer.
-     *
-     * @return the integer
+     * Returns the next available ID for a new post.
+     * @return the next unique ID
      */
     @Override
     public Integer findNextId() {
@@ -99,10 +99,10 @@ public class PostRepositoryImpl implements IPostRepository {
     }
 
     /**
-     * Find posts by user ids and last two weeks list.
-     *
-     * @param userFollowing the user following
-     * @return the list
+     * Retrieves posts from users that the given user is following,
+     * @param userFollowing a list of user IDs that the user is following
+     * @return a list of Post instances from followed users that were created
+     *         within the last two weeks
      */
     @Override
     public List<Post> findPostsByUserIdsAndLastTwoWeeks(List<Integer> userFollowing) {
@@ -112,9 +112,8 @@ public class PostRepositoryImpl implements IPostRepository {
     }
 
     /**
-     * Load posts json.
-     *
-     * @throws IOException the io exception
+     * Loads posts from a JSON file located in the classpath.
+     * @throws IOException the io exception if there is an error loading the JSON file
      */
     private void loadPostsJson() throws IOException {
         File file;

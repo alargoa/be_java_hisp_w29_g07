@@ -6,34 +6,34 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * The type User.
+ * This class represents a user in Melisocial.
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class User {
     /**
-     * The Id.
+     * The unique identifier for the user.
      */
     private Integer id;
     /**
-     * The Username.
+     * The username of the user.
      */
     private String username;
     /**
-     * The Name.
+     * The first name of the user.
      */
     private String name;
     /**
-     * The Lastname.
+     * The last name of the user.
      */
     private String lastname;
     /**
-     * The Email.
+     * The email address of the user.
      */
     private String email;
     /**
-     * The User type.
+     * The type of the user.
      */
     private UserType userType;
 }

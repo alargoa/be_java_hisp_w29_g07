@@ -5,13 +5,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * The type Seller follower count dto.
+ * Represents the response when requesting the number of followers of a seller
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class SellerFollowerCountDTO {
+    /**
+     * The unique identifier for the user.
+     */
     private Integer user_id;
+    /**
+     * The username of the user.
+     */
     private String user_name;
+    /**
+     * User followers count
+     */
     private Long followers_count;
 }

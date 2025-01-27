@@ -25,34 +25,38 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * The type Post service.
+ * This class provides the business logic for managing posts, including adding new posts,
+ * retrieving posts, handling promotional posts, and sorting posts. It interacts with the
+ * repositories and services to handle data operations and ensure the rules of the application
+ * are enforced.
  */
 @Service
 public class PostServiceImpl implements IPostService {
 
     /**
-     * The Post repository.
+     * The Post repository for managing post-related operations.
      */
     private final IPostRepository postRepository;
     /**
-     * The User repository.
+     * The User repository for managing user-related operations.
      */
     private final IUserRepository userRepository;
     /**
-     * The Follow repository.
+     * The Follow repository for managing follow-related operations.
      */
     private final IFollowRepository followRepository;
     /**
-     * The Mapper.
+     * The Mapper for converting between DTOs and entities.
      */
     private final ObjectMapper mapper;
     /**
-     * The User service.
+     * The User service for retrieving and validating user information.
      */
     private final IUserService userService;
 
     /**
-     * Instantiates a new Post service.
+     * Initializes the required repositories and services, as well as configures
+     * the {@link ObjectMapper} to handle date and time serialization.
      *
      * @param postRepository   the post repository
      * @param userRepository   the user repository
@@ -75,10 +79,12 @@ public class PostServiceImpl implements IPostService {
     }
 
     /**
-     * Add post post save dto.
+     * Validates the post details and ensures the user creating the post is a seller.
+     * Throws exceptions if the post contains invalid promotional details or if the user
+     * does not have the correct permissions.
      *
-     * @param post the post
-     * @return the post save dto
+     * @param post the post DTO containing post details
+     * @return the {@link PostSaveDTO} containing a success message and the saved post
      */
     @Override
     public PostSaveDTO addPost(PostDTO post) {
@@ -99,24 +105,24 @@ public class PostServiceImpl implements IPostService {
     }
 
     /**
-     * Find post by id optional.
+     * Finds a post by its ID.
      *
-     * @param id the id
-     * @return the optional
+     * @param id the ID of the post
+     * @return an Optional containing the {@link PostDTO} if found, or empty if not found
      */
     @Override
     public PostDTO findPostById(Integer id) {
         Optional<Post> post = postRepository.findPostById(id);
         if (post.isEmpty()) {
-            throw new NotFoundException(Messages.POST_NOT_FOUND);
+            throw new NotFoundException(Messages.NO_POST_FOUND);
         }
         return mapper.convertValue(post.get(), PostDTO.class);
     }
 
     /**
-     * Find all list.
+     * Retrieves all posts.
      *
-     * @return the list
+     * @return a list of PostDTO objects representing all posts
      */
     @Override
     public List<PostDTO> findAll() {
@@ -127,11 +133,13 @@ public class PostServiceImpl implements IPostService {
     }
 
     /**
-     * Find list users followed posts by user id list post dto.
+     * Retrieves the list of posts from users followed by a specific user.
+     * Filters posts created in the last two weeks and applies sorting based on the provided order.
      *
-     * @param userId the user id
-     * @param order  the order
-     * @return the list post dto
+     * @param userId the ID of the user
+     * @param order  the sorting order (e.g., "date_asc" or "date_desc")
+     * @return a {@link ListPostDTO} containing the user ID and the list of posts
+     * @throws NotFoundException if the user follows no one or if no posts are found
      */
     @Override
     public ListPostDTO findListUsersFollowedPostsByUserId(Integer userId, String order) {
@@ -156,11 +164,11 @@ public class PostServiceImpl implements IPostService {
     }
 
     /**
-     * Apply sorting list.
+     * Applies sorting to a list of posts based on the provided order.
      *
-     * @param posts the posts
-     * @param order the order
-     * @return the list
+     * @param posts the list of posts to be sorted
+     * @param order the sorting order (e.g., "date_asc" or "date_desc")
+     * @return the sorted list of posts
      */
     private List<Post> applySorting(List<Post> posts, String order) {
         if (Objects.isNull(order)){
@@ -179,11 +187,14 @@ public class PostServiceImpl implements IPostService {
     }
 
     /**
-     * Find promo post count by user id promo count post dto.
+     * Finds the count of promotional posts created by a specific user.
      *
-     * @param userId the user id
-     * @return the promo count post dto
+     * @param userId the user ID
+     * @return a {@link PromoCountPostDTO} containing the user ID, username, and promotional post count
+     * @throws NotFoundException if the user or posts are not found
+     * @throws BadRequestException if the user is not a seller
      */
+
     @Override
     public PromoCountPostDTO findPromoPostCountByUserId(Integer userId) {
         Optional<User> user = userRepository.getUserById(userId);
@@ -202,11 +213,14 @@ public class PostServiceImpl implements IPostService {
     }
 
     /**
-     * Create promo post promo post dto out.
+     * Creates a promotional post.
+     * Validates the input data and ensures the user is authorized to create promotional posts.
      *
-     * @param promoPostDTOIn the promo post dto in
-     * @return the promo post dto out
+     * @param promoPostDTOIn the DTO containing the promotional post details
+     * @return the {@link PromoPostDTOOut} containing the details of the created promotional post
+     * @throws BadRequestException if the input data is invalid
      */
+
     @Override
     public PromoPostDTOOut createPromoPost(PromoPostDTOIn promoPostDTOIn) {
         User user = userService.findUserById(promoPostDTOIn.getUser_id());

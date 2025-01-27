@@ -6,12 +6,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * The type Post save dto.
+ * Represents the information of a saved post
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostSaveDTO {
+    /**
+     * Message to respond
+     */
     private String message;
+    /**
+     * Post created
+     */
     private PostDTO post;
 }

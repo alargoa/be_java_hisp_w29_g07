@@ -5,11 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * The type Exception dto.
+ * Represents the response of an exception
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class ExceptionDTO {
+    /**
+     * Message to respond
+     */
     private String message;
 }

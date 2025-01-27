@@ -5,11 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * The type Message dto.
+ * Represents a message in a response
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageDTO {
-    String message;
+    /**
+     * Message to respond
+     */
+    private String message;
 }

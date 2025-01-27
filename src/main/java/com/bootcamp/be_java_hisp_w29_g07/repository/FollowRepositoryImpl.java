@@ -10,21 +10,21 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * The type Follow repository.
+ * This class is an implementation of the IPostRepository interface.
+ * It provides concrete methods for interacting with the data store to manage posts.
  */
 @Repository
 public class FollowRepositoryImpl implements IFollowRepository {
     /**
      * The Follow list.
      */
-    private List<Follow> followList = new ArrayList<>();
+    private final List<Follow> followList = new ArrayList<>();
 
     /**
-     * Save follow follow.
-     *
-     * @param user         the user
-     * @param userToFollow the user to follow
-     * @return the follow
+     * Creates a new Follow instance representing a user following another user.
+     * @param user         the user who is following
+     * @param userToFollow the user to be followed
+     * @return the created Follow instance
      */
     @Override
     public Follow saveFollow(User user, User userToFollow) {
@@ -34,9 +34,8 @@ public class FollowRepositoryImpl implements IFollowRepository {
     }
 
     /**
-     * Find all list.
-     *
-     * @return the list
+     * Retrieves all the follow relationships stored in the repository.
+     * @return a list of all Follow instances
      */
     @Override
     public List<Follow> findAll() {
@@ -44,11 +43,10 @@ public class FollowRepositoryImpl implements IFollowRepository {
     }
 
     /**
-     * Find follow optional.
-     *
-     * @param user         the user
-     * @param userToFollow the user to follow
-     * @return the optional
+     * Searches for a specific follow relationship between two users.
+     * @param user         the user who may have followed another user
+     * @param userToFollow the user who may be followed
+     * @return an Optional containing the Follow instance if exists, otherwise empty
      */
     @Override
     public Optional<Follow> findFollow(User user, User userToFollow) {
@@ -60,10 +58,10 @@ public class FollowRepositoryImpl implements IFollowRepository {
     }
 
     /**
-     * Count by followed id long.
-     *
-     * @param userId the user id
-     * @return the long
+     *Counts how many users are being followed by a specific user
+     * identified by their user ID.
+     * @param userId the user id of the user being followed
+     * @return the count of Follow instances for the specified userId
      */
     @Override
     public Long countByFollowedId(Integer userId) {
@@ -73,10 +71,10 @@ public class FollowRepositoryImpl implements IFollowRepository {
     }
 
     /**
-     * Find followed by user id list.
-     *
-     * @param userId the user id
-     * @return the list
+     * Retrieves a list of Follow instances where the specified user
+     * is the follower.
+     * @param userId the user id of the follower
+     * @return a list of Follow instances for the specified userId
      */
     @Override
     public List<Follow> findFollowedByUserId(Integer userId) {
@@ -87,10 +85,10 @@ public class FollowRepositoryImpl implements IFollowRepository {
     }
 
     /**
-     * Find followers by user id list.
-     *
-     * @param userId the user id
-     * @return the list
+     * Retrieves a list of Follow instances where the specified user
+     * is being followed.
+     * @param userId the user id of the followed user
+     * @return a list of Follow instances for the specified userId
      */
     @Override
     public List<Follow> findFollowersByUserId(Integer userId) {
@@ -101,11 +99,10 @@ public class FollowRepositoryImpl implements IFollowRepository {
     }
 
     /**
-     * Delete follow user by id boolean.
-     *
-     * @param userId           the user id
-     * @param userIdToUnfollow the user id to unfollow
-     * @return the boolean
+     *Attempts to delete a follow relationship between a user and another user.
+     * @param userId           the user id of the follower
+     * @param userIdToUnfollow the user id of the user to unfollow
+     * @return true if the follow relationship was deleted, otherwise false
      */
     @Override
     public Boolean deleteFollowUserById(Integer userId, Integer userIdToUnfollow) {

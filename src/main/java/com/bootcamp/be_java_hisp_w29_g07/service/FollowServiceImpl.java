@@ -3,7 +3,6 @@ package com.bootcamp.be_java_hisp_w29_g07.service;
 import com.bootcamp.be_java_hisp_w29_g07.Enum.OrderType;
 import com.bootcamp.be_java_hisp_w29_g07.Enum.UserType;
 import com.bootcamp.be_java_hisp_w29_g07.constants.Messages;
-import com.bootcamp.be_java_hisp_w29_g07.dto.response.FollowerDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListFollowersDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.MessageDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.SellerFollowerCountDTO;
@@ -17,17 +16,20 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 /**
- * The type Follow service.
+ * This class provides the business logic for managing follow relationships between users.
+ * It includes operations for following, unfollowing, retrieving followers and followed users,
+ * and validating business rules such as user types and permissions.
  */
 @Service
 public class FollowServiceImpl implements IFollowService{
 
     /**
-     * The Follow repository.
+     * The Follow repository for managing follow-related operations.
      */
     private final IFollowRepository followRepository;
+
     /**
-     * The User service.
+     * The User service for retrieving and validating user information.
      */
     private final IUserService userService;
 
@@ -46,10 +48,12 @@ public class FollowServiceImpl implements IFollowService{
     }
 
     /**
-     * Gets seller follower count.
+     * Gets the count of followers for a specific seller and
+     * validates that the user is a seller and retrieves the total number of followers.
      *
-     * @param userId the user id
-     * @return the seller follower count
+     * @param userId the user ID
+     * @return a {@link SellerFollowerCountDTO} containing the seller ID, username, and follower count
+     * @throws BadRequestException if the user is not a seller
      */
     @Override
     public SellerFollowerCountDTO getSellerFollowerCount(Integer userId) {
@@ -67,11 +71,13 @@ public class FollowServiceImpl implements IFollowService{
     }
 
     /**
-     * Unfollow user by id message dto.
+     * Unfollows a user by their ID.
+     * Validates the existence of both users and checks if the relationship exists before unfollowing.
      *
-     * @param userId           the user id
-     * @param userIdToUnfollow the user id to unfollow
-     * @return the message dto
+     * @param userId           the ID of the user performing the unfollow action
+     * @param userIdToUnfollow the ID of the user to unfollow
+     * @return a {@link MessageDTO} containing a success message
+     * @throws NotFoundException if the relationship does not exist
      */
     @Override
     public MessageDTO unfollowUserById(Integer userId, Integer userIdToUnfollow) {
@@ -88,16 +94,17 @@ public class FollowServiceImpl implements IFollowService{
     }
 
     /**
-     * Save follow message dto.
+     * Saves a follow relationship between two users.
+     * Validates user types and ensures the relationship does not already exist.
      *
-     * @param userId         the user id
-     * @param userIdToFollow the user id to follow
-     * @return the message dto
+     * @param userId         the ID of the user performing the follow action
+     * @param userIdToFollow the ID of the user to follow
+     * @return a {@link MessageDTO} containing a success message
+     * @throws BadRequestException if the relationship is invalid or already exists
      */
     @Override
     public MessageDTO saveFollow(Integer userId, Integer userIdToFollow) {
         User user = userService.findUserById(userId);
-        userService.verifyUserExists(userId);
         User userToFollow = userService.findUserById(userIdToFollow);
 
         if(user.getUserType().equals(UserType.SELLER)){
@@ -113,60 +120,62 @@ public class FollowServiceImpl implements IFollowService{
         if(existFollow.isPresent()){
             throw new BadRequestException(Messages.USER_ALREADY_FOLLOW_SELLER);
         }
-        followRepository.saveFollow(user, userToFollow);
-        return new MessageDTO(String.format(Messages.USER_FOLLOW_SELLER, user.getName(), userToFollow.getName()));
+        Follow follow = followRepository.saveFollow(user, userToFollow);
+        return new MessageDTO(String.format(Messages.USER_FOLLOW_SELLER, follow.getFollower().getName(), follow.getFollowed().getName()));
     }
 
     /**
-     * Find list followed by user id list followed dto.
+     * Retrieves a list of users followed by a specific user.
+     * Applies optional sorting based on the order parameter.
      *
-     * @param userId the user id
-     * @param order  the order
-     * @return the list followed dto
+     * @param userId the ID of the user
+     * @param order  the sorting order (e.g., ascending or descending by username)
+     * @return a {@link ListFollowedDTO} containing the list of followed users
      */
     @Override
     public ListFollowedDTO findListFollowedByUserId(Integer userId, String order) {
         // Validates that the user exists
         User user = userService.findUserById(userId);
-        List<FollowedDTO> followList =  new ArrayList<>(followRepository.findFollowedByUserId(userId)
+        List<UserDTO> followList =  new ArrayList<>(followRepository.findFollowedByUserId(userId)
                 .stream()
-                .map(follow -> new FollowedDTO(follow.getFollowed().getId(), follow.getFollowed().getName()))
+                .map(follow -> new UserDTO(follow.getFollowed().getId(), follow.getFollowed().getName()))
                 .toList());
 
-        followList = orderList(followList, order, Comparator.comparing(FollowedDTO::getUserName));
+        followList = orderList(followList, order, Comparator.comparing(UserDTO::getUserName));
 
         return new ListFollowedDTO(user.getId(), user.getUsername(), followList);
     }
 
     /**
-     * Find list followers by user id list followers dto.
+     * Retrieves a list of followers for a specific user.
+     * Applies optional sorting based on the order parameter.
      *
-     * @param userId the user id
-     * @param order  the order
-     * @return the list followers dto
+     * @param userId the ID of the user
+     * @param order  the sorting order (e.g., ascending or descending by username)
+     * @return a {@link ListFollowersDTO} containing the list of followers
      */
     @Override
     public ListFollowersDTO findListFollowersByUserId(Integer userId, String order) {
         // Validates that the user exists
         User user = userService.findUserById(userId);
-        List<FollowerDTO> followList = new ArrayList<>(followRepository.findFollowersByUserId(userId)
+        List<UserDTO> followList = new ArrayList<>(followRepository.findFollowersByUserId(userId)
                 .stream()
-                .map(follow -> new FollowerDTO(follow.getFollower().getId(), follow.getFollower().getName()))
+                .map(follow -> new UserDTO(follow.getFollower().getId(), follow.getFollower().getName()))
                 .toList());
 
-        followList = orderList(followList, order, Comparator.comparing(FollowerDTO::getUser_name));
+        followList = orderList(followList, order, Comparator.comparing(UserDTO::getUserName));
 
         return new ListFollowersDTO(user.getId(), user.getUsername(), followList);
     }
 
     /**
-     * Order list list.
+     * Orders a list based on the provided comparator and order type.
      *
-     * @param <T>        the type parameter
-     * @param list       the list
-     * @param order      the order
-     * @param comparator the comparator
-     * @return the list
+     * @param <T>        the type parameter for the list elements
+     * @param list       the list to order
+     * @param order      the sorting order (e.g., ascending or descending)
+     * @param comparator the comparator to define the sorting logic
+     * @return the ordered list
      */
     private <T> List<T> orderList(List<T> list, String order, Comparator<T> comparator) {
         if (Objects.nonNull(order)) {

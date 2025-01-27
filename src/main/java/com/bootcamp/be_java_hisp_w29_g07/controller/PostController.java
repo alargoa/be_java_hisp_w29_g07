@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * The type Post controller.
+ * This class defines a set of endpoints for managing posts.
  */
 @RestController
 @RequestMapping("/products")
@@ -26,7 +26,7 @@ public class PostController {
     private final IPostService postService;
 
     /**
-     * Instantiates a new Post controller.
+     * Constructor that instantiates a new Post controller.
      *
      * @param postService the post service
      */
@@ -35,35 +35,33 @@ public class PostController {
     }
 
     /**
-     * Gets promo post count by id.
+     * Counts the number of promotional posts a user has.
      *
-     * @param userId the user id
-     * @return the promo post count by id
+     * @param userId the user ID
+     * @return a {@link ResponseEntity} containing the count of promotional posts
      */
     @Operation(summary = "Count the number of posts a user has")
     @GetMapping("promo-post/count")
     private ResponseEntity<?> getPromoPostCountById(@RequestParam("user_id") Integer userId) {
         return new ResponseEntity<>(postService.findPromoPostCountByUserId(userId), HttpStatus.OK);
-
     }
 
     /**
-     * Find post by id response entity.
+     * Finds a post by its ID.
      *
-     * @param id the id
-     * @return the response entity
+     * @param id the ID of the post
+     * @return a {@link ResponseEntity} containing the post details
      */
-    @Operation(summary = "Search for a post by id")
+    @Operation(summary = "Search for a post by ID")
     @GetMapping("/findPost/{id}")
     public ResponseEntity<?> findPostById(@PathVariable Integer id) {
         return new ResponseEntity<>(postService.findPostById(id), HttpStatus.OK);
-
     }
 
     /**
-     * Gets all.
+     * Retrieves all posts.
      *
-     * @return the all
+     * @return a {@link ResponseEntity} containing a list of all posts
      */
     @Operation(summary = "Get all posts")
     @GetMapping("/posts")
@@ -72,10 +70,10 @@ public class PostController {
     }
 
     /**
-     * Add post response entity.
+     * Adds a new post.
      *
-     * @param posDto the pos dto
-     * @return the response entity
+     * @param posDto the post data transfer object
+     * @return a {@link ResponseEntity} confirming the addition of the post
      */
     @Operation(summary = "Add new post")
     @PostMapping("/post/findAll")
@@ -84,10 +82,10 @@ public class PostController {
     }
 
     /**
-     * Create promo post response entity.
+     * Creates a new promotional post.
      *
-     * @param promoPostDTOIn the promo post dto in
-     * @return the response entity
+     * @param promoPostDTOIn the promotional post data transfer object
+     * @return a {@link ResponseEntity} containing the created promotional post
      */
     @Operation(summary = "Add new promo post")
     @PostMapping("/promo-post")
@@ -96,11 +94,11 @@ public class PostController {
     }
 
     /**
-     * Find list users followed posts response entity.
+     * Retrieves a list of posts from users followed by a specific user, with optional sorting.
      *
-     * @param userId the user id
-     * @param order  the order
-     * @return the response entity
+     * @param userId the ID of the user
+     * @param order  the order for sorting (optional)
+     * @return a {@link ResponseEntity} containing the list of followed users' posts
      */
     @Operation(summary = "list of followers by user id")
     @GetMapping("/followed/{userId}/list")

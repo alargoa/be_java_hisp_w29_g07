@@ -7,14 +7,22 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * The type List followed dto.
+ * Represents the list of followed sellers
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ListFollowedDTO {
+    /**
+     * The unique identifier for the user.
+     */
     private Integer id;
+    /**
+     * The username of the user.
+     */
     private String userName;
-
-    private List<FollowedDTO> followed;
+    /**
+     * List of followed sellers
+     */
+    private List<UserDTO> followed;
 }

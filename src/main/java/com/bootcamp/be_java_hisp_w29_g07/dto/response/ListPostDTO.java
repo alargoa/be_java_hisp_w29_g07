@@ -8,12 +8,18 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * The type List post dto.
+ * Represents a seller's list of posts
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ListPostDTO {
+    /**
+     * The unique identifier for the user.
+     */
     private Integer user_id;
+    /**
+     * List of post publishes by a seller
+     */
     private List<PostDTO> posts;
 }

@@ -6,16 +6,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * The type Followed dto.
+ * Represents the information of a followed user
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FollowedDTO {
+public class UserDTO {
+    /**
+     * The unique identifier for the user.
+     */
     @JsonProperty("user_id")
     private Integer userId;
+    /**
+     * The username of the user.
+     */
     @JsonProperty("user_name")
-    private  String userName;
+    private String userName;
 
 
 }

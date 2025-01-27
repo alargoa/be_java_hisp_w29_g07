@@ -5,15 +5,10 @@ import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 import java.util.Optional;
 
 /**
- * The interface User repository.
+ * The interface IUserRepository defines methods for interacting with user data.
  */
 public interface IUserRepository {
-    /**
-     * Gets user by id.
-     *
-     * @param userId the user id
-     * @return the user by id
-     */
+
     Optional<User> getUserById(Integer userId);
     Boolean existsById(Integer userId);
 }
