@@ -168,6 +168,13 @@ public class FollowServiceImpl implements IFollowService{
         return new ListFollowersDTO(user.getId(), user.getUsername(), followList);
     }
 
+    @Override
+    public List<Integer> findFollowedByUserId(Integer userId) {
+        return followRepository.findFollowedByUserId(userId).stream()
+                .map(f -> f.getFollowed().getId())
+                .toList();
+    }
+
     /**
      * Orders a list based on the provided comparator and order type.
      *
