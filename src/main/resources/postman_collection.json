@@ -3,8 +3,8 @@
 		"_postman_id": "2bf63b94-6dda-4047-b5b2-6e24d74669da",
 		"name": "Sprint1Collection",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "40986361",
-		"_collection_link": "https://gold-flare-296532.postman.co/workspace/Sprint-1-Meli~d28778a0-f293-4c6b-a4d3-42c878177ed8/collection/40982806-2bf63b94-6dda-4047-b5b2-6e24d74669da?action=share&source=collection_link&creator=40986361"
+		"_exporter_id": "40982806",
+		"_collection_link": "https://gold-flare-296532.postman.co/workspace/Sprint-1-Meli~d28778a0-f293-4c6b-a4d3-42c878177ed8/collection/40982806-2bf63b94-6dda-4047-b5b2-6e24d74669da?action=share&source=collection_link&creator=40982806"
 	},
 	"item": [
 		{
@@ -79,14 +79,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/users/3/followed/list",
+					"raw": "localhost:8080/users/5/followed/list",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"users",
-						"3",
+						"5",
 						"followed",
 						"list"
 					]
@@ -101,7 +101,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"user_id\": 2,\n    \"date\": \"11-01-2025\",\n    \"product\": {\n        \"product_id\": 1,\n        \"product_name\": \"Silla Gamer\",\n        \"type\": \"Gamer\",\n        \"brand\": \"Racer\",\n        \"color\": \"Red & Black\",\n        \"notes\": \"Special Edition\"\n    },\n    \"category\": 1,\n    \"price\": 1500.50\n}",
+					"raw": "{\n    \"user_id\": 4,\n    \"date\": \"11-01-2025\",\n    \"product\": {\n        \"product_id\": 1,\n        \"product_name\": \"Silla Gamer\",\n        \"type\": \"Gamer\",\n        \"brand\": \"Racer\",\n        \"color\": \"Red & Black\",\n        \"notes\": \"Special Edition\"\n    },\n    \"category\": 1,\n    \"price\": 1500.50\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -128,7 +128,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/products/followed/1/list",
+					"raw": "localhost:8080/products/followed/4/list",
 					"host": [
 						"localhost"
 					],
@@ -136,7 +136,7 @@
 					"path": [
 						"products",
 						"followed",
-						"1",
+						"4",
 						"list"
 					]
 				}
@@ -149,14 +149,14 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/users/1/unfollow/4",
+					"raw": "localhost:8080/users/5/unfollow/4",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"users",
-						"1",
+						"5",
 						"unfollow",
 						"4"
 					]
@@ -309,6 +309,66 @@
 							"key": "user_id",
 							"value": "2"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "0012 - FindPost",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/products/findPost/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"products",
+						"findPost",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "0013 - FindAllPost",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/products/post/findAll",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"products",
+						"post",
+						"findAll"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "0014 - FindAllPostBySellerId",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/products/posts/4",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"products",
+						"posts",
+						"4"
 					]
 				}
 			},
