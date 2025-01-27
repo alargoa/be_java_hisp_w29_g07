@@ -17,17 +17,20 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 /**
- * The type Follow service.
+ * This class provides the business logic for managing follow relationships between users.
+ * It includes operations for following, unfollowing, retrieving followers and followed users,
+ * and validating business rules such as user types and permissions.
  */
 @Service
 public class FollowServiceImpl implements IFollowService{
 
     /**
-     * The Follow repository.
+     * The Follow repository for managing follow-related operations.
      */
     private final IFollowRepository followRepository;
+
     /**
-     * The User service.
+     * The User service for retrieving and validating user information.
      */
     private final IUserService userService;
 
@@ -46,10 +49,12 @@ public class FollowServiceImpl implements IFollowService{
     }
 
     /**
-     * Gets seller follower count.
+     * Gets the count of followers for a specific seller and
+     * validates that the user is a seller and retrieves the total number of followers.
      *
-     * @param userId the user id
-     * @return the seller follower count
+     * @param userId the user ID
+     * @return a {@link SellerFollowerCountDTO} containing the seller ID, username, and follower count
+     * @throws BadRequestException if the user is not a seller
      */
     @Override
     public SellerFollowerCountDTO getSellerFollowerCount(Integer userId) {
@@ -67,11 +72,13 @@ public class FollowServiceImpl implements IFollowService{
     }
 
     /**
-     * Unfollow user by id message dto.
+     * Unfollows a user by their ID.
+     * Validates the existence of both users and checks if the relationship exists before unfollowing.
      *
-     * @param userId           the user id
-     * @param userIdToUnfollow the user id to unfollow
-     * @return the message dto
+     * @param userId           the ID of the user performing the unfollow action
+     * @param userIdToUnfollow the ID of the user to unfollow
+     * @return a {@link MessageDTO} containing a success message
+     * @throws NotFoundException if the relationship does not exist
      */
     @Override
     public MessageDTO unfollowUserById(Integer userId, Integer userIdToUnfollow) {
@@ -89,11 +96,13 @@ public class FollowServiceImpl implements IFollowService{
     }
 
     /**
-     * Save follow message dto.
+     * Saves a follow relationship between two users.
+     * Validates user types and ensures the relationship does not already exist.
      *
-     * @param userId         the user id
-     * @param userIdToFollow the user id to follow
-     * @return the message dto
+     * @param userId         the ID of the user performing the follow action
+     * @param userIdToFollow the ID of the user to follow
+     * @return a {@link MessageDTO} containing a success message
+     * @throws BadRequestException if the relationship is invalid or already exists
      */
     @Override
     public MessageDTO saveFollow(Integer userId, Integer userIdToFollow) {
@@ -119,11 +128,12 @@ public class FollowServiceImpl implements IFollowService{
     }
 
     /**
-     * Find list followed by user id list followed dto.
+     * Retrieves a list of users followed by a specific user.
+     * Applies optional sorting based on the order parameter.
      *
-     * @param userId the user id
-     * @param order  the order
-     * @return the list followed dto
+     * @param userId the ID of the user
+     * @param order  the sorting order (e.g., ascending or descending by username)
+     * @return a {@link ListFollowedDTO} containing the list of followed users
      */
     @Override
     public ListFollowedDTO findListFollowedByUserId(Integer userId, String order) {
@@ -140,11 +150,12 @@ public class FollowServiceImpl implements IFollowService{
     }
 
     /**
-     * Find list followers by user id list followers dto.
+     * Retrieves a list of followers for a specific user.
+     * Applies optional sorting based on the order parameter.
      *
-     * @param userId the user id
-     * @param order  the order
-     * @return the list followers dto
+     * @param userId the ID of the user
+     * @param order  the sorting order (e.g., ascending or descending by username)
+     * @return a {@link ListFollowersDTO} containing the list of followers
      */
     @Override
     public ListFollowersDTO findListFollowersByUserId(Integer userId, String order) {
@@ -161,13 +172,13 @@ public class FollowServiceImpl implements IFollowService{
     }
 
     /**
-     * Order list list.
+     * Orders a list based on the provided comparator and order type.
      *
-     * @param <T>        the type parameter
-     * @param list       the list
-     * @param order      the order
-     * @param comparator the comparator
-     * @return the list
+     * @param <T>        the type parameter for the list elements
+     * @param list       the list to order
+     * @param order      the sorting order (e.g., ascending or descending)
+     * @param comparator the comparator to define the sorting logic
+     * @return the ordered list
      */
     private <T> List<T> orderList(List<T> list, String order, Comparator<T> comparator) {
         if (Objects.nonNull(order)) {
