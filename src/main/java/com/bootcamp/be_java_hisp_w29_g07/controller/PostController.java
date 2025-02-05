@@ -8,8 +8,10 @@ import com.bootcamp.be_java_hisp_w29_g07.dto.response.PromoPostDTOOut;
 import com.bootcamp.be_java_hisp_w29_g07.service.IPostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.List;
  * This class defines a set of endpoints for managing posts.
  */
 @RestController
+@Validated
 @RequestMapping("/products")
 @Tag(name = "Post")
 public class PostController {
@@ -44,7 +47,7 @@ public class PostController {
      */
     @Operation(summary = "Count the number of posts a user has")
     @GetMapping("promo-post/count")
-    private ResponseEntity<?> getPromoPostCountById(@RequestParam("user_id") Integer userId) {
+    private ResponseEntity<?> getPromoPostCountById(@RequestParam("user_id")  Integer userId) {
         return new ResponseEntity<>(postService.findPromoPostCountByUserId(userId), HttpStatus.OK);
     }
 
@@ -79,7 +82,7 @@ public class PostController {
      */
     @Operation(summary = "Add new post")
     @PostMapping("/post")
-    public ResponseEntity<PostSaveDTO> addPost(@RequestBody PostDTO posDto) {
+    public ResponseEntity<PostSaveDTO> addPost(@RequestBody @Valid PostDTO posDto) {
         return new ResponseEntity<>(postService.addPost(posDto), HttpStatus.OK);
     }
 
@@ -91,7 +94,7 @@ public class PostController {
      */
     @Operation(summary = "Add new promo post")
     @PostMapping("/promo-post")
-    private ResponseEntity<PromoPostDTOOut> createPromoPost(@RequestBody PromoPostDTOIn promoPostDTOIn) {
+    private ResponseEntity<PromoPostDTOOut> createPromoPost(@RequestBody @Valid PromoPostDTOIn promoPostDTOIn) {
         return new ResponseEntity<>(postService.createPromoPost(promoPostDTOIn), HttpStatus.OK);
     }
 

@@ -1,10 +1,18 @@
 package com.bootcamp.be_java_hisp_w29_g07.exception;
 
 import com.bootcamp.be_java_hisp_w29_g07.dto.ExceptionDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.ValidationExceptionDTO;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * This class handles exceptions globally for the application.
@@ -48,5 +56,31 @@ public class ExceptionController {
         ExceptionDTO exceptionDTO = new ExceptionDTO(e.getMessage());
         return new ResponseEntity<>(exceptionDTO, HttpStatus.BAD_REQUEST);
     }
+
+    // Maneja las excepciones generadas al validar objetos (por ejemplo, @RequestBody)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+        List<ValidationExceptionDTO> errorMessages = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> new ValidationExceptionDTO(error.getDefaultMessage()))
+                .toList();
+
+        return new ResponseEntity<>(errorMessages, HttpStatus.BAD_REQUEST);
+    }
+
+    //Maneja las excepciones generadas al validar parámetros del método (por ejemplo, @PathVariable)
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<?> handleConstraintViolation(ConstraintViolationException ex) {
+        List<ValidationExceptionDTO> errorMessages = ex.getConstraintViolations()
+                .stream()
+                .map(error -> new ValidationExceptionDTO(error.getMessage()))
+                .toList();
+
+        return new ResponseEntity<>(errorMessages, HttpStatus.BAD_REQUEST);
+    }
+
+
+
 }
 

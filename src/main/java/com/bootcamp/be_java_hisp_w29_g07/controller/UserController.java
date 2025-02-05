@@ -8,14 +8,17 @@ import com.bootcamp.be_java_hisp_w29_g07.service.IFollowService;
 import com.bootcamp.be_java_hisp_w29_g07.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
  * This class defines a set of endpoints for managing users.
  */
 @RestController
+@Validated
 @RequestMapping("/users")
 @Tag(name="User")
 public class UserController {
@@ -56,7 +59,7 @@ public class UserController {
      */
     @Operation(summary = "Add a new follow by user")
     @PostMapping("/{userId}/follow/{userIdToFollow}")
-    public ResponseEntity<MessageDTO> addFollow(@PathVariable Integer userId, @PathVariable Integer userIdToFollow) {
+    public ResponseEntity<MessageDTO> addFollow(@PathVariable @Min(1) Integer userId, @PathVariable Integer userIdToFollow) {
         return new ResponseEntity<>(followService.saveFollow(userId, userIdToFollow), HttpStatus.OK);
     }
 
