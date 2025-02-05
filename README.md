@@ -13,6 +13,7 @@ Welcome to the **be_java_hisp_w29_g07** project. This repository contains sprint
 - [Completed Sprints](#completed-sprints)
 - [Seeds](#seeds)
 - [Postman Collection](#postman-collection)
+- [Functional Requirements](#functional-requirements)
 - [Swagger](#swagger)
 - [Class Diagram](#-class-diagram)
 
@@ -42,6 +43,12 @@ Welcome to the **be_java_hisp_w29_g07** project. This repository contains sprint
 You can access the API documentation through the following URL:
 
 - **[Swagger UI](http://localhost:8080/swagger-ui/index.html#/)**
+
+---
+
+## 📝Functional Requirements
+
+- **[Functional Requirements Document](./src/main/resources/functional_requirements.docx)**
 
 ---
 
