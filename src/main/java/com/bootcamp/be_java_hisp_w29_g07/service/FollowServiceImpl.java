@@ -85,8 +85,8 @@ public class FollowServiceImpl implements IFollowService{
         userService.verifyUserExists(userId);
         userService.verifyUserExists(userIdToUnfollow);
 
-        Boolean isUnfollowed = followRepository.deleteFollowUserById(userId, userIdToUnfollow);
-        if (!isUnfollowed) {
+        Integer numberOfFollowsDeleted = followRepository.deleteFollowUserById(userId, userIdToUnfollow);
+        if (numberOfFollowsDeleted.equals(0)) {
             throw new NotFoundException(String.format(Messages.USER_IS_NOT_FOLLOWING_USER, userId, userIdToUnfollow));
         }
 
