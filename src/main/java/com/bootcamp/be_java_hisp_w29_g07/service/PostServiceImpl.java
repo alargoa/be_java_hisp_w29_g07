@@ -35,10 +35,6 @@ public class PostServiceImpl implements IPostService {
      */
     private final IPostRepository postRepository;
     /**
-     * The User repository for managing user-related operations.
-     */
-    private final IUserRepository userRepository;
-    /**
      * The Follow repository for managing follow-related operations.
      */
     private final IFollowService followService;
@@ -56,18 +52,14 @@ public class PostServiceImpl implements IPostService {
      * the {@link ObjectMapper} to handle date and time serialization.
      *
      * @param postRepository   the post repository
-     * @param userRepository   the user repository
-     * @param followRepository the follow repository
      * @param userService      the user service
      */
     public PostServiceImpl(
             IPostRepository postRepository,
-            IUserRepository userRepository,
             IFollowService followService,
             IUserService userService
     ) {
         this.postRepository = postRepository;
-        this.userRepository = userRepository;
         this.followService = followService;
         this.mapper = new ObjectMapper();
         this.mapper.registerModule(new JavaTimeModule());
