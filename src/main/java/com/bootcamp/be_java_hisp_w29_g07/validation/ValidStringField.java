@@ -5,7 +5,6 @@ import com.bootcamp.be_java_hisp_w29_g07.constants.ValidationValues;
 import jakarta.validation.Constraint;
 import jakarta.validation.OverridesAttribute;
 import jakarta.validation.Payload;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -22,20 +21,16 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Constraint(validatedBy = {})
 @Documented
-@NotNull
-@NotBlank
+@NotNull(message = ValidationMessages.FIELD_CANNOT_BE_NULL)
+@NotBlank(message = ValidationMessages.FIELD_CANNOT_BE_EMPTY)
 @Pattern(
         regexp = ValidationValues.STRING_VALID_CHARACTERS_REGEX,
         message = ValidationMessages.FIELD_ONLY_VALID_CHARACTERS)
-public @interface ValidProductStringField {
+public @interface ValidStringField {
 
-    String message() default "Not valid field value";
-
-    @OverridesAttribute(constraint = NotNull.class, name = "message")
-    String notNullConstraintMessage() default "Field cannot be empty";
-
-
-
+    String message() default "Invalid field value";
+    //@OverridesAttribute(constraint = NotNull.class, name = "message")
+    //String notNullConstraintMessage() default "Field cannot be empty";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
