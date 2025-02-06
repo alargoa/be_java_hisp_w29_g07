@@ -1,14 +1,22 @@
 package com.bootcamp.be_java_hisp_w29_g07.service;
 
 import com.bootcamp.be_java_hisp_w29_g07.constants.Messages;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListFollowedDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.MessageDTO;
+import com.bootcamp.be_java_hisp_w29_g07.entity.Follow;
+import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 import com.bootcamp.be_java_hisp_w29_g07.exception.NotFoundException;
 import com.bootcamp.be_java_hisp_w29_g07.repository.IFollowRepository;
+import com.bootcamp.be_java_hisp_w29_g07.util.UtilFollowFactory;
+import com.bootcamp.be_java_hisp_w29_g07.util.UtilUserFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -100,9 +108,67 @@ class FollowServiceTest {
     void saveFollow() {
     }
 
+    /**
+     * Unit Test to verify that when a user exists and is following other users,
+     * the findListFollowedByUserId method returns the correct ListFollowedDTO
+     * containing the followed users.
+     */
     @Test
-    void findListFollowedByUserId() {
+    void givenExistingUser_whenFindListFollowedByUserId_thenReturnListFollowedDTO() {
+        User user1 = UtilUserFactory.getUser("steven", 1);
+        User user2 = UtilUserFactory.getUser("pedro", 2);
+        User user3 = UtilUserFactory.getUser("carlos", 3);
+        when(userService.findUserById(1)).thenReturn(user1);
+
+
+        Follow follow1 = UtilFollowFactory.getFollow(user1, user2);
+        Follow follow2 = UtilFollowFactory.getFollow(user1, user3);
+
+        List<Follow> followList = Arrays.asList(follow1, follow2);
+        when(followRepository.findFollowedByUserId(user1.getId())).thenReturn(followList);
+
+        ListFollowedDTO result = followService.findListFollowedByUserId(user1.getId(), "asc");
+
+        assertNotNull(result);
+        assertEquals(user1.getId(), result.getId());
+        assertEquals("steven", result.getUserName());
+        assertEquals(2, result.getFollowed().size());
+
+        assertEquals(2, result.getFollowed().getFirst().getUserId());
+        assertEquals("pedro", result.getFollowed().getFirst().getUserName());
+
+        assertEquals(3, result.getFollowed().get(1).getUserId());
+        assertEquals("carlos", result.getFollowed().get(1).getUserName());
+
+
+        verify(userService).findUserById(user1.getId());
+        verify(followRepository).findFollowedByUserId(user1.getId());
+
     }
+
+    /**
+     * Unit Test to verify that when an existing user has no followed users,
+     * the findListFollowedByUserId method returns a ListFollowedDTO with an empty followed users list.
+     */
+    @Test
+    void givenExistingUser_whenFindListFollowedByUserId_thenReturnEmptyListFollowedDTO() {
+        User user1 = UtilUserFactory.getUser("steven", 1);
+        when(userService.findUserById(1)).thenReturn(user1);
+        ListFollowedDTO result = followService.findListFollowedByUserId(user1.getId(), "asc");
+        assertNotNull(result);
+        assertEquals(user1.getId(), result.getId());
+        assertEquals("steven", result.getUserName());
+        assertEquals(0, result.getFollowed().size());
+    }
+
+    @Test
+    void givenNoExistingUser_whenFindListFollowedByUserId_thenReturnListFollowedDTO() {
+        Integer userId = 99;
+        when(userService.findUserById(userId)).thenThrow( NotFoundException.class);
+        assertThrows(NotFoundException.class, () -> followService.findListFollowedByUserId(userId,"asc"));
+        verify(userService).findUserById(userId);
+    }
+
 
     @Test
     void findListFollowersByUserId() {

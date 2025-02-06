@@ -1,10 +1,15 @@
 package com.bootcamp.be_java_hisp_w29_g07.repository;
 
+import com.bootcamp.be_java_hisp_w29_g07.entity.Follow;
 import com.bootcamp.be_java_hisp_w29_g07.entity.User;
+import com.bootcamp.be_java_hisp_w29_g07.util.UtilFollowFactory;
 import com.bootcamp.be_java_hisp_w29_g07.util.UtilUserFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Unit test class for {@link FollowRepositoryImpl}.
@@ -21,7 +26,6 @@ class FollowRepositoryTest {
      * Set up the test environment before each test method is run.
      * Initializes the {@link IFollowRepository} with its concrete implementation {@link FollowRepositoryImpl}.
      * This ensures that a fresh instance is created for each test.
-     *
      */
     @BeforeEach
     public void setUp() {
@@ -94,4 +98,42 @@ class FollowRepositoryTest {
 
         Assertions.assertEquals(0, numberOfFollowsDeleted);
     }
+
+    /**
+     * Unit Test to verify that when a user has followers, the method
+     * findFollowedByUserId returns the correct list of follows for that user.
+     */
+    @Test
+    void givenExistingFollowers_whenFindFollowedByUserId_thenReturnListOfFollows() {
+        User user1 = UtilUserFactory.getUser("alargo", 1);
+        User user2 = UtilUserFactory.getUser("jfeo", 2);
+        User user3 = UtilUserFactory.getUser("bcamilo", 3);
+
+        followRepository.saveFollow(user1, user2);
+        followRepository.saveFollow(user1, user3);
+
+        List<Follow> followedList = followRepository.findFollowedByUserId(user1.getId());
+
+        Follow expectedFollow1 = UtilFollowFactory.getFollow(user1, user2);
+        Follow expectedFollow2 = UtilFollowFactory.getFollow(user1, user3);
+
+        Assertions.assertEquals(2, followedList.size());
+        Assertions.assertTrue(followedList.contains(expectedFollow1));
+        Assertions.assertTrue(followedList.contains(expectedFollow2));
+    }
+
+    /**
+     * Unit Test to verify that when a user with no followers calls
+     * findFollowedByUserId, the operation returns an empty list.
+     */
+    @Test
+    void givenNoExistingFollowers_whenFindFollowedByUserId_thenReturnListOfFollows() {
+        User user1 = UtilUserFactory.getUser("jfeo", 1);
+
+        List<Follow> followedList = followRepository.findFollowedByUserId(user1.getId());
+
+        Assertions.assertEquals(0, followedList.size());
+    }
+
+
 }

@@ -96,7 +96,7 @@ public class UserController {
     /**
      * Allows a user to unfollow another user.
      *
-     * @param userId           the ID of the user initiating the unfollow
+     * @param userId           the ID of the user initiating to unfollow
      * @param userIdToUnfollow the ID of the user to be unfollowed
      * @return a {@link ResponseEntity} confirming the unfollow action
      */

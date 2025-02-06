@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * This class represents a follow relationship between two users.
@@ -29,4 +30,18 @@ public class Follow {
      * The date when the follow action occurred.
      */
     private LocalDate followDate;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Follow)) return false;
+        Follow follow = (Follow) o;
+        return Objects.equals(follower.getId(), follow.follower.getId()) &&
+                Objects.equals(followed.getId(), follow.followed.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(follower.getId(), followed.getId());
+    }
 }

@@ -1,8 +1,10 @@
 package com.bootcamp.be_java_hisp_w29_g07.integration;
 
 import com.bootcamp.be_java_hisp_w29_g07.constants.Messages;
-import com.bootcamp.be_java_hisp_w29_g07.controller.PostController;
 import com.bootcamp.be_java_hisp_w29_g07.controller.UserController;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListFollowedDTO;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -11,8 +13,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserControllerIT {
+public class UserControllerIntegrationTest {
     /**
      * Instance of {@link MockMvc} that allows simulating HTTP requests and verifying controller responses.
      */
@@ -106,5 +110,47 @@ public class UserControllerIT {
 
         String jsonRes = res.getResponse().getContentAsString();
         assertTrue(jsonRes.contains(String.format(Messages.USER_NOT_FOUND_MSG, userIdFollower)));
+    }
+
+    @Test
+    public void givenExistingUser_whenFindListFollowedByUserId_thenReturnSuccess() throws Exception {
+
+        Integer userIdFollower = 1;
+        Integer userIdToFollow = 2;
+
+        mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}", userIdFollower, userIdToFollow))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        MvcResult res = mockMvc.perform(get("/users/{userId}/followed/list", userIdFollower))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String jsonRes = res.getResponse().getContentAsString();
+        ListFollowedDTO listFollowedDTO = new ObjectMapper().readValue(jsonRes, new TypeReference<ListFollowedDTO>() {
+        });
+
+        assertEquals("alargo", listFollowedDTO.getUserName());
+        assertEquals(1, listFollowedDTO.getId());
+        assertEquals(1, listFollowedDTO.getFollowed().size());
+        assertEquals("cmorales", listFollowedDTO.getFollowed().getFirst().getUserName());
+        assertEquals(2, listFollowedDTO.getFollowed().getFirst().getUserId());
+    }
+
+    @Test
+    public void givenNoExistingUser_whenFindListFollowedByUserId_thenReturnError() throws Exception {
+        Integer userId = 99;
+
+        MvcResult res = mockMvc.perform(get("/users/{userId}/followed/list", userId))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String jsonRes = res.getResponse().getContentAsString();
+
+        assertTrue(jsonRes.contains(String.format(Messages.USER_NOT_FOUND_MSG, userId)));
     }
 }
