@@ -14,6 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -169,12 +172,14 @@ class FollowRepositoryTest {
 
         List<Follow> followedList = followRepository.findFollowedByUserId(user1.getId());
 
-        Follow expectedFollow1 = UtilFollowFactory.getFollow(user1, user2);
-        Follow expectedFollow2 = UtilFollowFactory.getFollow(user1, user3);
+        Follow expectedFollowUser1 = UtilFollowFactory.getFollow(user1, user2);
+        Follow expectedFollowUser2 = UtilFollowFactory.getFollow(user1, user3);
+        expectedFollowUser2.setId(2);
+
+        List<Follow> expectedFollowList = Arrays.asList(expectedFollowUser1,expectedFollowUser2);
 
         Assertions.assertEquals(2, followedList.size());
-        Assertions.assertTrue(followedList.contains(expectedFollow1));
-        Assertions.assertTrue(followedList.contains(expectedFollow2));
+        Assertions.assertArrayEquals(expectedFollowList.toArray() ,followedList.toArray());
     }
 
     /**

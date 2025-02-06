@@ -2,6 +2,7 @@ package com.bootcamp.be_java_hisp_w29_g07.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
@@ -13,6 +14,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@EqualsAndHashCode
 public class Follow {
     /**
      * The unique identifier for the follow record.
@@ -31,17 +33,5 @@ public class Follow {
      */
     private LocalDate followDate;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Follow)) return false;
-        Follow follow = (Follow) o;
-        return Objects.equals(follower.getId(), follow.follower.getId()) &&
-                Objects.equals(followed.getId(), follow.followed.getId());
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(follower.getId(), followed.getId());
-    }
 }
