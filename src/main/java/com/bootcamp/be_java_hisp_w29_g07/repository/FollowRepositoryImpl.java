@@ -98,6 +98,11 @@ public class FollowRepositoryImpl implements IFollowRepository {
                 .toList();
     }
 
+    @Override
+    public void deleteAll() {
+        this.followList.clear();
+    }
+
     /**
      * Attempts to delete a follow relationship between a user and another user.
      *
