@@ -84,7 +84,7 @@ public class UserControllerTest {
     public void givenExistingUser_whenFindListFollowedByUserId_thenReturnListFollowedDTO()
     {
         Integer userId = 1;
-        String order = "asc";
+        String order = null;
 
         ListFollowedDTO mockResponse = new ListFollowedDTO(userId,"steven", new ArrayList<>());
 
