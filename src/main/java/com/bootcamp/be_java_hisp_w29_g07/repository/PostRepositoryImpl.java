@@ -119,6 +119,11 @@ public class PostRepositoryImpl implements IPostRepository {
         return posts.stream().filter(post -> post.getUserId().equals(userId)).toList();
     }
 
+    @Override
+    public void deleteAll() {
+        this.posts.clear();
+    }
+
     /**
      * Loads posts from a JSON file located in the classpath.
      * @throws IOException the io exception if there is an error loading the JSON file
