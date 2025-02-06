@@ -260,9 +260,18 @@ public class UserControllerIntegrationTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
+
+    /**
+     * Integration Test to verify that when an existing user follows another user,
+     * the followed user's list can be retrieved successfully.
+     * <p>
+     * This test simulates a scenario where a user follows another user.
+     * It verifies that the system returns a successful response with the expected
+     * ListFollowedDTO, confirming the user’s following status.
+     * </p>
+     */
     @Test
     public void givenExistingUser_whenFindListFollowedByUserId_thenReturnSuccess() throws Exception {
-
         Integer userIdFollower = 1;
         Integer userIdToFollow = 2;
 
@@ -287,6 +296,15 @@ public class UserControllerIntegrationTest {
         assertEquals(2, listFollowedDTO.getFollowed().getFirst().getUserId());
     }
 
+
+    /**
+     * Integration Test to verify that an attempt to unfollow a user when the user ID is invalid
+     * <p>
+     * This test simulates an attempt to unfollow a user when the provided follower id is invalid
+     * (non-existent). It verifies that the system returns a 404 Not Found error,
+     * indicating that the user to unfollow does not exist in the system.
+     * </p>
+     */
     @Test
     public void givenNoExistingUser_whenFindListFollowedByUserId_thenReturnError() throws Exception {
         Integer userId = 99;
