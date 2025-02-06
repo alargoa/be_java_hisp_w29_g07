@@ -11,7 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
  */
 @SpringBootTest
 @AutoConfigureMockMvc
-public class PostControllerIT {
+public class PostControllerIntegrationTest {
     /**
      * Instance of {@link MockMvc} that allows simulating HTTP requests and verifying controller responses.
      */

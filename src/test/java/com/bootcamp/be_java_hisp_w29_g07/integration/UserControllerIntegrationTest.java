@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserControllerIT {
+public class UserControllerIntegrationTest {
     /**
      * Instance of {@link MockMvc} that allows simulating HTTP requests and verifying controller responses.
      */
