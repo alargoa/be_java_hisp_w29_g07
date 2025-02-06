@@ -108,17 +108,17 @@ public class FollowServiceImpl implements IFollowService {
         User user = userService.findUserById(userId);
         User userToFollow = userService.findUserById(userIdToFollow);
 
-        if (user.getUserType().equals(UserType.SELLER)) {
-            throw new BadRequestException(Messages.SELLER_CANNOT_FOLLOW_SELLER);
-        }
-        if (userToFollow.getUserType().equals(UserType.USER)) {
-            throw new BadRequestException(Messages.USER_NOT_SELLER_MSG);
-        }
-        if (user.getId().equals(userToFollow.getId())) {
+        if(user.getId().equals(userToFollow.getId())){
             throw new BadRequestException(Messages.USER_NOT_FOLLOW_THEMSELVES_MSG);
         }
+        if(user.getUserType().equals(UserType.SELLER)){
+            throw new BadRequestException(Messages.SELLER_CANNOT_FOLLOW_SELLER);
+        }
+        if(userToFollow.getUserType().equals(UserType.USER)){
+            throw new BadRequestException(Messages.USER_NOT_SELLER_MSG);
+        }
         Optional<Follow> existFollow = followRepository.findFollow(user, userToFollow);
-        if (existFollow.isPresent()) {
+        if(existFollow.isPresent()){
             throw new BadRequestException(Messages.USER_ALREADY_FOLLOW_SELLER);
         }
         Follow follow = followRepository.saveFollow(user, userToFollow);

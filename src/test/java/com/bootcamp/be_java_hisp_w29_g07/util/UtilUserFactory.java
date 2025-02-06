@@ -23,4 +23,14 @@ public class UtilUserFactory {
     public static User getUser(String username, Integer id) {
         return new User(id, username, "userName", "userLastName", "test@mercadolibre.com", UserType.USER);
     }
+
+    public static User createUserSeller(Integer id) {
+        return new User(
+                id,
+                "userSeller",
+                "User",
+                "Seller",
+                "testseller@mercadolibre.com",
+                UserType.SELLER);
+    }
 }

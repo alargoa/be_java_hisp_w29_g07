@@ -3,7 +3,6 @@ package com.bootcamp.be_java_hisp_w29_g07.validation;
 import com.bootcamp.be_java_hisp_w29_g07.constants.ValidationMessages;
 import com.bootcamp.be_java_hisp_w29_g07.constants.ValidationValues;
 import jakarta.validation.Constraint;
-import jakarta.validation.OverridesAttribute;
 import jakarta.validation.Payload;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

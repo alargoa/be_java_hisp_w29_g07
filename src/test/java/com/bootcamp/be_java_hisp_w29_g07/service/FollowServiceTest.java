@@ -1,12 +1,22 @@
 package com.bootcamp.be_java_hisp_w29_g07.service;
 
+import com.bootcamp.be_java_hisp_w29_g07.Enum.UserType;
 import com.bootcamp.be_java_hisp_w29_g07.constants.Messages;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListFollowedDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.MessageDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.SellerFollowerCountDTO;
+import com.bootcamp.be_java_hisp_w29_g07.entity.User;
+import com.bootcamp.be_java_hisp_w29_g07.exception.BadRequestException;
+import com.bootcamp.be_java_hisp_w29_g07.entity.Follow;
+import com.bootcamp.be_java_hisp_w29_g07.entity.User;
+import com.bootcamp.be_java_hisp_w29_g07.exception.BadRequestException;
 import com.bootcamp.be_java_hisp_w29_g07.entity.Follow;
 import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 import com.bootcamp.be_java_hisp_w29_g07.exception.NotFoundException;
 import com.bootcamp.be_java_hisp_w29_g07.repository.IFollowRepository;
+import com.bootcamp.be_java_hisp_w29_g07.util.UtilFollowFactory;
+import com.bootcamp.be_java_hisp_w29_g07.util.UtilUserFactory;
+import com.bootcamp.be_java_hisp_w29_g07.util.UtilUserFactory;
 import com.bootcamp.be_java_hisp_w29_g07.util.UtilFollowFactory;
 import com.bootcamp.be_java_hisp_w29_g07.util.UtilUserFactory;
 import org.junit.jupiter.api.Test;
@@ -17,6 +27,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -104,8 +116,161 @@ class FollowServiceTest {
         verify(userService).verifyUserExists(userIdFollower);
     }
 
+    /**
+     * Unit Test to verify that a seller with followers returns the correct follower count.
+     * <p>
+     * This test mocks a seller and a predefined number of followers.
+     * It then calls the service method and verifies that the response contains the correct follower count.
+     * </p>
+     */
     @Test
-    void saveFollow() {
+    void givenExistingSeller_whenGetSellerFollowerCount_thenReturnCorrectFollowerCount() {
+        User sellerMock = UtilUserFactory.createUserSeller(4);
+        Long followersCount = 5L;
+        when(userService.findUserById(sellerMock.getId())).thenReturn(sellerMock);
+        when(followRepository.countByFollowedId(sellerMock.getId())).thenReturn(followersCount);
+
+        SellerFollowerCountDTO countResult = followService.getSellerFollowerCount(sellerMock.getId());
+
+        assertNotNull(countResult);
+        assertEquals(followersCount, countResult.getFollowers_count());
+        verify(userService, times(1)).findUserById(sellerMock.getId());
+        verify(followRepository, times(1)).countByFollowedId(sellerMock.getId());
+    }
+
+    /**
+     * Unit Test to verify that retrieving follower count for a non-existent user throws a NotFoundException.
+     * <p>
+     * This test mocks a non-existent seller and ensures that calling the service method results in a NotFoundException.
+     * </p>
+     */
+    @Test
+    void givenNonExistingUserSeller_whenGetSellerFollowerCount_thenThrowNotFound() {
+        Integer sellerId = 99;
+        String expectedMsg = String.format(Messages.USER_NOT_FOUND_MSG, sellerId);
+        when(userService.findUserById(sellerId)).thenThrow(new NotFoundException(expectedMsg));
+
+        assertThrows(NotFoundException.class, () -> followService.getSellerFollowerCount(sellerId));
+        verify(userService, times(1)).findUserById(sellerId);
+    }
+
+    /**
+     * Unit Test to verify that retrieving follower count for a non-seller user throws a BadRequestException.
+     * <p>
+     * This test mocks a user who is not a seller and ensures that calling the service method results in a BadRequestException.
+     * </p>
+     */
+    @Test
+    void givenNonSellerUser_whenGetSellerFollowerCount_thenThrowBadRequest() {
+        User notSeller = UtilUserFactory.getUser("user1");
+        when(userService.findUserById(notSeller.getId())).thenReturn(notSeller);
+
+        assertThrows(BadRequestException.class, () -> followService.getSellerFollowerCount(notSeller.getId()));
+        verify(userService, times(1)).findUserById(notSeller.getId());
+    }
+
+    /**
+     * Unit Test to verify that when an existing user attempts to follow a seller,
+     * a success message is returned indicating the user has followed the seller.
+     */
+    @Test
+    void givenExistingUserAndSeller_whenSaveFollow_thenReturnMessageDTO() {
+        User user = UtilUserFactory.getUser("alargo",20);
+        User userToFollow = UtilUserFactory.getUser("cmorales",21);
+        userToFollow.setUserType(UserType.SELLER);
+        Follow follow = UtilFollowFactory.getFollow(user, userToFollow);
+        when(followRepository.saveFollow(user, userToFollow)).thenReturn(follow);
+        when(userService.findUserById(user.getId())).thenReturn(user);
+        when(userService.findUserById(userToFollow.getId())).thenReturn(userToFollow);
+
+        MessageDTO messageResponse = followService.saveFollow(user.getId(), userToFollow.getId());
+
+        assertEquals(String.format(Messages.USER_FOLLOW_SELLER, user.getName(), userToFollow.getName()), messageResponse.getMessage());
+    }
+
+    /**
+     * Unit Test to verify that when both the user and the user to follow are sellers,
+     * a BadRequestException is thrown, as a seller cannot follow another seller.
+     */
+    @Test
+    void givenSellerFollowSeller_whenSaveFollow_thenThrowsBadRequestException(){
+        User user = UtilUserFactory.getUser("alargo",11);
+        User userToFollow = UtilUserFactory.getUser("cmorales",12);
+        user.setUserType(UserType.SELLER);
+        userToFollow.setUserType(UserType.SELLER);
+        when(userService.findUserById(user.getId())).thenReturn(user);
+        when(userService.findUserById(userToFollow.getId())).thenReturn(userToFollow);
+
+        assertThrows(BadRequestException.class, () -> followService.saveFollow(user.getId(), userToFollow.getId()));
+        verify(userService, atLeastOnce()).findUserById(user.getId());
+        verify(userService, atLeastOnce()).findUserById(userToFollow.getId());
+    }
+
+    /**
+     * Unit Test to verify that when a non-existent user tries to follow another user,
+     * a NotFoundException is thrown indicating the user cannot be found.
+     */
+    @Test
+    void givenNonExistentUser_whenSaveFollow_thenThrowsNotFoundException() {
+        User user = UtilUserFactory.getUser("alargo",20);
+        User userToFollow = UtilUserFactory.getUser("cmorales",21);
+        when(userService.findUserById(user.getId())).thenThrow(NotFoundException.class);
+
+        assertThrows(NotFoundException.class, () -> followService.saveFollow(user.getId(), userToFollow.getId()));
+        verify(userService).findUserById(user.getId());
+    }
+
+    /**
+     * Unit Test to verify that when a user attempts to follow another regular user,
+     * a BadRequestException is thrown, as regular users cannot follow each other.
+     */
+    @Test
+    void givenUserFollowUser_whenSaveFollow_thenThrowsBadRequestException(){
+        User user = UtilUserFactory.getUser("alargo", 10);
+        User userToFollow = UtilUserFactory.getUser("cmorales",11);
+        userToFollow.setUserType(UserType.USER);
+        when(userService.findUserById(user.getId())).thenReturn(user);
+        when(userService.findUserById(userToFollow.getId())).thenReturn(userToFollow);
+
+        assertThrows(BadRequestException.class, () -> followService.saveFollow(user.getId(), userToFollow.getId()));
+        verify(userService, atLeastOnce()).findUserById(user.getId());
+        verify(userService, atLeastOnce()).findUserById(userToFollow.getId());
+    }
+
+    /**
+     * Unit Test to verify that when an existing follow relationship is found,
+     * a BadRequestException is thrown, indicating that the user cannot follow the same person twice.
+     */
+    @Test
+    void givenExistsFollow_whenSaveFollow_thenThrowsBadRequestException(){
+        User user = UtilUserFactory.getUser("alargo",11);
+        User userToFollow = UtilUserFactory.getUser("cmorales",12);
+        userToFollow.setUserType(UserType.SELLER);
+        Follow follow = UtilFollowFactory.getFollow(user, userToFollow);
+        when(userService.findUserById(user.getId())).thenReturn(user);
+        when(userService.findUserById(userToFollow.getId())).thenReturn(userToFollow);
+        when(followRepository.findFollow(user, userToFollow)).thenReturn(Optional.of(follow));
+
+        assertThrows(BadRequestException.class, () -> followService.saveFollow(user.getId(), userToFollow.getId()));
+        verify(userService, atLeastOnce()).findUserById(user.getId());
+        verify(userService, atLeastOnce()).findUserById(userToFollow.getId());
+        verify(followRepository, atLeastOnce()).findFollow(user, userToFollow);
+    }
+
+    /**
+     * Unit Test to verify that when a user attempts to follow themselves,
+     * a BadRequestException is thrown, as users cannot follow themselves.
+     */
+    @Test
+    void givenUserFollowThemselves_whenSaveFollow_thenThrowsBadRequestException(){
+        User user = UtilUserFactory.getUser("alargo");
+        User userToFollow = UtilUserFactory.getUser("cmorales");
+        when(userService.findUserById(user.getId())).thenReturn(user);
+        when(userService.findUserById(userToFollow.getId())).thenReturn(userToFollow);
+
+        assertThrows(BadRequestException.class, () -> followService.saveFollow(user.getId(), userToFollow.getId()));
+        verify(userService, atLeastOnce()).findUserById(user.getId());
+        verify(userService, atLeastOnce()).findUserById(userToFollow.getId());
     }
 
     /**

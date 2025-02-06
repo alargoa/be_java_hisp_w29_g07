@@ -8,6 +8,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -26,14 +31,27 @@ class FollowRepositoryTest {
      * Set up the test environment before each test method is run.
      * Initializes the {@link IFollowRepository} with its concrete implementation {@link FollowRepositoryImpl}.
      * This ensures that a fresh instance is created for each test.
+     *
      */
     @BeforeEach
     public void setUp() {
         this.followRepository = new FollowRepositoryImpl();
     }
 
+    /**
+     * Unit Test to verify that when a user attempts to follow another user,
+     * the follow relationship is successfully created and added to the follow list.
+     * The method checks that the returned follow object has the correct follower and followed users,
+     * and that the follow has a valid ID.
+     */
     @Test
-    void saveFollow() {
+    void givenUserAndUserToFollow_whenSaveFollow_thenReturnFollow() {
+        User user = mock(User.class);
+        User userToFollow = mock(User.class);
+        Follow response = followRepository.saveFollow(user, userToFollow);
+        assertEquals(user, response.getFollower());
+        assertEquals(userToFollow, response.getFollowed());
+        assertEquals(1, response.getId());
     }
 
     @Test
@@ -96,8 +114,45 @@ class FollowRepositoryTest {
     void givenNonExistentFollow_whenDeleteFollowUserById_thenReturnZero() {
         Integer numberOfFollowsDeleted = followRepository.deleteFollowUserById(6, 7);
 
-        Assertions.assertEquals(0, numberOfFollowsDeleted);
+        assertEquals(0, numberOfFollowsDeleted);
     }
+
+    /**
+     * Unit Test to verify that counting followers for a user with followers returns the correct count.
+     * <p>
+     * This test creates a seller and two followers, saving the follow relationships.
+     * It then retrieves the follower count and verifies that it matches the expected value.
+     * </p>
+     */
+    @Test
+    void givenUserWithFollowers_whenCountByFollowedId_thenReturnCorrectFollowersCount() {
+        User userFollower1 = UtilUserFactory.getUser("user1", 1);
+        User userFollower2 = UtilUserFactory.getUser("user2", 2);
+        User seller = UtilUserFactory.createUserSeller(5);
+        followRepository.saveFollow(userFollower1, seller);
+        followRepository.saveFollow(userFollower2, seller);
+
+        Long followersCountResult = followRepository.countByFollowedId(seller.getId());
+
+        assertEquals(2L, followersCountResult);
+    }
+
+    /**
+     * Unit Test to verify that counting followers for a user with no followers returns zero.
+     * <p>
+     * This test creates a seller with no followers and retrieves the follower count.
+     * It verifies that the response correctly returns zero.
+     * </p>
+     */
+    @Test
+    void givenUserWithNoFollowers_whenCountByFollowedId_thenReturnZeroCount() {
+        User seller = UtilUserFactory.createUserSeller(5);
+
+        Long followersCountResult = followRepository.countByFollowedId(seller.getId());
+
+        assertEquals(0L, followersCountResult);
+    }
+
 
     /**
      * Unit Test to verify that when a user has followers, the method
