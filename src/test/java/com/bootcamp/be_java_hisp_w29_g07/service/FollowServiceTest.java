@@ -2,8 +2,12 @@ package com.bootcamp.be_java_hisp_w29_g07.service;
 
 import com.bootcamp.be_java_hisp_w29_g07.constants.Messages;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.MessageDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.SellerFollowerCountDTO;
+import com.bootcamp.be_java_hisp_w29_g07.entity.User;
+import com.bootcamp.be_java_hisp_w29_g07.exception.BadRequestException;
 import com.bootcamp.be_java_hisp_w29_g07.exception.NotFoundException;
 import com.bootcamp.be_java_hisp_w29_g07.repository.IFollowRepository;
+import com.bootcamp.be_java_hisp_w29_g07.util.UtilUserFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -94,6 +98,59 @@ class FollowServiceTest {
 
         assertThrows(NotFoundException.class, () -> followService.unfollowUserById(userIdFollower, userIdFollowed));
         verify(userService).verifyUserExists(userIdFollower);
+    }
+
+    /**
+     * Unit Test to verify that a seller with followers returns the correct follower count.
+     * <p>
+     * This test mocks a seller and a predefined number of followers.
+     * It then calls the service method and verifies that the response contains the correct follower count.
+     * </p>
+     */
+    @Test
+    void givenExistingSeller_whenGetSellerFollowerCount_thenReturnCorrectFollowerCount() {
+        User sellerMock = UtilUserFactory.createUserSeller(4);
+        Long followersCount = 5L;
+        when(userService.findUserById(sellerMock.getId())).thenReturn(sellerMock);
+        when(followRepository.countByFollowedId(sellerMock.getId())).thenReturn(followersCount);
+
+        SellerFollowerCountDTO countResult = followService.getSellerFollowerCount(sellerMock.getId());
+
+        assertNotNull(countResult);
+        assertEquals(followersCount, countResult.getFollowers_count());
+        verify(userService, times(1)).findUserById(sellerMock.getId());
+        verify(followRepository, times(1)).countByFollowedId(sellerMock.getId());
+    }
+
+    /**
+     * Unit Test to verify that retrieving follower count for a non-existent user throws a NotFoundException.
+     * <p>
+     * This test mocks a non-existent seller and ensures that calling the service method results in a NotFoundException.
+     * </p>
+     */
+    @Test
+    void givenNonExistingUserSeller_whenGetSellerFollowerCount_thenThrowNotFound() {
+        Integer sellerId = 99;
+        String expectedMsg = String.format(Messages.USER_NOT_FOUND_MSG, sellerId);
+        when(userService.findUserById(sellerId)).thenThrow(new NotFoundException(expectedMsg));
+
+        assertThrows(NotFoundException.class, () -> followService.getSellerFollowerCount(sellerId));
+        verify(userService, times(1)).findUserById(sellerId);
+    }
+
+    /**
+     * Unit Test to verify that retrieving follower count for a non-seller user throws a BadRequestException.
+     * <p>
+     * This test mocks a user who is not a seller and ensures that calling the service method results in a BadRequestException.
+     * </p>
+     */
+    @Test
+    void givenNonSellerUser_whenGetSellerFollowerCount_thenThrowBadRequest() {
+        User notSeller = UtilUserFactory.getUser("user1");
+        when(userService.findUserById(notSeller.getId())).thenReturn(notSeller);
+
+        assertThrows(BadRequestException.class, () -> followService.getSellerFollowerCount(notSeller.getId()));
+        verify(userService, times(1)).findUserById(notSeller.getId());
     }
 
     @Test
