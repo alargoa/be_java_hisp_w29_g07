@@ -1,6 +1,7 @@
 package com.bootcamp.be_java_hisp_w29_g07.exception;
 
 import com.bootcamp.be_java_hisp_w29_g07.dto.ExceptionDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.FieldErrorDetailDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.ValidationExceptionDTO;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -60,24 +61,35 @@ public class ExceptionController {
     // Maneja las excepciones generadas al validar objetos (por ejemplo, @RequestBody)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
-        List<ValidationExceptionDTO> errorMessages = ex.getBindingResult()
+        List<FieldErrorDetailDTO> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(error -> new ValidationExceptionDTO(error.getDefaultMessage()))
+                .map(error -> new FieldErrorDetailDTO(error.getField(), error.getDefaultMessage()))
                 .toList();
 
-        return new ResponseEntity<>(errorMessages, HttpStatus.BAD_REQUEST);
+        ValidationExceptionDTO validationError = new ValidationExceptionDTO(
+                "Validation failed",
+                errors
+        );
+        return new ResponseEntity<>(validationError, HttpStatus.BAD_REQUEST);
     }
 
     //Maneja las excepciones generadas al validar parámetros del método (por ejemplo, @PathVariable)
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<?> handleConstraintViolation(ConstraintViolationException ex) {
-        List<ValidationExceptionDTO> errorMessages = ex.getConstraintViolations()
+        List<FieldErrorDetailDTO> errors = ex.getConstraintViolations()
                 .stream()
-                .map(error -> new ValidationExceptionDTO(error.getMessage()))
+                .map(error -> new FieldErrorDetailDTO(
+                        error.getPropertyPath().toString(),
+                        error.getMessage()))
                 .toList();
 
-        return new ResponseEntity<>(errorMessages, HttpStatus.BAD_REQUEST);
+        ValidationExceptionDTO validationError = new ValidationExceptionDTO(
+                "Validation failed",
+                errors
+        );
+
+        return new ResponseEntity<>(validationError, HttpStatus.BAD_REQUEST);
     }
 
 

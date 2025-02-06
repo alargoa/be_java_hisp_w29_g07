@@ -1,4 +1,4 @@
-package com.bootcamp.be_java_hisp_w29_g07.dto;
+package com.bootcamp.be_java_hisp_w29_g07.dto.response;
 
 import com.bootcamp.be_java_hisp_w29_g07.entity.Product;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -8,14 +8,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-/**
- * Represents a Post from a seller
- */
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
-//DELETE CLASS WHEN PostDTOIn and PostDTOOut be fully implemented
-public class PostDTO {
+@Data
+public class PostDTOOut {
     /**
      * The unique identifier for the post.
      */
