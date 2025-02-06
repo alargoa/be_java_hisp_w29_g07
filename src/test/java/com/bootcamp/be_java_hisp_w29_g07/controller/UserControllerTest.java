@@ -2,7 +2,9 @@ package com.bootcamp.be_java_hisp_w29_g07.controller;
 
 import com.bootcamp.be_java_hisp_w29_g07.constants.Messages;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.MessageDTO;
+import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 import com.bootcamp.be_java_hisp_w29_g07.service.IFollowService;
+import com.bootcamp.be_java_hisp_w29_g07.util.UtilUserFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -56,4 +58,19 @@ public class UserControllerTest {
         assertEquals(messageDTO.getMessage(), response.getBody().getMessage());
     }
 
+    /**
+     * Unit Test to verify that when a user successfully follows a seller,
+     * the appropriate success ResponseEntity with the message is returned.
+     */
+    @Test
+    public void givenUserFollowSeller_whenAddFollow_thenReturnSuccessResponseEntity(){
+        User user = UtilUserFactory.getUser("jfeo");
+        User userToFollow = UtilUserFactory.getUser("alargo");
+        MessageDTO message = new MessageDTO(String.format(Messages.USER_FOLLOW_SELLER, user.getName(), userToFollow.getName()));
+        when(followService.saveFollow(user.getId(), userToFollow.getId())).thenReturn(message);
+
+        ResponseEntity<MessageDTO> response = userController.addFollow(user.getId(), userToFollow.getId());
+
+        assertEquals(message, response.getBody());
+        }
 }
