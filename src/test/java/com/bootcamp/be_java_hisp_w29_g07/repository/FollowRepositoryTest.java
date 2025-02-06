@@ -1,5 +1,6 @@
 package com.bootcamp.be_java_hisp_w29_g07.repository;
 
+import com.bootcamp.be_java_hisp_w29_g07.entity.Follow;
 import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 import com.bootcamp.be_java_hisp_w29_g07.util.UtilUserFactory;
 import org.junit.jupiter.api.Assertions;
@@ -7,6 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 
 /**
  * Unit test class for {@link FollowRepositoryImpl}.
@@ -30,8 +34,20 @@ class FollowRepositoryTest {
         this.followRepository = new FollowRepositoryImpl();
     }
 
+    /**
+     * Unit Test to verify that when a user attempts to follow another user,
+     * the follow relationship is successfully created and added to the follow list.
+     * The method checks that the returned follow object has the correct follower and followed users,
+     * and that the follow has a valid ID.
+     */
     @Test
-    void saveFollow() {
+    void givenUserAndUserToFollow_whenSaveFollow_thenReturnFollow() {
+        User user = mock(User.class);
+        User userToFollow = mock(User.class);
+        Follow response = followRepository.saveFollow(user, userToFollow);
+        assertEquals(user, response.getFollower());
+        assertEquals(userToFollow, response.getFollowed());
+        assertEquals(1, response.getId());
     }
 
     @Test

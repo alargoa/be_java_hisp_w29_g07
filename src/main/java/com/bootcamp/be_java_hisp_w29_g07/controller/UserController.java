@@ -5,11 +5,9 @@ import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListFollowersDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.MessageDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.SellerFollowerCountDTO;
 import com.bootcamp.be_java_hisp_w29_g07.service.IFollowService;
-import com.bootcamp.be_java_hisp_w29_g07.service.IUserService;
 import com.bootcamp.be_java_hisp_w29_g07.validation.ValidID;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/users")
+@Validated
 @Tag(name="User")
 public class UserController {
 
@@ -103,8 +102,8 @@ public class UserController {
     @Operation(summary = "Unfollow a user")
     @PostMapping("/{userId}/unfollow/{userIdToUnfollow}")
     public ResponseEntity<MessageDTO> unfollowUserById(
-            @PathVariable Integer userId,
-            @PathVariable Integer userIdToUnfollow) {
+            @ValidID @PathVariable Integer userId,
+            @ValidID @PathVariable Integer userIdToUnfollow) {
         return new ResponseEntity<>(followService.unfollowUserById(userId, userIdToUnfollow), HttpStatus.OK);
     }
 }
