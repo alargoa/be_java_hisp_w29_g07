@@ -292,7 +292,7 @@ class FollowServiceTest {
         List<Follow> followList = Arrays.asList(follow1, follow2);
         when(followRepository.findFollowedByUserId(user1.getId())).thenReturn(followList);
 
-        ListFollowedDTO result = followService.findListFollowedByUserId(user1.getId(), "asc");
+        ListFollowedDTO result = followService.findListFollowedByUserId(user1.getId(), null);
 
         assertNotNull(result);
         assertEquals(user1.getId(), result.getId());
@@ -319,18 +319,22 @@ class FollowServiceTest {
     void givenExistingUser_whenFindListFollowedByUserId_thenReturnEmptyListFollowedDTO() {
         User user1 = UtilUserFactory.getUser("steven", 1);
         when(userService.findUserById(1)).thenReturn(user1);
-        ListFollowedDTO result = followService.findListFollowedByUserId(user1.getId(), "asc");
+        ListFollowedDTO result = followService.findListFollowedByUserId(user1.getId(), null);
         assertNotNull(result);
         assertEquals(user1.getId(), result.getId());
         assertEquals("steven", result.getUserName());
         assertEquals(0, result.getFollowed().size());
     }
 
+    /**
+     * Unit Test to verify that when a non-existent user is requested,
+     * the findListFollowedByUserId method throws a NotFoundException.
+     */
     @Test
     void givenNoExistingUser_whenFindListFollowedByUserId_thenReturnListFollowedDTO() {
         Integer userId = 99;
         when(userService.findUserById(userId)).thenThrow( NotFoundException.class);
-        assertThrows(NotFoundException.class, () -> followService.findListFollowedByUserId(userId,"asc"));
+        assertThrows(NotFoundException.class, () -> followService.findListFollowedByUserId(userId,null));
         verify(userService).findUserById(userId);
     }
 
