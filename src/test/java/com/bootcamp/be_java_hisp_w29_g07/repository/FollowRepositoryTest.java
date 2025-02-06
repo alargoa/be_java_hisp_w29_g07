@@ -39,7 +39,7 @@ class FollowRepositoryTest {
      * and that the follow has a valid ID.
      */
     @Test
-    void givenUserAndUserToFollow_whenSaveFollow_thenReturnNewFollowAndAddToList() {
+    void givenUserAndUserToFollow_whenSaveFollow_thenReturnFollow() {
         User user = mock(User.class);
         User userToFollow = mock(User.class);
         Follow response = followRepository.saveFollow(user, userToFollow);
