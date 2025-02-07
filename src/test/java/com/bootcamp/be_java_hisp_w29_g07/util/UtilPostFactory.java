@@ -60,6 +60,10 @@ public class UtilPostFactory {
                 .toList();
     }
 
+    public static PostDTO getPostDTO(Integer userId) {
+        return UtilObjectMapper.getObjectMapper().convertValue(UtilPostFactory.getPostByUser(userId, 1), PostDTO.class);
+    }
+
     /**
      * Creates a list of unordered {@link Post} instances.
      * This method is useful for testing scenarios where the order of posts is not predetermined.

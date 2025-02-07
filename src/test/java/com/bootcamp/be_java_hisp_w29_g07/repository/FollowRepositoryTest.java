@@ -16,6 +16,9 @@ import static org.mockito.Mockito.mock;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+
 /**
  * Unit test class for {@link FollowRepositoryImpl}.
  */
@@ -70,8 +73,47 @@ class FollowRepositoryTest {
     void findFollowedByUserId() {
     }
 
+    /**
+     * Unit Test to verify that when a user has existing followers,
+     * calling findFollowersByUserId returns a list of follows.
+     * The test ensures that the followers are correctly returned for a specific user.
+     *
+     * In this case, two users (user1 and user3) follow user2. The test will check
+     * if the followers of user2 are returned correctly, ensuring the relationship
+     * is stored and fetched properly from the repository.
+     */
     @Test
-    void findFollowersByUserId() {
+    void givenExistingFollowers_whenFindFollowersByUserId_thenReturnListOfFollows() {
+        User user1 = UtilUserFactory.getUser("alargo", 1);
+        User user2 = UtilUserFactory.getUser("jfeo", 2);
+        User user3 = UtilUserFactory.getUser("bcamilo", 3);
+
+        followRepository.saveFollow(user1, user2);
+        followRepository.saveFollow(user3, user2);
+
+        List<Follow> followedList = followRepository.findFollowersByUserId(user2.getId());
+
+        Follow expectedFollowUser1 = UtilFollowFactory.getFollow(user1, user2);
+        Follow expectedFollowUser3 = UtilFollowFactory.getFollow(user3, user2);
+        expectedFollowUser3.setId(2);
+
+        List<Follow> expectedFollowList = Arrays.asList(expectedFollowUser1,expectedFollowUser3);
+
+        Assertions.assertEquals(2, followedList.size());
+        Assertions.assertArrayEquals(expectedFollowList.toArray(), followedList.toArray());
+    }
+
+    /**
+     * Unit Test to verify that when a user with no followers calls
+     * findFollowedByUserId, the operation returns an empty list.
+     */
+    @Test
+    void givenNoExistingFollowers_whenFindFollowersByUserId_thenReturnListEmpty() {
+        User user1 = UtilUserFactory.getUser("jfeo", 1);
+
+        List<Follow> followedList = followRepository.findFollowedByUserId(user1.getId());
+
+        Assertions.assertEquals(0, followedList.size());
     }
 
     /**

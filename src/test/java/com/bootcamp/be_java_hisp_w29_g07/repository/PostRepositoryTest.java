@@ -2,6 +2,7 @@ package com.bootcamp.be_java_hisp_w29_g07.repository;
 
 import com.bootcamp.be_java_hisp_w29_g07.entity.Post;
 import com.bootcamp.be_java_hisp_w29_g07.util.UtilPostFactory;
+import com.bootcamp.be_java_hisp_w29_g07.util.UtilUserFactory;
 import org.junit.jupiter.api.Assertions;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,6 +16,7 @@ import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 class PostRepositoryTest {
     /**
@@ -78,10 +80,6 @@ class PostRepositoryTest {
 
     @Test
     void savePost() {
-    }
-
-    @Test
-    void findPostById() {
     }
 
     @Test
@@ -153,6 +151,37 @@ class PostRepositoryTest {
         List<Post> postList = postRepository.findPostsByUserIdsAndLastTwoWeeks(usersFollowing);
 
         Assertions.assertTrue(postList.isEmpty());
+    }
+
+    /**
+     * Unit Test to verify that when an existing post ID is provided,
+     * the repository returns an Optional containing the post with the matching ID.
+     */
+    @Test
+    void givenExistingUserId_WhenFindPostById_ThenReturnOptional() {
+        Integer postId = 1;
+        Post post = UtilPostFactory.getPostByUser(1, 1);
+        postRepository.savePost(post);
+
+        Optional<Post> optionalPost = postRepository.findPostById(postId);
+
+        Assertions.assertTrue(optionalPost.isPresent());
+        Assertions.assertEquals(postId, optionalPost.get().getId());
+    }
+
+    /**
+     * Unit Test to verify that when a non-existing post ID is provided,
+     * the repository returns an Optional.
+     */
+    @Test
+    void givenNonExistentUserId_WhenFindPostById_ThenReturnOptional() {
+        Integer postId = 10;
+        Post post = UtilPostFactory.getPostByUser(1, 1);
+        postRepository.savePost(post);
+
+        Optional<Post> optionalPost = postRepository.findPostById(postId);
+
+        Assertions.assertTrue(optionalPost.isEmpty());
     }
 
     @Test
