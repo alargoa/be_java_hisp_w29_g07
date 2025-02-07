@@ -410,7 +410,7 @@ public class PostControllerIntegrationTest {
     void givenNewPost_whenAddPost_thenReturnNewPost() throws Exception {
         List<Post> posts = UtilPostFactory.createUnorderedPosts();
         posts.forEach(post -> postRepository.savePost(post));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ValidationValues.DATE_PATTERN);
         mockMvc.perform(get("/products/post/findAll"))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
