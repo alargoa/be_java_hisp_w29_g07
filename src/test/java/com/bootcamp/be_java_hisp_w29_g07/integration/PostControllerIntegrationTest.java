@@ -16,15 +16,9 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import com.bootcamp.be_java_hisp_w29_g07.entity.Post;
-import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 import com.bootcamp.be_java_hisp_w29_g07.repository.IFollowRepository;
 import com.bootcamp.be_java_hisp_w29_g07.repository.IPostRepository;
-import com.bootcamp.be_java_hisp_w29_g07.util.UtilPostFactory;
-import com.bootcamp.be_java_hisp_w29_g07.util.UtilUserFactory;
 import com.jayway.jsonpath.JsonPath;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -68,20 +62,11 @@ public class PostControllerIntegrationTest {
     private MockMvc mockMvc;
 
     /**
-     * Static instance of {@link ObjectWriter} used for JSON serialization.
-     */
-    private static ObjectWriter writer;
-
-    /**
      * Sets up the object writer for JSON serialization before each test.
      */
     @BeforeEach
     public void setUp() {
-        writer = new ObjectMapper()
-                .registerModule(new JavaTimeModule())
-                .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-                .configure(SerializationFeature.WRAP_ROOT_VALUE, false)
-                .writer().withDefaultPrettyPrinter();
+
         followRepository.deleteAll();
         postRepository.deleteAll();     
     }
@@ -102,7 +87,8 @@ public class PostControllerIntegrationTest {
         PromoPostDTOOut promoPostDTOOutExpected = UtilPostFactory.getPromoPostDTOOut(savedPost);
 
         MvcResult res = mockMvc.perform(post("/products/promo-post")
-                        .content(writer.writeValueAsString(UtilPostFactory.getPromoPostDTOIn(newPost)))
+                        .content(UtilObjectMapper.getObjectWriter()
+                                .writeValueAsString(UtilPostFactory.getPromoPostDTOIn(newPost)))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -127,8 +113,8 @@ public class PostControllerIntegrationTest {
     public void givenExistingUserId_WhenFindListUsersFollowedPosts_ThenReturnSuccess() throws Exception {
 
         User userFollower = UtilUserFactory.getUser("gali", 1);
-        User followedSellerA = UtilUserFactory.createUserSeller(2);
-        User followedSellerB = UtilUserFactory.createUserSeller(4);
+        User followedSellerA = UtilUserFactory.getSeller(2);
+        User followedSellerB = UtilUserFactory.getSeller(4);
 
         followRepository.saveFollow(userFollower, followedSellerA);
         followRepository.saveFollow(userFollower, followedSellerB);
@@ -169,8 +155,8 @@ public class PostControllerIntegrationTest {
     @Test
         void givenExistingUnorderedPosts_whenFindListUsersFollowedPosts_thenReturnPostsOrderedByDateDesc() throws Exception {
         User userFollower = UtilUserFactory.getUser("user1", 1);
-        User followedSeller1 = UtilUserFactory.createUserSeller(2);
-        User followedSeller2 = UtilUserFactory.createUserSeller(4);
+        User followedSeller1 = UtilUserFactory.getSeller(2);
+        User followedSeller2 = UtilUserFactory.getSeller(4);
         String order = "date_desc";
 
         followRepository.saveFollow(userFollower, followedSeller1);
@@ -213,8 +199,8 @@ public class PostControllerIntegrationTest {
     @Test
     void givenExistingUnorderedPosts_whenFindListUsersFollowedPosts_thenReturnPostsOrderedByDateAsc() throws Exception {
         User userFollower = UtilUserFactory.getUser("user1", 1);
-        User followedSeller1 = UtilUserFactory.createUserSeller(2);
-        User followedSeller2 = UtilUserFactory.createUserSeller(4);
+        User followedSeller1 = UtilUserFactory.getSeller(2);
+        User followedSeller2 = UtilUserFactory.getSeller(4);
         String order = "date_asc";
         followRepository.saveFollow(userFollower, followedSeller1);
         followRepository.saveFollow(userFollower, followedSeller2);

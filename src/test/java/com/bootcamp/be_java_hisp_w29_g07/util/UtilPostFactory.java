@@ -22,8 +22,6 @@ import java.util.Objects;
 
 public class UtilPostFactory {
 
-    private static ObjectMapper mapper;
-
     /**
      * Creates a new {@link Post} instance for the given user and week offset.
      *
@@ -58,7 +56,7 @@ public class UtilPostFactory {
         );
 
         return listPost.stream()
-                .map(post -> getObjectMapper().convertValue(post, PostDTO.class))
+                .map(post -> UtilObjectMapper.getObjectMapper().convertValue(post, PostDTO.class))
                 .toList();
     }
 
@@ -75,23 +73,6 @@ public class UtilPostFactory {
                 new Post(3, 2, LocalDate.now(), null, 101, 0.0, false, 0.0)
         );
     }
-
-    /**
-     * Returns a singleton instance of {@link ObjectMapper} configured with the {@link JavaTimeModule}.
-     * If no instance exists, it creates and returns a new one.
-     *
-     * @return a configured {@link ObjectMapper}.
-     */
-    private static ObjectMapper getObjectMapper() {
-        if (Objects.isNull(mapper)) {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.registerModule(new JavaTimeModule());
-            mapper.findAndRegisterModules();
-            return mapper;
-        }
-        return mapper;
-    }
-
 
     /**
      * Creates a new instance of {@link Post} with predefined values.
@@ -126,7 +107,7 @@ public class UtilPostFactory {
      * @param post the post to convert.
      * @return a {@link PromoPostDTOIn} object with values from the specified post.
      */
-    public static PromoPostDTOIn getPromoPostDTOIn(Post post){
+    public static PromoPostDTOIn getPromoPostDTOIn(Post post) {
         PromoPostDTOIn promoPostDTOIn = new PromoPostDTOIn();
         promoPostDTOIn.setHas_promo(post.getHasPromo());
         promoPostDTOIn.setUser_id(post.getUserId());
@@ -144,7 +125,7 @@ public class UtilPostFactory {
      * @param post the post to convert.
      * @return a {@link PromoPostDTOOut} object with values from the specified post.
      */
-    public static PromoPostDTOOut getPromoPostDTOOut(Post post){
+    public static PromoPostDTOOut getPromoPostDTOOut(Post post) {
         return UtilObjectMapper.getObjectMapper().convertValue(post, PromoPostDTOOut.class);
     }
 
@@ -153,7 +134,7 @@ public class UtilPostFactory {
      *
      * @return a {@link Post} object with promotional details.
      */
-    public static Post getPromoPost(){
+    public static Post getPromoPost() {
         Post promoPost = getPost();
         promoPost.setHasPromo(true);
         promoPost.setDiscount(2.0);

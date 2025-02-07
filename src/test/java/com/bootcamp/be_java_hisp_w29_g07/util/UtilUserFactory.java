@@ -61,7 +61,7 @@ public class UtilUserFactory {
      * @return a {@link User} object with the specified id and default values for username, name, last name,
      *         email, and user type set as {@link UserType#SELLER}.
      */
-    public static User createUserSeller(Integer id) {
+    public static User getSeller(Integer id) {
         return new User(
                 id,
                 "jfeo",

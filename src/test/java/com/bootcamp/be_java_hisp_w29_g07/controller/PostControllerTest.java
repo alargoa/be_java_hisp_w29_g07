@@ -1,8 +1,14 @@
 package com.bootcamp.be_java_hisp_w29_g07.controller;
 
 import com.bootcamp.be_java_hisp_w29_g07.dto.PostDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.request.PromoPostDTOIn;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListPostDTO;
-import org.junit.jupiter.api.DisplayName;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.PromoPostDTOOut;
+import com.bootcamp.be_java_hisp_w29_g07.entity.Post;
+import com.bootcamp.be_java_hisp_w29_g07.entity.User;
+import com.bootcamp.be_java_hisp_w29_g07.service.IPostService;
+import com.bootcamp.be_java_hisp_w29_g07.util.UtilPostFactory;
+import com.bootcamp.be_java_hisp_w29_g07.util.UtilUserFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -64,7 +70,7 @@ public class PostControllerTest {
      * the controller returns a ResponseEntity containing the expected ListPostDTO with HTTP status OK.
      */
     @Test
-    public void givenExistingUserId_WhenfindListUsersFollowedPosts_ThenReturnSuccessResponseEntity(){
+    public void givenExistingUserId_whenFindListUsersFollowedPosts_ThenReturnSuccessResponseEntity(){
         Integer userIdA = 1;
         Integer userIdB = 2;
         List<PostDTO> postDTOList = UtilPostFactory.getPostDTOList(userIdB);
