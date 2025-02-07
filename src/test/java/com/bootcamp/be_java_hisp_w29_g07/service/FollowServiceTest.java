@@ -101,7 +101,7 @@ class FollowServiceTest {
      * attempting to unfollow results in a NotFoundException being thrown.
      */
     @Test
-    void givenNonExistentUser_whenDeleteFollowUserById_thenThrowsNotFoundException() {
+    void givenNonExistentUser_whenUnfollowUserById_thenThrowsNotFoundException() {
         Integer userIdFollower = 9999;
         Integer userIdFollowed = 2;
         when(userService.verifyUserExists(userIdFollower)).thenThrow(NotFoundException.class);
@@ -115,7 +115,7 @@ class FollowServiceTest {
      * attempting to unfollow results in a NotFoundException being thrown.
      */
     @Test
-    void givenNonExistentUserFollowed_whenDeleteFollowUserById_thenThrowsNotFoundException() {
+    void givenNonExistentUserFollowed_whenUnfollowUserById_thenThrowsNotFoundException() {
         Integer userIdFollower = 1;
         Integer userIdFollowed = 9999;
         when(userService.verifyUserExists(userIdFollower)).thenReturn(true);
