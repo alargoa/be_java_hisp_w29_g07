@@ -23,12 +23,25 @@ import static org.mockito.Mockito.when;
  */
 @ExtendWith(MockitoExtension.class)
 public class PostControllerTest {
+
+    /**
+     * Mocked instance of {@link IPostService} used for testing the controller's behavior
+     * without calling the actual service methods.
+     */
     @Mock
     private IPostService postService;
 
+    /**
+     * Instance of {@link PostController} with mocked dependencies injected for unit testing.
+     * The controller's methods are tested here using mocked services.
+     */
     @InjectMocks
     private PostController postController;
 
+    /**
+     * Unit Test to verify that when a valid user ID is provided,
+     * the controller returns a ResponseEntity containing the expected ListPostDTO with HTTP status OK.
+     */
     @Test
     public void givenExistingUserId_WhenfindListUsersFollowedPosts_ThenReturnSuccessResponseEntity(){
         Integer userIdA = 1;
