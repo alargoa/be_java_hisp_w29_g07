@@ -161,10 +161,10 @@ public class FollowServiceImpl implements IFollowService {
         User user = userService.findUserById(userId);
         List<UserDTO> followList = new ArrayList<>(followRepository.findFollowersByUserId(userId)
                 .stream()
-                .map(follow -> new UserDTO(follow.getFollower().getId(), follow.getFollower().getName()))
+                .map(follow -> new UserDTO(follow.getFollower().getId(), follow.getFollower().getUsername()))
                 .toList());
 
-        followList = orderList(followList, order, Comparator.comparing(UserDTO::getUserName));
+        orderList(followList, order, Comparator.comparing(UserDTO::getUserName));
 
         return new ListFollowersDTO(user.getId(), user.getUsername(), followList);
     }

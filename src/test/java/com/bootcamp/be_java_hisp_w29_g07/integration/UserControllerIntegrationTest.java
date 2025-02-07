@@ -3,6 +3,7 @@ package com.bootcamp.be_java_hisp_w29_g07.integration;
 import com.bootcamp.be_java_hisp_w29_g07.constants.Messages;
 import com.bootcamp.be_java_hisp_w29_g07.controller.UserController;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListFollowedDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListFollowersDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.bootcamp.be_java_hisp_w29_g07.repository.IFollowRepository;
@@ -318,6 +319,180 @@ public class UserControllerIntegrationTest {
         String jsonRes = res.getResponse().getContentAsString();
 
         assertTrue(jsonRes.contains(String.format(Messages.USER_NOT_FOUND_MSG, userId)));
+    }
+
+    /**
+     * Test to verify that the list of followed users is returned in ascending order by username
+     * when the "name_asc" order parameter is provided.
+     * <p>
+     * It simulates a user following two other users and then retrieves the followed list,
+     * ensuring the list is correctly ordered and the response data matches the expected values.
+     * </p>
+     */
+    @Test
+    public void givenExistingUserAndOrderAsc_whenFindListFollowedByUserId_thenReturnSuccessOrderedList() throws Exception {
+        Integer userIdFollower = 1;
+        Integer userIdToFollow1 = 2;
+        Integer userIdToFollow2 = 4;
+        String userNameToFollow1 = "cmorales";
+        String userNameToFollow2 = "jfeo";
+
+        mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}", userIdFollower, userIdToFollow1))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}", userIdFollower, userIdToFollow2))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        MvcResult res = mockMvc.perform(get("/users/{userId}/followed/list", userIdFollower)
+                        .param("order", "name_asc"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String jsonRes = res.getResponse().getContentAsString();
+        ListFollowedDTO listFollowedDTO = new ObjectMapper().readValue(jsonRes, new TypeReference<ListFollowedDTO>() {});
+
+        assertEquals(1, listFollowedDTO.getId());
+        assertEquals(2, listFollowedDTO.getFollowed().size());
+        assertEquals(userNameToFollow1, listFollowedDTO.getFollowed().getFirst().getUserName());
+        assertEquals(userNameToFollow2, listFollowedDTO.getFollowed().get(1).getUserName());
+    }
+
+    /**
+     * Test to verify that the list of followed users is returned in descending order by username
+     * when the "name_desc" order parameter is provided.
+     * <p>
+     * It simulates a user following two other users and then retrieves the followed list,
+     * ensuring the list is correctly ordered and the response data matches the expected values.
+     * </p>
+     */
+    @Test
+    public void givenExistingUserAndOrderDesc_whenFindListFollowedByUserId_thenReturnSuccessOrderedList() throws Exception {
+        Integer userIdFollower = 1;
+        Integer userIdToFollow1 = 4;
+        Integer userIdToFollow2 = 2;
+        String userNameToFollow1 = "jfeo";
+        String userNameToFollow2 = "cmorales";
+
+        mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}", userIdFollower, userIdToFollow1))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}", userIdFollower, userIdToFollow2))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        MvcResult res = mockMvc.perform(get("/users/{userId}/followed/list", userIdFollower)
+                        .param("order", "name_desc"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String jsonRes = res.getResponse().getContentAsString();
+        ListFollowedDTO listFollowedDTO = new ObjectMapper().readValue(jsonRes, new TypeReference<ListFollowedDTO>() {});
+
+        assertEquals(1, listFollowedDTO.getId());
+        assertEquals(2, listFollowedDTO.getFollowed().size());
+        assertEquals(userNameToFollow1, listFollowedDTO.getFollowed().getFirst().getUserName());
+        assertEquals(userNameToFollow2, listFollowedDTO.getFollowed().get(1).getUserName());
+    }
+
+    /**
+     * Test to verify that the list of followers users is returned in ascending order by username
+     * when the "name_asc" order parameter is provided.
+     * <p>
+     * It simulates two users following other user and then retrieves the followers list,
+     * ensuring the list is correctly ordered and the response data matches the expected values.
+     * </p>
+     */
+    @Test
+    public void givenExistingUserAndOrderAsc_whenFindListFollowersByUserId_thenReturnSuccessOrderedList() throws Exception {
+        Integer userFollowed = 2;
+        Integer userIdFollower1 = 3;
+        Integer userIdFollower2 = 1;
+        Integer userIdFollower3 = 5;
+        String userNameFollower1 = "acano";
+        String userNameFollower2 = "alargo";
+        String userNameFollower3 = "bsanchez";
+
+        mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}", userIdFollower1, userFollowed))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}", userIdFollower2, userFollowed))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}", userIdFollower3, userFollowed))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        MvcResult res = mockMvc.perform(get("/users/{userId}/followers/list", userFollowed)
+                        .param("order", "name_asc"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String jsonRes = res.getResponse().getContentAsString();
+        ListFollowersDTO listFollowedDTO = new ObjectMapper().readValue(jsonRes, new TypeReference<ListFollowersDTO>() {});
+
+        assertEquals(2, listFollowedDTO.getUser_id());
+        assertEquals(3, listFollowedDTO.getFollowers().size());
+        assertEquals(userNameFollower1, listFollowedDTO.getFollowers().getFirst().getUserName());
+        assertEquals(userNameFollower2, listFollowedDTO.getFollowers().get(1).getUserName());
+        assertEquals(userNameFollower3, listFollowedDTO.getFollowers().get(2).getUserName());
+    }
+
+    /**
+     * Test to verify that the list of followers users is returned in descending order by username
+     * when the "name_desc" order parameter is provided.
+     * <p>
+     * It simulates two users following other user and then retrieves the followers list,
+     * ensuring the list is correctly ordered and the response data matches the expected values.
+     * </p>
+     */
+    @Test
+    public void givenExistingUserAndOrderDesc_whenFindListFollowersByUserId_thenReturnSuccessOrderedList() throws Exception {
+        Integer userFollowed = 2;
+        Integer userIdFollower1 = 3;
+        Integer userIdFollower2 = 1;
+        Integer userIdFollower3 = 5;
+        String userNameFollower1 = "bsanchez";
+        String userNameFollower2 = "alargo";
+        String userNameFollower3 = "acano";
+
+        mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}", userIdFollower1, userFollowed))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}", userIdFollower2, userFollowed))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}", userIdFollower3, userFollowed))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        MvcResult res = mockMvc.perform(get("/users/{userId}/followers/list", userFollowed)
+                        .param("order", "name_desc"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String jsonRes = res.getResponse().getContentAsString();
+        ListFollowersDTO listFollowedDTO = new ObjectMapper().readValue(jsonRes, new TypeReference<ListFollowersDTO>() {});
+
+        assertEquals(2, listFollowedDTO.getUser_id());
+        assertEquals(3, listFollowedDTO.getFollowers().size());
+        assertEquals(userNameFollower1, listFollowedDTO.getFollowers().getFirst().getUserName());
+        assertEquals(userNameFollower2, listFollowedDTO.getFollowers().get(1).getUserName());
+        assertEquals(userNameFollower3, listFollowedDTO.getFollowers().get(2).getUserName());
     }
 }
 
