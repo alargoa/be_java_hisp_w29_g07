@@ -1,10 +1,14 @@
 package com.bootcamp.be_java_hisp_w29_g07.controller;
 
 import com.bootcamp.be_java_hisp_w29_g07.dto.PostDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.request.PromoPostDTOIn;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListPostDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.PromoPostDTOOut;
+import com.bootcamp.be_java_hisp_w29_g07.entity.Post;
+import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 import com.bootcamp.be_java_hisp_w29_g07.service.IPostService;
 import com.bootcamp.be_java_hisp_w29_g07.util.UtilPostFactory;
-import org.junit.jupiter.api.DisplayName;
+import com.bootcamp.be_java_hisp_w29_g07.util.UtilUserFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,25 +30,47 @@ import static org.mockito.Mockito.*;
 public class PostControllerTest {
 
     /**
-     * Mocked instance of {@link IPostService} used for testing the controller's behavior
-     * without calling the actual service methods.
+     * Mocked instance of {@link IPostService} to simulate post service operations.
      */
     @Mock
     private IPostService postService;
 
     /**
-     * Instance of {@link PostController} with mocked dependencies injected for unit testing.
-     * The controller's methods are tested here using mocked services.
+     * Injected instance of {@link PostController} with mocked dependencies.
      */
     @InjectMocks
     private PostController postController;
+
+    /**
+     * Unit Test to verify that when a non-existent promotional post is created,
+     * a success response entity is returned.
+     */
+    @Test
+    public void givenNonExistentPromoPost_whenCreatePromoPost_thenReturnSuccessResponseEntity(){
+        User user = UtilUserFactory.getSeller("cmorales", 2);
+
+        Post newPost = UtilPostFactory.getPromoPost();
+        newPost.setId(null);
+
+        Post savedPost = UtilPostFactory.getPromoPost();
+        savedPost.setUserId(user.getId());
+        PromoPostDTOOut promoPostDTOOutExpected = UtilPostFactory.getPromoPostDTOOut(savedPost);
+
+        PromoPostDTOIn promoPostDTOIn = UtilPostFactory.getPromoPostDTOIn(newPost);
+        when(postService.createPromoPost(promoPostDTOIn)).thenReturn(promoPostDTOOutExpected);
+
+        ResponseEntity<PromoPostDTOOut> responseEntity = postController.createPromoPost(promoPostDTOIn);
+
+        verify(postService).createPromoPost(promoPostDTOIn);
+        assertEquals(promoPostDTOOutExpected, responseEntity.getBody());
+    }
 
     /**
      * Unit Test to verify that when a valid user ID is provided,
      * the controller returns a ResponseEntity containing the expected ListPostDTO with HTTP status OK.
      */
     @Test
-    public void givenExistingUserId_WhenfindListUsersFollowedPosts_ThenReturnSuccessResponseEntity(){
+    public void givenExistingUserId_whenFindListUsersFollowedPosts_ThenReturnSuccessResponseEntity(){
         Integer userIdA = 1;
         Integer userIdB = 2;
         List<PostDTO> postDTOList = UtilPostFactory.getPostDTOList(userIdB);

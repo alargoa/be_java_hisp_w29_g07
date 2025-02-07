@@ -2,11 +2,14 @@ package com.bootcamp.be_java_hisp_w29_g07.service;
 
 import com.bootcamp.be_java_hisp_w29_g07.dto.PostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListPostDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.PromoPostDTOOut;
 import com.bootcamp.be_java_hisp_w29_g07.entity.Post;
-import com.bootcamp.be_java_hisp_w29_g07.exception.NotFoundException;
+import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 import com.bootcamp.be_java_hisp_w29_g07.exception.BadRequestException;
+import com.bootcamp.be_java_hisp_w29_g07.exception.NotFoundException;
 import com.bootcamp.be_java_hisp_w29_g07.repository.IPostRepository;
 import com.bootcamp.be_java_hisp_w29_g07.util.UtilPostFactory;
+import com.bootcamp.be_java_hisp_w29_g07.util.UtilUserFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,22 +25,24 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Test class for {@link PostServiceImpl}.
+ * This class contains unit tests for the methods in {@link PostServiceImpl}.
+ */
 @ExtendWith(MockitoExtension.class)
 class PostServiceTest {
 
     /**
-     * Mocked instance of {@link IPostRepository} used for testing the follow service without
-     * interacting with the actual repository implementation.
-     */
-    @Mock
-    private IPostRepository postRepository;
-
-    /**
-     * Mocked instance of {@link IUserService} used for testing the follow service without
-     * interacting with the actual repository implementation.
+     * Mocked instance of {@link IUserService} to simulate user service operations.
      */
     @Mock
     private IUserService userService;
+
+    /**
+     * Mocked instance of {@link IPostRepository} to simulate post repository operations.
+     */
+    @Mock
+    private IPostRepository postRepository;
 
     /**
      * Mocked instance of {@link IFollowService} used for testing the follow service without
@@ -47,13 +52,10 @@ class PostServiceTest {
     private IFollowService followService;
 
     /**
-     * Instance of {@link PostServiceImpl} with mocked dependencies injected for unit testing.
-     * This is the service that is being tested.
+     * Injected instance of {@link PostServiceImpl} with mocked dependencies.
      */
     @InjectMocks
     private PostServiceImpl postService;
-
-    private ObjectMapper mapper;
 
     @Test
     void addPost() {
@@ -265,8 +267,104 @@ class PostServiceTest {
     void findPromoPostCountByUserId() {
     }
 
+    /**
+     * Unit Test to verify that when a non-existent promotional post is created,
+     * a PromoPostDTOOut is returned.
+     */
     @Test
-    void createPromoPost() {
+    void givenNonExistentPromoPost_whenCreatePromoPost_thenReturnPromoPostDTOOut() {
+        User user = UtilUserFactory.getSeller("cmorales", 2);
+
+        Post newPost = UtilPostFactory.getPromoPost();
+        newPost.setId(null);
+
+        Post savedPost = UtilPostFactory.getPromoPost();
+        savedPost.setUserId(user.getId());
+        PromoPostDTOOut promoPostDTOOutExpected = UtilPostFactory.getPromoPostDTOOut(savedPost);
+
+        when(userService.findUserById(user.getId())).thenReturn(user);
+        when(postRepository.savePost(newPost)).thenReturn(savedPost);
+
+        PromoPostDTOOut promoPostDTOOutRes = postService.createPromoPost(UtilPostFactory.getPromoPostDTOIn(newPost));
+
+        verify(userService).findUserById(user.getId());
+        verify(postRepository).savePost(newPost);
+        assertEquals(promoPostDTOOutExpected, promoPostDTOOutRes);
+    }
+
+    /**
+     * Unit Test to verify that when a non-seller user attempts to create a promotional post,
+     * a BadRequestException is thrown.
+     */
+    @Test
+    void givenNonSellerUser_whenCreatePromoPost_thenReturnBadRequestException() {
+        User user = UtilUserFactory.getUser("alargo", 1);
+
+        Post newPost = UtilPostFactory.getPromoPost();
+        newPost.setUserId(user.getId());
+        newPost.setId(null);
+
+        when(userService.findUserById(user.getId())).thenReturn(user);
+
+        assertThrows(BadRequestException.class, () -> postService.createPromoPost(UtilPostFactory.getPromoPostDTOIn(newPost)));
+        verify(userService).findUserById(user.getId());
+    }
+
+    /**
+     * Unit Test to verify that when a new post without a promo is created,
+     * a BadRequestException is thrown.
+     */
+    @Test
+    void givenNewPostWithoutPromo_whenCreatePromoPost_thenReturnBadRequestException() {
+        User user = UtilUserFactory.getSeller("cmorales", 2);
+
+        Post newPost = UtilPostFactory.getPromoPost();
+        newPost.setUserId(user.getId());
+        newPost.setId(null);
+        newPost.setHasPromo(false);
+
+        when(userService.findUserById(user.getId())).thenReturn(user);
+
+        assertThrows(BadRequestException.class, () -> postService.createPromoPost(UtilPostFactory.getPromoPostDTOIn(newPost)));
+        verify(userService).findUserById(user.getId());
+    }
+
+    /**
+     * Unit Test to verify that when a new post without a discount is created,
+     * a BadRequestException is thrown.
+     */
+    @Test
+    void givenNewPostWithoutDiscount_whenCreatePromoPost_thenReturnBadRequestException() {
+        User user = UtilUserFactory.getSeller("cmorales", 2);
+
+        Post newPost = UtilPostFactory.getPromoPost();
+        newPost.setUserId(user.getId());
+        newPost.setId(null);
+        newPost.setDiscount(null);
+
+        when(userService.findUserById(user.getId())).thenReturn(user);
+
+        assertThrows(BadRequestException.class, () -> postService.createPromoPost(UtilPostFactory.getPromoPostDTOIn(newPost)));
+        verify(userService).findUserById(user.getId());
+    }
+
+    /**
+     * Unit Test to verify that when a new post with a discount of zero is created,
+     * a BadRequestException is thrown.
+     */
+    @Test
+    void givenNewPostWithDiscountZero_whenCreatePromoPost_thenReturnBadRequestException() {
+        User user = UtilUserFactory.getSeller("cmorales", 2);
+
+        Post newPost = UtilPostFactory.getPromoPost();
+        newPost.setUserId(user.getId());
+        newPost.setId(null);
+        newPost.setDiscount(0.0);
+
+        when(userService.findUserById(user.getId())).thenReturn(user);
+
+        assertThrows(BadRequestException.class, () -> postService.createPromoPost(UtilPostFactory.getPromoPostDTOIn(newPost)));
+        verify(userService).findUserById(user.getId());
     }
 
     @Test
