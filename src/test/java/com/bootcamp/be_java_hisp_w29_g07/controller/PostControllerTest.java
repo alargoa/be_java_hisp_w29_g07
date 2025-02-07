@@ -24,6 +24,9 @@ import org.springframework.http.ResponseEntity;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -51,7 +54,7 @@ public class PostControllerTest {
      * a success response entity is returned.
      */
     @Test
-    public void givenNonExistentPromoPost_whenCreatePromoPost_thenReturnSuccessResponseEntity(){
+    public void givenNonExistentPromoPost_whenCreatePromoPost_thenReturnSuccessResponseEntity() {
         User user = UtilUserFactory.getSeller("cmorales", 2);
 
         Post newPost = UtilPostFactory.getPromoPost();
@@ -75,7 +78,7 @@ public class PostControllerTest {
      * the controller returns a ResponseEntity containing the expected ListPostDTO with HTTP status OK.
      */
     @Test
-    public void givenExistingUserId_whenFindListUsersFollowedPosts_ThenReturnSuccessResponseEntity(){
+    public void givenExistingUserId_whenFindListUsersFollowedPosts_ThenReturnSuccessResponseEntity() {
         Integer userIdA = 1;
         Integer userIdB = 2;
         List<PostDTO> postDTOList = UtilPostFactory.getPostDTOList(userIdB);
@@ -183,6 +186,26 @@ public class PostControllerTest {
         assertNotNull(response.getBody());
         assertEquals(postDTO, response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    /**
+     * Unit Test to verify that when a valid seller ID is provided,
+     * the controller returns a ResponseEntity containing the expected ListPostDTO with HTTP status OK.
+     */
+    @Test
+    public void givenExistingPosts_whenFindAllPostsBySellerId_thenReturnSuccessResponseEntity(){
+        Integer userIdSeller = 2;
+        List<PostDTO> postDTOList = UtilPostFactory.getPostDTOList(userIdSeller);
+        ListPostDTO listPostDTO = new ListPostDTO(userIdSeller, postDTOList);
+
+        when(postService.findAllPostBySellerId(userIdSeller)).thenReturn(listPostDTO);
+
+        ResponseEntity<ListPostDTO> responseEntity = postController.findAllPostsBySellerId(userIdSeller);
+
+        verify(postService).findAllPostBySellerId(userIdSeller);
+        assertNotNull(responseEntity.getBody());
+        assertThat(responseEntity.getBody().getPosts()).containsExactlyInAnyOrderElementsOf(postDTOList);
+        assertEquals(userIdSeller, responseEntity.getBody().getUser_id());
     }
 
     /**

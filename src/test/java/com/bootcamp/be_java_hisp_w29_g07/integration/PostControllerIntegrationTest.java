@@ -3,6 +3,8 @@ package com.bootcamp.be_java_hisp_w29_g07.integration;
 import com.bootcamp.be_java_hisp_w29_g07.constants.Messages;
 import com.bootcamp.be_java_hisp_w29_g07.constants.ValidationValues;
 import com.bootcamp.be_java_hisp_w29_g07.controller.PostController;
+import com.bootcamp.be_java_hisp_w29_g07.dto.PostDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListPostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.PromoPostDTOOut;
 import com.bootcamp.be_java_hisp_w29_g07.entity.Post;
 import com.bootcamp.be_java_hisp_w29_g07.entity.User;
@@ -14,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import com.bootcamp.be_java_hisp_w29_g07.repository.IFollowRepository;
@@ -23,10 +26,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -37,7 +43,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -357,6 +362,38 @@ public class PostControllerIntegrationTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message").value(String.format(Messages.NO_POST_FOUND, 2)));
+    }
+
+    /**
+     * Integration Test to verify that when existing posts are retrieved by user ID,
+     * the service returns a ListPostDTO containing the posts.
+     */
+    @Test
+    public void givenExistingPosts_whenFindAllPostsBySellerId_thenReturnSuccessResponseEntity() throws Exception {
+        Integer userIdSeller = 2;
+
+        List<Post> postsExpected = UtilPostFactory.createUnorderedPosts();
+
+        postsExpected.forEach(post -> {
+            post.setUserId(userIdSeller);
+            postRepository.savePost(post);
+        });
+
+        MvcResult res = mockMvc.perform(get("/products/posts/{userId}", userIdSeller))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String jsonRes = res.getResponse().getContentAsString();
+
+        ListPostDTO listPostDTORes = UtilObjectMapper.getObjectMapper().readValue(jsonRes, new TypeReference<ListPostDTO>() {});
+        assertNotNull(listPostDTORes);
+        assertEquals(postsExpected.size(), listPostDTORes.getPosts().size());
+        List<PostDTO> postsDTOExpected = postsExpected.stream()
+                .map(p -> UtilObjectMapper.getObjectMapper()
+                        .convertValue(p, PostDTO.class)).toList();
+        Assertions.assertThat(listPostDTORes.getPosts()).containsExactlyInAnyOrderElementsOf(postsDTOExpected);
+        assertEquals(userIdSeller, listPostDTORes.getUser_id());
     }
 
 
