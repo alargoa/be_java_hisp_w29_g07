@@ -1,5 +1,6 @@
 package com.bootcamp.be_java_hisp_w29_g07.service;
 
+import com.bootcamp.be_java_hisp_w29_g07.dto.PostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListPostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.entity.Post;
 import com.bootcamp.be_java_hisp_w29_g07.exception.NotFoundException;
@@ -16,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -55,10 +57,6 @@ class PostServiceTest {
 
     @Test
     void addPost() {
-    }
-
-    @Test
-    void findPostById() {
     }
 
     @Test
@@ -231,6 +229,36 @@ class PostServiceTest {
         verify(userService).verifyUserExists(userId);
         verify(followService).findFollowedByUserId(userId);
         verify(postRepository).findPostsByUserIdsAndLastTwoWeeks(userFollowingIds);
+    }
+
+    /**
+     * Unit Test to verify that when an existing post ID is provided,
+     * the service returns a PostDTO containing the correct post data.
+     */
+    @Test
+    void givenExistingPostId_WhenFindPostById_ThenReturnPostDTO() {
+        Integer postId = 1;
+        Post post = UtilPostFactory.getPostByUser(1,1);
+        when(postRepository.findPostById(postId)).thenReturn(Optional.of(post));
+
+        PostDTO postDTO = postService.findPostById(postId);
+
+        assertNotNull(postDTO);
+        assertEquals(post.getId(), postDTO.getPost_id());
+        verify(postRepository).findPostById(postId);
+    }
+
+    /**
+     * Unit Test to verify that when a non-existent post ID is provided,
+     * the service throws a NotFoundException.
+     */
+    @Test
+    void givenNonExistentPostId_WhenFindPostById_ThenReturnNotFoundException() {
+        Integer postId = 10;
+        when(postRepository.findPostById(postId)).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> postService.findPostById(postId));
+        verify(postRepository).findPostById(postId);
     }
 
     @Test
