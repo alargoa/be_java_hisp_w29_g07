@@ -61,7 +61,7 @@ public class UtilPostFactory {
     }
 
     public static PostDTO getPostDTO(Integer userId) {
-        return getObjectMapper().convertValue(UtilPostFactory.getPostByUser(userId, 1), PostDTO.class);
+        return UtilObjectMapper.getObjectMapper().convertValue(UtilPostFactory.getPostByUser(userId, 1), PostDTO.class);
     }
 
     /**
