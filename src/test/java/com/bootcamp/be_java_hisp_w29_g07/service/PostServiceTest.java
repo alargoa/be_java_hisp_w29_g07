@@ -1,5 +1,7 @@
 package com.bootcamp.be_java_hisp_w29_g07.service;
 
+import com.bootcamp.be_java_hisp_w29_g07.Enum.UserType;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.PromoCountPostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.PromoPostDTOOut;
 import com.bootcamp.be_java_hisp_w29_g07.entity.Post;
 import com.bootcamp.be_java_hisp_w29_g07.entity.User;
@@ -239,8 +241,89 @@ class PostServiceTest {
         verify(postRepository).findPostsByUserIdsAndLastTwoWeeks(userFollowingIds);
     }
 
+    /**
+     * Test that verifies the correct count of promotional posts for a given user when
+     * the user is of type SELLER.
+     * <p>
+     * This test sets up a mock user of type SELLER and simulates the retrieval of promotional
+     * post count through `postService.findPromoPostCountByUserId`. It then checks that the
+     * response contains the correct user information and the expected count of promotional posts.
+     * </p>
+     */
     @Test
-    void findPromoPostCountByUserId() {
+    void givenExistingUserId_whenFindPromoPost_thenReturnPromoPostCount() {
+        Integer userId = 4;
+        User user = UtilUserFactory.getUser(userId);
+        user.setUserType(UserType.SELLER);
+        Integer countPromoPost = 2;
+        when(userService.findUserById(userId)).thenReturn(user);
+        when(postRepository.findPromoPostCountByUserId(userId)).thenReturn(2L);
+
+        PromoCountPostDTO response = postService.findPromoPostCountByUserId(userId);
+
+        assertNotNull(response);
+        assertEquals(response.getUser_id(), user.getId());
+        assertEquals(response.getUser_name(), user.getUsername());
+        assertEquals(countPromoPost, response.getPromo_products_count());
+    }
+
+    /**
+     * Test that verifies the behavior when trying to find promotional posts for a non-existing user.
+     * <p>
+     * This test simulates the case where a user does not exist by making the `userService.findUserById`
+     * method throw a `NotFoundException`. It then verifies that the `NotFoundException` is thrown when
+     * attempting to get the promotional post count for that user.
+     * </p>
+     */
+    @Test
+    void givenNotExistingUserId_whenFindPromoPost_thenReturnUserException() {
+        Integer userId = 10;
+        when(userService.findUserById(userId)).thenThrow(NotFoundException.class);
+
+        assertThrows(NotFoundException.class, () -> postService.findPromoPostCountByUserId(userId));
+        verify(userService, atLeastOnce()).findUserById(userId);
+    }
+
+    /**
+     * Test that verifies the behavior when trying to find promotional posts for a non-seller user.
+     * <p>
+     * This test simulates the case where a user exists but is not of type SELLER. It checks that
+     * when a non-seller user tries to fetch the promotional post count, a `BadRequestException` is thrown.
+     * The test ensures that the service behaves correctly by throwing the appropriate exception for this user type.
+     * </p>
+     */
+    @Test
+    void givenExistingNotSellerUserId_whenFindPromoPost_thenReturnUserException() {
+        Integer userId = 1;
+        User user = UtilUserFactory.getUser(userId);
+        user.setUserType(UserType.USER);
+        when(userService.findUserById(userId)).thenReturn(user);
+        when(postRepository.findPromoPostCountByUserId(userId)).thenReturn(0L);
+
+        assertThrows(BadRequestException.class, () -> postService.findPromoPostCountByUserId(userId));
+        verify(userService, atLeastOnce()).findUserById(userId);
+        verify(postRepository, atLeastOnce()).findPromoPostCountByUserId(userId);
+    }
+
+    /**
+     * Unit Test that verifies the behavior when trying to find promotional posts for a seller user with no promotional posts.
+     * <p>
+     * This test simulates the case where a seller user exists, but there are no promotional posts for that user
+     * (i.e., the post count is zero). It ensures that when no promotional posts are found, a `NotFoundException`
+     * is thrown.
+     * </p>
+     */
+    @Test
+    void givenExistingUserId_whenFindPromoPost_thenReturnNoPromoPostException() {
+        Integer userId = 2;
+        User user = UtilUserFactory.getUser(userId);
+        user.setUserType(UserType.SELLER);
+        when(userService.findUserById(userId)).thenReturn(user);
+        when(postRepository.findPromoPostCountByUserId(userId)).thenReturn(0L);
+
+        assertThrows(NotFoundException.class, () -> postService.findPromoPostCountByUserId(userId));
+        verify(userService, atLeastOnce()).findUserById(userId);
+        verify(postRepository, atLeastOnce()).findPromoPostCountByUserId(userId);
     }
 
     /**
