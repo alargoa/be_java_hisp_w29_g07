@@ -20,9 +20,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -47,6 +47,42 @@ public class PostControllerIntegrationTest {
     void setUp() {
         followRepository.deleteAll();
         postRepository.deleteAll();
+    }
+
+    @Test
+    public void givenExistingUserId_WhenFindListUsersFollowedPosts_ThenReturnSuccess() throws Exception {
+
+        User userFollower = UtilUserFactory.getUser("gali", 1);
+        User followedSellerA = UtilUserFactory.createUserSeller(2);
+        User followedSellerB = UtilUserFactory.createUserSeller(4);
+
+        followRepository.saveFollow(userFollower, followedSellerA);
+        followRepository.saveFollow(userFollower, followedSellerB);
+
+        List<Post> posts = UtilPostFactory.createUnorderedPosts();
+        posts.forEach(post -> postRepository.savePost(post));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate twoWeeksAgo = LocalDate.now().minusWeeks(2);
+        LocalDate today = LocalDate.now();
+
+        String responseContent = mockMvc.perform(get("/products/followed/{userId}/list", userFollower.getId()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.posts").isNotEmpty())
+                .andReturn().getResponse().getContentAsString();
+
+        List<String> dateStrings = JsonPath.read(responseContent, "$.posts[*].date");
+        List<LocalDate> dates = dateStrings.stream()
+                .map(dateStr -> LocalDate.parse(dateStr, formatter))
+                .toList();
+
+        dates.forEach(date -> {
+            assertThat(date)
+                    .as("The date %s should be between %s and %s", date, twoWeeksAgo, today)
+                    .isAfterOrEqualTo(twoWeeksAgo)
+                    .isBeforeOrEqualTo(today);
+        });
     }
 
     /**
@@ -136,5 +172,4 @@ public class PostControllerIntegrationTest {
                     assertTrue(date2.isBefore(date3));
                 });
     }
-
 }
