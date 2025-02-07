@@ -5,10 +5,14 @@ import com.bootcamp.be_java_hisp_w29_g07.util.UtilPostFactory;
 import com.bootcamp.be_java_hisp_w29_g07.util.UtilUserFactory;
 import org.junit.jupiter.api.Assertions;
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +36,46 @@ class PostRepositoryTest {
         this.postRepository = new PostRepositoryImpl();
     }
 
-
+    /**
+     * Test that checks if the correct count of promotional posts is returned for a given user.
+     * <p>
+     * This test creates a post associated with an existing user, marks it as a promotional post,
+     * and then checks if the method `findPromoPostCountByUserId` returns the correct number of
+     * promotional posts for that user.
+     * </p>
+     */
     @Test
-    void findPromoPostCountByUserId() {
+     void givenExistingUserId_whenFindPromoPost_thenReturnPromoPostCount() {
+        Integer userId = 4;
+        Long expected = 1L;
+        Post postA = UtilPostFactory.getPostByUser(userId, 1);
+        postA.setHasPromo(true);
+        postRepository.savePost(postA);
+
+        Long response = postRepository.findPromoPostCountByUserId(userId);
+
+        assertEquals(expected, response);
+    }
+
+    /**
+     * Test that checks if the correct count of non-promotional posts is returned for a given user.
+     * <p>
+     * This test creates a post associated with an existing user, marks it as a non-promotional post,
+     * and then checks if the method `findPromoPostCountByUserId` returns the correct count of
+     * promotional posts (which should be zero in this case).
+     * </p>
+     */
+    @Test
+    void givenExistingUserId_whenFindPromoPost_thenReturnNonPromoPostCount() {
+        Integer userId = 4;
+        Long expected = 0L;
+        Post postA = UtilPostFactory.getPostByUser(userId, 1);
+        postA.setHasPromo(false);
+        postRepository.savePost(postA);
+
+        Long response = postRepository.findPromoPostCountByUserId(userId);
+
+        assertEquals(expected, response);
     }
 
     @Test
@@ -71,7 +112,7 @@ class PostRepositoryTest {
         List<Post> postList = postRepository.findPostsByUserIdsAndLastTwoWeeks(usersFollowing);
 
         Assertions.assertNotNull(postList);
-        Assertions.assertEquals(2, postList.size());
+        assertEquals(2, postList.size());
         assertThat(postList)
                 .allSatisfy(post -> assertThat(post.getDate()).isBefore(LocalDate.now()));
     }
