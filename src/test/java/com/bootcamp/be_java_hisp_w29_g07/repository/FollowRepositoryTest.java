@@ -8,6 +8,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -165,7 +170,7 @@ class FollowRepositoryTest {
     void givenUserWithFollowers_whenCountByFollowedId_thenReturnCorrectFollowersCount() {
         User userFollower1 = UtilUserFactory.getUser("user1", 1);
         User userFollower2 = UtilUserFactory.getUser("user2", 2);
-        User seller = UtilUserFactory.createUserSeller(5);
+        User seller = UtilUserFactory.getSeller(5);
         followRepository.saveFollow(userFollower1, seller);
         followRepository.saveFollow(userFollower2, seller);
 
@@ -183,7 +188,7 @@ class FollowRepositoryTest {
      */
     @Test
     void givenUserWithNoFollowers_whenCountByFollowedId_thenReturnZeroCount() {
-        User seller = UtilUserFactory.createUserSeller(5);
+        User seller = UtilUserFactory.getSeller(5);
 
         Long followersCountResult = followRepository.countByFollowedId(seller.getId());
 

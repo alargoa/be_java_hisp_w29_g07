@@ -3,20 +3,34 @@ package com.bootcamp.be_java_hisp_w29_g07.integration;
 import com.bootcamp.be_java_hisp_w29_g07.constants.Messages;
 import com.bootcamp.be_java_hisp_w29_g07.constants.ValidationValues;
 import com.bootcamp.be_java_hisp_w29_g07.controller.PostController;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.PromoPostDTOOut;
 import com.bootcamp.be_java_hisp_w29_g07.entity.Post;
 import com.bootcamp.be_java_hisp_w29_g07.entity.User;
-import com.bootcamp.be_java_hisp_w29_g07.repository.IFollowRepository;
-import com.bootcamp.be_java_hisp_w29_g07.repository.IPostRepository;
+import com.bootcamp.be_java_hisp_w29_g07.util.UtilObjectMapper;
 import com.bootcamp.be_java_hisp_w29_g07.util.UtilPostFactory;
 import com.bootcamp.be_java_hisp_w29_g07.util.UtilUserFactory;
-import com.jayway.jsonpath.JsonPath;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import com.bootcamp.be_java_hisp_w29_g07.repository.IFollowRepository;
+import com.bootcamp.be_java_hisp_w29_g07.repository.IPostRepository;
+import com.jayway.jsonpath.JsonPath;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -29,28 +43,65 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * Integration test for the {@link PostController} controller.
+ * This class contains integration tests for the endpoints in {@link PostController}.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
 public class PostControllerIntegrationTest {
-    /**
-     * Instance of {@link MockMvc} that allows simulating HTTP requests and verifying controller responses.
-     */
-    @Autowired
-    private MockMvc mockMvc;
-
+    
     @Autowired
     private IPostRepository postRepository;
 
     @Autowired
     private IFollowRepository followRepository;
 
+    /**
+     * Instance of {@link MockMvc} that allows simulating HTTP requests and verifying controller responses.
+     */
+    @Autowired
+    private MockMvc mockMvc;
+
+    /**
+     * Sets up the object writer for JSON serialization before each test.
+     */
     @BeforeEach
-    void setUp() {
+    public void setUp() {
+
         followRepository.deleteAll();
-        postRepository.deleteAll();
+        postRepository.deleteAll();     
     }
 
+    /**
+     * Integration Test to verify that when a non-existent promotional post is created,
+     * a success response entity is returned.
+     */
+    @Test
+    public void givenNonExistentPromoPost_whenCreatePromoPost_thenReturnSuccessResponseEntity() throws Exception {
+        User user = UtilUserFactory.getSeller("cmorales", 2);
+
+        Post newPost = UtilPostFactory.getPromoPost();
+        newPost.setId(null);
+
+        Post savedPost = UtilPostFactory.getPromoPost();
+        savedPost.setUserId(user.getId());
+        PromoPostDTOOut promoPostDTOOutExpected = UtilPostFactory.getPromoPostDTOOut(savedPost);
+
+        MvcResult res = mockMvc.perform(post("/products/promo-post")
+                        .content(UtilObjectMapper.getObjectWriter()
+                                .writeValueAsString(UtilPostFactory.getPromoPostDTOIn(newPost)))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String jsonRes = res.getResponse().getContentAsString();
+
+        PromoPostDTOOut promoPostDTOOutRes = UtilObjectMapper.getObjectMapper().readValue(jsonRes, new TypeReference<PromoPostDTOOut>() {});
+        promoPostDTOOutExpected.setPost_id(promoPostDTOOutRes.getPost_id());
+        assertEquals(promoPostDTOOutExpected, promoPostDTOOutRes);
+    }
+        
     /**
      * Integration test to verify that posts from followed users are returned when no order parameter is provided.
      * <p>
@@ -62,8 +113,8 @@ public class PostControllerIntegrationTest {
     public void givenExistingUserId_WhenFindListUsersFollowedPosts_ThenReturnSuccess() throws Exception {
 
         User userFollower = UtilUserFactory.getUser("gali", 1);
-        User followedSellerA = UtilUserFactory.createUserSeller(2);
-        User followedSellerB = UtilUserFactory.createUserSeller(4);
+        User followedSellerA = UtilUserFactory.getSeller(2);
+        User followedSellerB = UtilUserFactory.getSeller(4);
 
         followRepository.saveFollow(userFollower, followedSellerA);
         followRepository.saveFollow(userFollower, followedSellerB);
@@ -104,8 +155,8 @@ public class PostControllerIntegrationTest {
     @Test
         void givenExistingUnorderedPosts_whenFindListUsersFollowedPosts_thenReturnPostsOrderedByDateDesc() throws Exception {
         User userFollower = UtilUserFactory.getUser("user1", 1);
-        User followedSeller1 = UtilUserFactory.createUserSeller(2);
-        User followedSeller2 = UtilUserFactory.createUserSeller(4);
+        User followedSeller1 = UtilUserFactory.getSeller(2);
+        User followedSeller2 = UtilUserFactory.getSeller(4);
         String order = "date_desc";
 
         followRepository.saveFollow(userFollower, followedSeller1);
@@ -148,8 +199,8 @@ public class PostControllerIntegrationTest {
     @Test
     void givenExistingUnorderedPosts_whenFindListUsersFollowedPosts_thenReturnPostsOrderedByDateAsc() throws Exception {
         User userFollower = UtilUserFactory.getUser("user1", 1);
-        User followedSeller1 = UtilUserFactory.createUserSeller(2);
-        User followedSeller2 = UtilUserFactory.createUserSeller(4);
+        User followedSeller1 = UtilUserFactory.getSeller(2);
+        User followedSeller2 = UtilUserFactory.getSeller(4);
         String order = "date_asc";
         followRepository.saveFollow(userFollower, followedSeller1);
         followRepository.saveFollow(userFollower, followedSeller2);

@@ -119,7 +119,7 @@ class FollowServiceTest {
      */
     @Test
     void givenExistingSeller_whenGetSellerFollowerCount_thenReturnCorrectFollowerCount() {
-        User sellerMock = UtilUserFactory.createUserSeller(4);
+        User sellerMock = UtilUserFactory.getSeller(4);
         Long followersCount = 5L;
         when(userService.findUserById(sellerMock.getId())).thenReturn(sellerMock);
         when(followRepository.countByFollowedId(sellerMock.getId())).thenReturn(followersCount);
