@@ -494,5 +494,54 @@ public class UserControllerIntegrationTest {
         assertEquals(userNameFollower2, listFollowedDTO.getFollowers().get(1).getUserName());
         assertEquals(userNameFollower3, listFollowedDTO.getFollowers().get(2).getUserName());
     }
+
+
+    /**
+     * Test that verifies the controller returns a BadRequest status with an appropriate error message
+     * when the 'findListFollowedByUserId' method is called with a user ID and an invalid order parameter.
+     * <p>
+     * In this case, the request is simulated with a user ID and an order parameter ("asc").
+     * The controller is expected to respond with a BadRequest status and a message indicating
+     * that the order does not exist.
+     * </p>
+     * @throws Exception if an error occurs during the test execution.
+     */
+    @Test
+    public void givenUserIdAndNotExistingOrder_whenFindListFollowed_thenReturnException() throws Exception {
+        MvcResult res = mockMvc.perform(get("/users/{userId}/followed/list", 1)
+                        .param("order", "asc"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String jsonRes = res.getResponse().getContentAsString();
+
+        assertTrue(jsonRes.contains(Messages.ORDER_DOES_NOT_EXIST));
+    }
+
+    /**
+     * Test that verifies the controller returns a BadRequest status with an appropriate error message
+     * when the 'findListFollowersByUserId' method is called with a user ID and an invalid order parameter.
+     * <p>
+     * In this case, the request is simulated with a user ID and an order parameter ("desc").
+     * The controller is expected to respond with a BadRequest status and a message indicating
+     * that the order does not exist.
+     * </p>
+     * @throws Exception if an error occurs during the test execution.
+     */
+    @Test
+    public void givenUserIdAndNotExistingOrder_whenFindListFollowers_thenReturnException() throws Exception {
+        MvcResult res = mockMvc.perform(get("/users/{userId}/followers/list", 1)
+                        .param("order", "desc"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String jsonRes = res.getResponse().getContentAsString();
+
+        assertTrue(jsonRes.contains(Messages.ORDER_DOES_NOT_EXIST));
+    }
 }
 
