@@ -3,6 +3,7 @@ package com.bootcamp.be_java_hisp_w29_g07.entity;
 import com.bootcamp.be_java_hisp_w29_g07.Enum.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@EqualsAndHashCode
 public class User {
     /**
      * The unique identifier for the user.

@@ -18,4 +18,5 @@ public interface IFollowRepository {
     List<Follow> findFollowedByUserId(Integer userId);
     Integer deleteFollowUserById(Integer userId, Integer userIdToUnfollow);
     List<Follow> findFollowersByUserId(Integer userId);
+    void deleteAll();
 }
