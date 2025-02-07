@@ -123,7 +123,7 @@ public class PostController {
      */
     @Operation(summary = "List posts by seller")
     @GetMapping("/posts/{userId}")
-    private ResponseEntity<ListPostDTO> findAllPostsBySellerId(@PathVariable(name="userId") Integer sellerId) {
+    public ResponseEntity<ListPostDTO> findAllPostsBySellerId(@PathVariable(name="userId") Integer sellerId) {
         return new ResponseEntity<>(postService.findAllPostBySellerId(sellerId), HttpStatus.OK);
     }
 

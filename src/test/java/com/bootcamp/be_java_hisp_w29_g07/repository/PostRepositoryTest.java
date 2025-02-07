@@ -4,6 +4,8 @@ import com.bootcamp.be_java_hisp_w29_g07.entity.Post;
 import com.bootcamp.be_java_hisp_w29_g07.util.UtilPostFactory;
 import org.junit.jupiter.api.Assertions;
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,6 +30,7 @@ class PostRepositoryTest {
     @BeforeEach
     public void setUp() throws IOException {
         this.postRepository = new PostRepositoryImpl();
+        postRepository.deleteAll();
     }
 
 
@@ -91,7 +94,7 @@ class PostRepositoryTest {
 
         List<Post> postList = postRepository.findPostsByUserIdsAndLastTwoWeeks(usersFollowing);
 
-        Assertions.assertTrue(postList.isEmpty());
+        assertTrue(postList.isEmpty());
     }
 
     /**
@@ -111,10 +114,37 @@ class PostRepositoryTest {
 
         List<Post> postList = postRepository.findPostsByUserIdsAndLastTwoWeeks(usersFollowing);
 
-        Assertions.assertTrue(postList.isEmpty());
+        assertTrue(postList.isEmpty());
     }
 
+    /**
+     * Unit Test to verify that when existing posts are present for a given user ID,
+     * the repository returns a list of posts for that user.
+     * The test asserts that the actual list of posts matches the expected list of posts
+     * in any order.
+     */
     @Test
-    void findAllPostsByUserId() {
+    void givenExistingPosts_whenFindAllPostsByUserId_thenReturnPostList() {
+        List<Post> postsExpected = UtilPostFactory.createUnorderedPosts();
+        postsExpected.forEach(p -> {
+            p.setUserId(1);
+            postRepository.savePost(p);
+        });
+
+        List<Post> postsActual = postRepository.findAllPostsByUserId(1);
+
+        assertThat(postsActual).containsExactlyInAnyOrderElementsOf(postsExpected);
+    }
+
+    /**
+     * Unit Test to verify that when no posts exist for a given user ID,
+     * the repository returns an empty list of posts.
+     * The test asserts that the actual list of posts is empty.
+     */
+    @Test
+    void givenNonExistingPosts_whenFindAllPostsByUserId_thenReturnPostListEmpty() {
+        List<Post> postsActual = postRepository.findAllPostsByUserId(1);
+
+        assertTrue(postsActual.isEmpty());
     }
 }
