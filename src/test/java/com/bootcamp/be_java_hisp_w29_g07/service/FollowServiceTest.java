@@ -19,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -431,6 +432,44 @@ class FollowServiceTest {
 
         assertEquals(followersList.getFirst().getFollower().getUsername(), result.getFollowers().getFirst().getUserName());
         assertEquals(followersList.get(1).getFollower().getUsername(), result.getFollowers().get(1).getUserName());
+    }
+
+    /**
+     * Test to verify that an exception is thrown when an invalid order parameter is provided
+     * while trying to retrieve the list of followers. It checks that a `BadRequestException`
+     * is thrown when the order is neither "name_asc" nor "name_desc", and verifies that the
+     * appropriate methods are called.
+     */
+    @Test
+    void givenUserIdAndNotExistingOrder_whenFindListFollowers_thenReturnException() {
+        Integer userId = 1;
+        String order = "asc";
+
+        when(userService.findUserById(userId)).thenReturn(new User());
+        when(followRepository.findFollowersByUserId(userId)).thenReturn(new ArrayList<>());
+
+        assertThrows(BadRequestException.class, () -> followService.findListFollowersByUserId(userId, order));
+        verify(userService, atLeastOnce()).findUserById(userId);
+        verify(followRepository, atLeastOnce()).findFollowersByUserId(userId);
+    }
+
+    /**
+     * Test to verify that an exception is thrown when an invalid order parameter is provided
+     * while trying to retrieve the list of followed. It checks that a `BadRequestException`
+     * is thrown when the order is neither "name_asc" nor "name_desc", and verifies that the
+     * appropriate methods are called.
+     */
+    @Test
+    void givenUserIdAndNotExistingOrder_whenFindListFollowed_thenReturnException() {
+        Integer userId = 1;
+        String order = "desc";
+
+        when(userService.findUserById(userId)).thenReturn(new User());
+        when(followRepository.findFollowedByUserId(userId)).thenReturn(new ArrayList<>());
+
+        assertThrows(BadRequestException.class, () -> followService.findListFollowedByUserId(userId, order));
+        verify(userService, atLeastOnce()).findUserById(userId);
+        verify(followRepository, atLeastOnce()).findFollowedByUserId(userId);
     }
 
     @Test
