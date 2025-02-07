@@ -2,6 +2,11 @@ package com.bootcamp.be_java_hisp_w29_g07.integration;
 
 import com.bootcamp.be_java_hisp_w29_g07.constants.Messages;
 import com.bootcamp.be_java_hisp_w29_g07.controller.UserController;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListFollowedDTO;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.bootcamp.be_java_hisp_w29_g07.repository.IFollowRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -11,9 +16,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -27,6 +37,14 @@ public class UserControllerIntegrationTest {
      */
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private IFollowRepository followRepository;
+
+    @BeforeEach
+    void setUp() {
+        followRepository.deleteAll();
+    }
 
     /**
      * Integration Test to verify that a user can unfollow another user when the follower is already following the target user.
@@ -108,6 +126,90 @@ public class UserControllerIntegrationTest {
     }
 
     /**
+     * Integration Test to verify that a seller with followers returns the correct follower count.
+     * <p>
+     * This test simulates users following a seller and then retrieves the follower count.
+     * It verifies that the response contains the correct number of followers and the seller's user ID.
+     * </p>
+     */
+    @Test
+    void givenExistentSeller_whenGetSellerFollowerCount_thenReturnCorrectCountResponse() throws Exception {
+        Integer userFollowerId1 = 1;
+        Integer userFollowerId2= 3;
+        Integer sellerFollowedId = 2;
+        Long expectedFollowers = 2L;
+        //Follow
+        mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}", userFollowerId1, sellerFollowedId))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}", userFollowerId2, sellerFollowedId))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/users/{userId}/followers/count", sellerFollowedId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.followers_count").value(expectedFollowers))
+                .andExpect(jsonPath("$.user_id").value(sellerFollowedId));
+    }
+
+
+    /**
+     * Integration Test to verify that a seller with no followers returns a count of zero.
+     * <p>
+     * This test retrieves the follower count for a seller who has no followers.
+     * It verifies that the response correctly returns zero followers.
+     * </p>
+     */
+    @Test
+    void givenExistentSellerWithNoFollowers_whenGetSellerFollowerCount_thenReturnZeroCountResponse() throws Exception {
+        Integer sellerFollowedId = 4;
+        Long expectedFollowers = 0L;
+
+        mockMvc.perform(get("/users/{userId}/followers/count", sellerFollowedId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.followers_count").value(expectedFollowers))
+                .andExpect(jsonPath("$.user_id").value(sellerFollowedId));
+    }
+
+    /**
+     * Integration Test to verify that retrieving follower count for a non-existent seller returns a 404 error.
+     * <p>
+     * This test attempts to retrieve the follower count for a seller that does not exist.
+     * It verifies that the system returns a 404 Not Found error with the expected message.
+     * </p>
+     */
+    @Test
+    void givenNonExistentSeller_whenGetSellerFollowerCount_thenReturnNotFoundError() throws Exception {
+
+        Integer sellerFollowedId = 99;
+        String expectedMsg = String.format(Messages.USER_NOT_FOUND_MSG, sellerFollowedId);
+
+        mockMvc.perform(get("/users/{userId}/followers/count", sellerFollowedId))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value(expectedMsg));
+    }
+
+    /**
+     * Integration Test to verify that retrieving follower count for a non-seller user returns a 400 error.
+     * <p>
+     * This test attempts to retrieve the follower count for a user that is not a seller.
+     * It verifies that the system returns a 400 Bad Request error with the expected message.
+     * </p>
+     */
+    @Test
+    void givenNonSellerUserId_whenGetSellerFollowerCount_thenReturnUserNotSellerError() throws Exception {
+        Integer sellerFollowedId = 1;
+        String expectedMsg = Messages.USER_NOT_SELLER_MSG;
+
+        mockMvc.perform(get("/users/{userId}/followers/count", sellerFollowedId))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value(expectedMsg));
+    }
+
+    /**
      * Integration Test to verify that an attempt to follow a user when both users exist
      * results in a successful follow operation.
      * <p>
@@ -158,4 +260,64 @@ public class UserControllerIntegrationTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
+
+    /**
+     * Integration Test to verify that when an existing user follows another user,
+     * the followed user's list can be retrieved successfully.
+     * <p>
+     * This test simulates a scenario where a user follows another user.
+     * It verifies that the system returns a successful response with the expected
+     * ListFollowedDTO, confirming the user’s following status.
+     * </p>
+     */
+    @Test
+    public void givenExistingUser_whenFindListFollowedByUserId_thenReturnSuccess() throws Exception {
+        Integer userIdFollower = 1;
+        Integer userIdToFollow = 2;
+
+        mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}", userIdFollower, userIdToFollow))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        MvcResult res = mockMvc.perform(get("/users/{userId}/followed/list", userIdFollower))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String jsonRes = res.getResponse().getContentAsString();
+        ListFollowedDTO listFollowedDTO = new ObjectMapper().readValue(jsonRes, new TypeReference<ListFollowedDTO>() {
+        });
+
+        assertEquals("alargo", listFollowedDTO.getUserName());
+        assertEquals(1, listFollowedDTO.getId());
+        assertEquals(1, listFollowedDTO.getFollowed().size());
+        assertEquals("cmorales", listFollowedDTO.getFollowed().getFirst().getUserName());
+        assertEquals(2, listFollowedDTO.getFollowed().getFirst().getUserId());
+    }
+
+
+    /**
+     * Integration Test to verify that an attempt to unfollow a user when the user ID is invalid
+     * <p>
+     * This test simulates an attempt to unfollow a user when the provided follower id is invalid
+     * (non-existent). It verifies that the system returns a 404 Not Found error,
+     * indicating that the user to unfollow does not exist in the system.
+     * </p>
+     */
+    @Test
+    public void givenNoExistingUser_whenFindListFollowedByUserId_thenReturnError() throws Exception {
+        Integer userId = 99;
+
+        MvcResult res = mockMvc.perform(get("/users/{userId}/followed/list", userId))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String jsonRes = res.getResponse().getContentAsString();
+
+        assertTrue(jsonRes.contains(String.format(Messages.USER_NOT_FOUND_MSG, userId)));
+    }
 }
+

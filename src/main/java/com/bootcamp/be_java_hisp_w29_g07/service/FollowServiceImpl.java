@@ -13,6 +13,7 @@ import com.bootcamp.be_java_hisp_w29_g07.exception.BadRequestException;
 import com.bootcamp.be_java_hisp_w29_g07.exception.NotFoundException;
 import com.bootcamp.be_java_hisp_w29_g07.repository.IFollowRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.*;
 
 /**
@@ -21,7 +22,7 @@ import java.util.*;
  * and validating business rules such as user types and permissions.
  */
 @Service
-public class FollowServiceImpl implements IFollowService{
+public class FollowServiceImpl implements IFollowService {
 
     /**
      * The Follow repository for managing follow-related operations.
@@ -136,12 +137,12 @@ public class FollowServiceImpl implements IFollowService{
     public ListFollowedDTO findListFollowedByUserId(Integer userId, String order) {
         // Validates that the user exists
         User user = userService.findUserById(userId);
-        List<UserDTO> followList =  new ArrayList<>(followRepository.findFollowedByUserId(userId)
+        List<UserDTO> followList = new ArrayList<>(followRepository.findFollowedByUserId(userId)
                 .stream()
-                .map(follow -> new UserDTO(follow.getFollowed().getId(), follow.getFollowed().getName()))
+                .map(follow -> new UserDTO(follow.getFollowed().getId(), follow.getFollowed().getUsername()))
                 .toList());
 
-        followList = orderList(followList, order, Comparator.comparing(UserDTO::getUserName));
+        orderList(followList, order, Comparator.comparing(UserDTO::getUserName));
 
         return new ListFollowedDTO(user.getId(), user.getUsername(), followList);
     }
