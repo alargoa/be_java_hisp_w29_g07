@@ -6,6 +6,7 @@ import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListFollowersDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.MessageDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.UserDTO;
 import com.bootcamp.be_java_hisp_w29_g07.entity.User;
+import com.bootcamp.be_java_hisp_w29_g07.exception.BadRequestException;
 import com.bootcamp.be_java_hisp_w29_g07.service.IFollowService;
 import com.bootcamp.be_java_hisp_w29_g07.util.UtilUserFactory;
 import org.junit.jupiter.api.Test;
@@ -19,10 +20,8 @@ import org.springframework.http.ResponseEntity;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 /**
  * Unit test class for {@link UserController}.
@@ -103,6 +102,27 @@ public class UserControllerTest {
         verify(followService).findListFollowedByUserId(userId,order);
     }
 
+    /**
+     * Unit Test to verify that when a user requests the list of followers,
+     * the appropriate ResponseEntity containing the ListFollowersDTO is returned.
+     */
+    @Test
+    public void givenExistingUser_whenFindListFollowersByUserId_thenReturnListFollowersDTO()
+    {
+        Integer userId = 1;
+
+        ListFollowersDTO mockResponse = new ListFollowersDTO(userId,"bsanchez", new ArrayList<>());
+
+        when(followService.findListFollowersByUserId(userId, null)).thenReturn(mockResponse);
+
+        ResponseEntity<ListFollowersDTO> response = userController.findListFollowersByUserId(userId, null);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(mockResponse,response.getBody());
+        assertNotNull(response.getBody());
+
+        verify(followService).findListFollowersByUserId(userId, null);
+    }
     /**
      * Unit test to verify that the list of followed users is correctly ordered by username in ascending order
      * when the "name_asc" order parameter is provided.
@@ -207,5 +227,39 @@ public class UserControllerTest {
         assertNotNull(response.getBody());
         assertEquals(followersDTO.getFollowers().getFirst().getUserName(), response.getBody().getFollowers().getFirst().getUserName());
         assertEquals(followersDTO.getFollowers().get(1).getUserName(), response.getBody().getFollowers().get(1).getUserName());
+    }
+
+    /**
+     * Unit Test to verify that an exception is thrown when an invalid order parameter is provided
+     * while trying to retrieve the list of followed. It checks that a `BadRequestException`
+     * is thrown when the order is neither "name_asc" nor "name_desc", and verifies that the
+     * appropriate methods are called.
+     */
+    @Test
+    public void givenUserIdAndNotExistingOrder_whenFindListFollowed_thenReturnException() {
+        Integer userId = 1;
+        String order = "asc";
+
+        when(followService.findListFollowedByUserId(userId,order)).thenThrow(BadRequestException.class);
+
+        assertThrows(BadRequestException.class, () -> userController.findListFollowedByUserId(userId, order));
+        verify(followService, atLeastOnce()).findListFollowedByUserId(userId, order);
+    }
+
+    /**
+     * Unit Test to verify that an exception is thrown when an invalid order parameter is provided
+     * while trying to retrieve the list of followers. It checks that a `BadRequestException`
+     * is thrown when the order is neither "name_asc" nor "name_desc", and verifies that the
+     * appropriate methods are called.
+     */
+    @Test
+    public void givenUserIdAndNotExistingOrder_whenFindListFollowers_thenReturnException() {
+        Integer userId = 1;
+        String order = "desc";
+
+        when(followService.findListFollowersByUserId(userId,order)).thenThrow(BadRequestException.class);
+
+        assertThrows(BadRequestException.class, () -> userController.findListFollowersByUserId(userId, order));
+        verify(followService, atLeastOnce()).findListFollowersByUserId(userId, order);
     }
 }

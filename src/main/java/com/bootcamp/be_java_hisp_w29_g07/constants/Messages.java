@@ -90,4 +90,6 @@ public class Messages {
      * Message indicating that the specified order type doesn't exist.
      */
     public static final String ORDER_DOES_NOT_EXIST = "The type of ordering indicated does not exist";
+
+    public static final String DATE_ORDER_INVALID = "Invalid date order";
 }

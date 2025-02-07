@@ -3,6 +3,7 @@ package com.bootcamp.be_java_hisp_w29_g07.dto.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**

@@ -133,6 +133,10 @@ public class PostServiceImpl implements IPostService {
     @Override
     public ListPostDTO findListUsersFollowedPostsByUserId(Integer userId, String order) {
 
+        if (!isValidDateOrder(order)) {
+            throw new BadRequestException(Messages.DATE_ORDER_INVALID);
+        }
+
         userService.verifyUserExists(userId);
 
         List<Integer> userFollowing = followService.findFollowedByUserId(userId);
@@ -171,6 +175,18 @@ public class PostServiceImpl implements IPostService {
                     .toList();
             default -> posts;
         };
+    }
+
+
+    /**
+     * Validates whether the given order string represents a valid date sorting order.
+     *
+     * @param order the order string to validate; it can be {@code null}, "date_asc", or "date_desc".
+     * @return {@code true} if the order is {@code null} or matches "date_asc" or "date_desc";
+     *         otherwise, returns {@code false}.
+     */
+    private boolean isValidDateOrder(String order) {
+        return Objects.isNull(order) || order.equals("date_asc") || order.equals("date_desc");
     }
 
     /**
