@@ -133,6 +133,10 @@ public class PostServiceImpl implements IPostService {
     @Override
     public ListPostDTO findListUsersFollowedPostsByUserId(Integer userId, String order) {
 
+        if (!isValidDateOrder(order)) {
+            throw new BadRequestException(Messages.DATE_ORDER_INVALID);
+        }
+
         userService.verifyUserExists(userId);
 
         List<Integer> userFollowing = followService.findFollowedByUserId(userId);
@@ -171,6 +175,10 @@ public class PostServiceImpl implements IPostService {
                     .toList();
             default -> posts;
         };
+    }
+
+    private boolean isValidDateOrder(String order) {
+        return Objects.isNull(order) || order.equals("date_asc") || order.equals("date_desc");
     }
 
     /**

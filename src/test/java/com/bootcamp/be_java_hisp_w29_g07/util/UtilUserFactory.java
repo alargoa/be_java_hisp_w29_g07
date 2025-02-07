@@ -27,10 +27,11 @@ public class UtilUserFactory {
     public static User createUserSeller(Integer id) {
         return new User(
                 id,
-                "userSeller",
-                "User",
-                "Seller",
-                "testseller@mercadolibre.com",
+                "jfeo",
+                "Juan Steven",
+                "Feo",
+                "jfeo@meli.com",
                 UserType.SELLER);
     }
+
 }

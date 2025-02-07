@@ -1,5 +1,6 @@
 package com.bootcamp.be_java_hisp_w29_g07.integration;
 
+import com.bootcamp.be_java_hisp_w29_g07.constants.Messages;
 import com.bootcamp.be_java_hisp_w29_g07.controller.PostController;
 import com.bootcamp.be_java_hisp_w29_g07.entity.Post;
 import com.bootcamp.be_java_hisp_w29_g07.entity.User;
@@ -135,6 +136,21 @@ public class PostControllerIntegrationTest {
                     assertTrue(date1.isBefore(date2));
                     assertTrue(date2.isBefore(date3));
                 });
+    }
+
+    /**
+     * Integration Test to verify that an invalid order type returns a 400 Bad Request error.
+     */
+    @Test
+    void givenInvalidOrder_whenFindListUsersFollowedPosts_thenReturnBadRequest() throws Exception {
+        Integer userFollowerId = 1;
+        String invalidOrder = "wrong_order";
+
+        mockMvc.perform(get("/products/followed/{userId}/list", userFollowerId)
+                        .param("order", invalidOrder))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value(Messages.DATE_ORDER_INVALID));
     }
 
 }

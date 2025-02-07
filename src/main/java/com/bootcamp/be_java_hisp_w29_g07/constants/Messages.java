@@ -85,4 +85,6 @@ public class Messages {
      * Message indicating that a seller cannot follow another seller.
      */
     public static final String SELLER_CANNOT_FOLLOW_SELLER = "A seller cannot follow another seller";
+
+    public static final String DATE_ORDER_INVALID = "Invalid date order";
 }
