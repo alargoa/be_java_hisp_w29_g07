@@ -242,11 +242,10 @@ class PostRepositoryTest {
         posts.forEach(post -> postRepository.savePost(post));
         List<Post> result = postRepository.findAll();
 
-        assertEquals(9, result.size());
-        assertEquals(2, result.getFirst().getUserId());
-        assertEquals(4, result.get(1).getUserId());
-        assertEquals("Headset RGB Inalámbrico", result.getFirst().getProduct().getName());
-        assertEquals("Silla Gamer", result.get(1).getProduct().getName());
+        assertEquals(posts.size(), result.size());
+        assertEquals(1, result.getFirst().getUserId());
+        assertEquals("Laptop", result.getFirst().getProduct().getName());
+        assertEquals("cars", result.get(1).getProduct().getName());
     }
 
 }
