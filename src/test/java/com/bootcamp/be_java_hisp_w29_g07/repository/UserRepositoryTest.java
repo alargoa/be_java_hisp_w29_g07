@@ -24,7 +24,7 @@ class UserRepositoryTest {
     @Test
     void givenExistingUserId_whenGetUserById_thenReturnUser() {
         Integer userId = 4;
-        User expectedUser = UtilUserFactory.createUserSeller(userId);
+        User expectedUser = UtilUserFactory.getSeller(userId);
 
         Optional<User> result = userRepository.getUserById(userId);
 

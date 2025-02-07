@@ -95,7 +95,7 @@ public class PostController {
      */
     @Operation(summary = "Add new promo post")
     @PostMapping("/promo-post")
-    private ResponseEntity<PromoPostDTOOut> createPromoPost(@Valid @RequestBody PromoPostDTOIn promoPostDTOIn) {
+    public ResponseEntity<PromoPostDTOOut> createPromoPost(@Valid @RequestBody PromoPostDTOIn promoPostDTOIn) {
         return new ResponseEntity<>(postService.createPromoPost(promoPostDTOIn), HttpStatus.OK);
     }
 

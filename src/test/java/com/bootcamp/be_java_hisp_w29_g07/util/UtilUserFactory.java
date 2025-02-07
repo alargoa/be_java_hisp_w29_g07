@@ -41,6 +41,18 @@ public class UtilUserFactory {
         return new User(id, username, "userName", "userLastName", "test@mercadolibre.com", UserType.USER);
     }
 
+    /**
+     * Creates a new instance of {@link User} with a predefined set of values and a specified ID.
+     * The user type is set to {@link UserType#SELLER}.
+     *
+     * @param username the username to assign to the new user.
+     * @param id the ID to assign to the new user.
+     * @return a {@link User} object with the specified username, ID, and default values for other fields.
+     */
+    public static User getSeller(String username, Integer id) {
+        return new User(id, username, "userName", "userLastName", "test@mercadolibre.com", UserType.SELLER);
+    }
+
 
     /**
      * Creates a new instance of {@link User} representing a seller with predefined values.
@@ -49,7 +61,7 @@ public class UtilUserFactory {
      * @return a {@link User} object with the specified id and default values for username, name, last name,
      *         email, and user type set as {@link UserType#SELLER}.
      */
-    public static User createUserSeller(Integer id) {
+    public static User getSeller(Integer id) {
         return new User(
                 id,
                 "jfeo",
