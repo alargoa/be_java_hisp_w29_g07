@@ -541,7 +541,7 @@ class PostServiceTest {
      * </p>
      */
     @Test
-    void whenFindAll_thenReturnListOfPostDTOs() {
+    void GivenExistingPost_whenFindAll_thenReturnListOfPostDTOs() {
         List<Post> posts = new ArrayList<>();
 
         Post post1 = UtilPostFactory.getPost();
