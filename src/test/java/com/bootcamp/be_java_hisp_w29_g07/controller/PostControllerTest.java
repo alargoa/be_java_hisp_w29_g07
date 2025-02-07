@@ -91,7 +91,7 @@ public class PostControllerTest {
      * the controller returns a ResponseEntity containing the expected PostDTO with HTTP status OK.
      */
     @Test
-    public void givenExistingPosId_WhenFindPostById_ThenReturnSuccessResponseEntity(){
+    public void givenExistingPostId_WhenFindPostById_ThenReturnSuccessResponseEntity(){
         Integer postId = 1;
         PostDTO postDTO = UtilPostFactory.getPostDTO(1);
         when(postService.findPostById(postId)).thenReturn(postDTO);
