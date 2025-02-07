@@ -51,6 +51,12 @@ class PostRepositoryTest {
     void findNextId() {
     }
 
+    /**
+     * Unit Test to verify that when an existing user ID is provided,
+     * the repository returns a list of posts from followed users created in the last two weeks.
+     * The test asserts that the post list is not null, contains the expected number of posts,
+     * and that each post's date is before the current date.
+     */
     @Test
     void givenExistingUserId_whenFindPostsByUserIdsLastTwoWeeks_thenReturnPostList() {
         List<Integer> usersFollowing = new ArrayList<>();
@@ -72,6 +78,10 @@ class PostRepositoryTest {
                 .allSatisfy(post -> assertThat(post.getDate()).isBefore(LocalDate.now()));
     }
 
+    /**
+     * Unit Test to verify that when a non-existent user ID is provided,
+     * the repository returns an empty list of posts from followed users created in the last two weeks.
+     */
     @Test
     void givenNonExistentUserId_whenFindPostsByUserIdsLastTwoWeeks_thenReturnEmptyPostList() {
         List<Integer> usersFollowing = new ArrayList<>();
@@ -84,6 +94,11 @@ class PostRepositoryTest {
         Assertions.assertTrue(postList.isEmpty());
     }
 
+    /**
+     * Unit Test to verify that when existent user IDs are provided,
+     * if none of the posts from these users fall within the last two weeks,
+     * the repository returns an empty post list.
+     */
     @Test
     void givenExistentUserId_whenFindPostsByUserIdsLastTwoWeeks_thenReturnPostList() {
         List<Integer> usersFollowing = new ArrayList<>();
