@@ -1,5 +1,6 @@
 package com.bootcamp.be_java_hisp_w29_g07.dto;
 
+import com.bootcamp.be_java_hisp_w29_g07.constants.ValidationValues;
 import com.bootcamp.be_java_hisp_w29_g07.entity.Product;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//DELETE CLASS WHEN PostDTOIn and PostDTOOut be fully implemented
+//TODO: DELETE CLASS WHEN PostDTOIn and PostDTOOut be fully implemented
 public class PostDTO {
     /**
      * The unique identifier for the post.
@@ -30,7 +31,7 @@ public class PostDTO {
      * The date when the post was created.
      * This field stores the date of the post, formatted as "dd-MM-yyyy".
      */
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(pattern = ValidationValues.DATE_PATTERN)
     private LocalDate date;
 
     /**
