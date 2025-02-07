@@ -49,6 +49,13 @@ public class PostControllerIntegrationTest {
         postRepository.deleteAll();
     }
 
+    /**
+     * Integration test to verify that posts from followed users are returned when no order parameter is provided.
+     * <p>
+     * This test follows two seller users, creates posts for them, and then retrieves the posts.
+     * It verifies that the posts' dates fall within the last two weeks.
+     * </p>
+     */
     @Test
     public void givenExistingUserId_WhenFindListUsersFollowedPosts_ThenReturnSuccess() throws Exception {
 
