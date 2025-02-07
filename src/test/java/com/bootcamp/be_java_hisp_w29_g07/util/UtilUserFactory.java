@@ -41,6 +41,14 @@ public class UtilUserFactory {
         return new User(id, username, "userName", "userLastName", "test@mercadolibre.com", UserType.USER);
     }
 
+
+    /**
+     * Creates a new instance of {@link User} representing a seller with predefined values.
+     *
+     * @param id the unique identifier to assign to the new seller user.
+     * @return a {@link User} object with the specified id and default values for username, name, last name,
+     *         email, and user type set as {@link UserType#SELLER}.
+     */
     public static User createUserSeller(Integer id) {
         return new User(
                 id,

@@ -141,6 +141,8 @@ class PostServiceTest {
 
         assertNotNull(result);
         assertEquals(3, result.getPosts().size());
+        verify(userService, times(1)).verifyUserExists(userId);
+        verify(followService, times(1)).findFollowedByUserId(userId);
         verify(postRepository, times(1)).findPostsByUserIdsAndLastTwoWeeks(followedUserIds);
     }
 

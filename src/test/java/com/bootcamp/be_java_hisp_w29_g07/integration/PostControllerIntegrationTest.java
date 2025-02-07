@@ -1,6 +1,7 @@
 package com.bootcamp.be_java_hisp_w29_g07.integration;
 
 import com.bootcamp.be_java_hisp_w29_g07.constants.Messages;
+import com.bootcamp.be_java_hisp_w29_g07.constants.ValidationValues;
 import com.bootcamp.be_java_hisp_w29_g07.controller.PostController;
 import com.bootcamp.be_java_hisp_w29_g07.entity.Post;
 import com.bootcamp.be_java_hisp_w29_g07.entity.User;
@@ -70,7 +71,7 @@ public class PostControllerIntegrationTest {
         List<Post> posts = UtilPostFactory.createUnorderedPosts();
         posts.forEach(post -> postRepository.savePost(post));
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ValidationValues.DATE_PATTERN);
         LocalDate twoWeeksAgo = LocalDate.now().minusWeeks(2);
         LocalDate today = LocalDate.now();
 
@@ -113,8 +114,7 @@ public class PostControllerIntegrationTest {
         List<Post> posts = UtilPostFactory.createUnorderedPosts();
         posts.forEach(post -> postRepository.savePost(post));
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ValidationValues.DATE_PATTERN);
 
         mockMvc.perform(get("/products/followed/{userId}/list", userFollower.getId())
                         .param("order", order))
@@ -157,7 +157,7 @@ public class PostControllerIntegrationTest {
         List<Post> posts = UtilPostFactory.createUnorderedPosts();
         posts.forEach(post -> postRepository.savePost(post));
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ValidationValues.DATE_PATTERN);
 
         mockMvc.perform(get("/products/followed/{userId}/list", userFollower.getId())
                         .param("order", order))
