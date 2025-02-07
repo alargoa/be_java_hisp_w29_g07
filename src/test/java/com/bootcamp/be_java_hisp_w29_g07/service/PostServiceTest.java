@@ -10,6 +10,7 @@ import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 import com.bootcamp.be_java_hisp_w29_g07.exception.BadRequestException;
 import com.bootcamp.be_java_hisp_w29_g07.exception.NotFoundException;
 import com.bootcamp.be_java_hisp_w29_g07.repository.IPostRepository;
+import com.bootcamp.be_java_hisp_w29_g07.util.UtilObjectMapper;
 import com.bootcamp.be_java_hisp_w29_g07.util.UtilPostFactory;
 import com.bootcamp.be_java_hisp_w29_g07.util.UtilUserFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -58,7 +60,7 @@ class PostServiceTest {
      */
     @InjectMocks
     private PostServiceImpl postService;
-    
+
     @Test
     void addPost() {
     }
@@ -454,7 +456,46 @@ class PostServiceTest {
         verify(userService).findUserById(user.getId());
     }
 
+    /**
+     * Unit Test to verify that when existing posts are retrieved by user ID,
+     * the service returns a ListPostDTO containing the posts.
+     */
     @Test
-    void findAllPostBySellerId() {
+    void givenExistingPosts_whenFindAllPostBySellerId_thenReturnPostList() {
+
+        User user = UtilUserFactory.getSeller("cmorales", 2);
+        List<Post> postsExpected = UtilPostFactory.createUnorderedPosts();
+        postsExpected.forEach(p -> {
+            p.setUserId(user.getId());
+            postRepository.savePost(p);
+        });
+        List<PostDTO> postsDTOExpected = postsExpected.stream()
+                .map(p -> UtilObjectMapper.getObjectMapper()
+                        .convertValue(p, PostDTO.class)).toList();
+        when(userService.findUserById(user.getId())).thenReturn(user);
+        when(postRepository.findAllPostsByUserId(user.getId())).thenReturn(postsExpected);
+
+        ListPostDTO listPostDTO = postService.findAllPostBySellerId(user.getId());
+        verify(userService).findUserById(user.getId());
+        verify(postRepository).findAllPostsByUserId(user.getId());
+
+        assertNotNull(listPostDTO);
+        assertEquals(postsExpected.size(), listPostDTO.getPosts().size());
+        assertThat(listPostDTO.getPosts()).containsExactlyInAnyOrderElementsOf(postsDTOExpected);
+        assertEquals(user.getId(), listPostDTO.getUser_id());
+    }
+
+    /**
+     * Unit Test to verify that when a non-seller user attempts to retrieve all posts by user ID,
+     * a BadRequestException is thrown.
+     */
+    @Test
+    void givenUserNonSeller_whenFindAllPostBySellerId_thenReturnBadRequestException() {
+
+        User user = UtilUserFactory.getUser("cmorales", 2);
+        when(userService.findUserById(user.getId())).thenReturn(user);
+
+        assertThrows(BadRequestException.class, () -> postService.findAllPostBySellerId(user.getId()));
+        verify(userService).findUserById(user.getId());
     }
 }
