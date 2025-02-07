@@ -2,6 +2,7 @@ package com.bootcamp.be_java_hisp_w29_g07.repository;
 
 import com.bootcamp.be_java_hisp_w29_g07.entity.Follow;
 import com.bootcamp.be_java_hisp_w29_g07.entity.User;
+import com.bootcamp.be_java_hisp_w29_g07.util.UtilFollowFactory;
 import com.bootcamp.be_java_hisp_w29_g07.util.UtilUserFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Unit test class for {@link FollowRepositoryImpl}.
@@ -82,7 +89,7 @@ class FollowRepositoryTest {
 
         Integer numberOfFollowsDeleted = followRepository.deleteFollowUserById(userFollower.getId(), userFollowed.getId());
 
-        assertEquals(1, numberOfFollowsDeleted);
+        Assertions.assertEquals(1, numberOfFollowsDeleted);
         Assertions.assertTrue(followRepository.findFollow(userFollower, userFollowed).isEmpty());
     }
 
@@ -99,7 +106,7 @@ class FollowRepositoryTest {
 
         Integer numberOfFollowsDeleted = followRepository.deleteFollowUserById(9, userFollowed.getId());
 
-        assertEquals(0, numberOfFollowsDeleted);
+        Assertions.assertEquals(0, numberOfFollowsDeleted);
     }
 
     /**
@@ -148,4 +155,45 @@ class FollowRepositoryTest {
 
         assertEquals(0L, followersCountResult);
     }
+
+
+    /**
+     * Unit Test to verify that when a user has followers, the method
+     * findFollowedByUserId returns the correct list of follows for that user.
+     */
+    @Test
+    void givenExistingFollowers_whenFindFollowedByUserId_thenReturnListOfFollows() {
+        User user1 = UtilUserFactory.getUser("alargo", 1);
+        User user2 = UtilUserFactory.getUser("jfeo", 2);
+        User user3 = UtilUserFactory.getUser("bcamilo", 3);
+
+        followRepository.saveFollow(user1, user2);
+        followRepository.saveFollow(user1, user3);
+
+        List<Follow> followedList = followRepository.findFollowedByUserId(user1.getId());
+
+        Follow expectedFollowUser1 = UtilFollowFactory.getFollow(user1, user2);
+        Follow expectedFollowUser2 = UtilFollowFactory.getFollow(user1, user3);
+        expectedFollowUser2.setId(2);
+
+        List<Follow> expectedFollowList = Arrays.asList(expectedFollowUser1,expectedFollowUser2);
+
+        Assertions.assertEquals(2, followedList.size());
+        Assertions.assertArrayEquals(expectedFollowList.toArray() ,followedList.toArray());
+    }
+
+    /**
+     * Unit Test to verify that when a user with no followers calls
+     * findFollowedByUserId, the operation returns an empty list.
+     */
+    @Test
+    void givenNoExistingFollowers_whenFindFollowedByUserId_thenReturnListOfFollows() {
+        User user1 = UtilUserFactory.getUser("jfeo", 1);
+
+        List<Follow> followedList = followRepository.findFollowedByUserId(user1.getId());
+
+        Assertions.assertEquals(0, followedList.size());
+    }
+
+
 }

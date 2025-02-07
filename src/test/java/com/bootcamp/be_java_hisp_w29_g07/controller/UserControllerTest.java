@@ -1,6 +1,7 @@
 package com.bootcamp.be_java_hisp_w29_g07.controller;
 
 import com.bootcamp.be_java_hisp_w29_g07.constants.Messages;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListFollowedDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.MessageDTO;
 import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 import com.bootcamp.be_java_hisp_w29_g07.service.IFollowService;
@@ -12,6 +13,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -73,4 +76,28 @@ public class UserControllerTest {
 
         assertEquals(message, response.getBody());
         }
+    /**
+     * Unit Test to verify that when a user requests the list of users they are following,
+     * the appropriate ResponseEntity containing the ListFollowedDTO is returned.
+     */
+    @Test
+    public void givenExistingUser_whenFindListFollowedByUserId_thenReturnListFollowedDTO()
+    {
+        Integer userId = 1;
+        String order = null;
+
+        ListFollowedDTO mockResponse = new ListFollowedDTO(userId,"steven", new ArrayList<>());
+
+        when(followService.findListFollowedByUserId(userId,order)).thenReturn(mockResponse);
+
+        ResponseEntity<ListFollowedDTO> response = userController.findListFollowedByUserId(userId,order);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(mockResponse,response.getBody());
+        assertNotNull(response.getBody());
+
+        verify(followService).findListFollowedByUserId(userId,order);
+    }
+
+
 }

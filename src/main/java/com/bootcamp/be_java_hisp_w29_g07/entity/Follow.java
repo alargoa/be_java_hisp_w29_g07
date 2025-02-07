@@ -2,9 +2,11 @@ package com.bootcamp.be_java_hisp_w29_g07.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * This class represents a follow relationship between two users.
@@ -12,6 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@EqualsAndHashCode
 public class Follow {
     /**
      * The unique identifier for the follow record.
@@ -29,4 +32,6 @@ public class Follow {
      * The date when the follow action occurred.
      */
     private LocalDate followDate;
+
+
 }
