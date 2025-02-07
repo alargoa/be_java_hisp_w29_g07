@@ -218,7 +218,7 @@ public class PostControllerTest {
      * </p>
      */
     @Test
-    public void GivenExistingPost_whenGetAll_thenReturnListOfPostDTOs()
+    public void givenExistingPost_whenGetAll_thenReturnListOfPostDTOs()
     {
         List<PostDTO> mockResponse = new ArrayList<>();
         PostDTO post1 = UtilPostFactory.getPostDto();

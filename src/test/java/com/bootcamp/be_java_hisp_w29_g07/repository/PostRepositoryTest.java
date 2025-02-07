@@ -227,7 +227,7 @@ class PostRepositoryTest {
      * </p>
      */
     @Test
-    void GivenExistingPost_whenFindAll_thenReturnListOfPosts() {
+    void givenExistingPost_whenFindAll_thenReturnListOfPosts() {
         List<Post> posts = new ArrayList<>();
         Post post1 = UtilPostFactory.getPost();
         Post post2 = UtilPostFactory.getPost();

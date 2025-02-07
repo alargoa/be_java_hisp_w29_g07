@@ -397,6 +397,15 @@ public class PostControllerIntegrationTest {
     }
 
 
+    /**
+     * Integration Test to verify that when new posts are added to the repository,
+     * the findAll endpoint returns the correct list of posts.
+     * <p>
+     * This test simulates the addition of new posts into the repository using a utility factory.
+     * It then performs a GET request to retrieve all posts and verifies that the response contains
+     * the correct number of posts along with the appropriate post IDs.
+     * </p>
+     */
     @Test
     void givenNewPost_whenAddPost_thenReturnNewPost() throws Exception {
         List<Post> posts = UtilPostFactory.createUnorderedPosts();
