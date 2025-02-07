@@ -161,10 +161,10 @@ public class FollowServiceImpl implements IFollowService {
         User user = userService.findUserById(userId);
         List<UserDTO> followList = new ArrayList<>(followRepository.findFollowersByUserId(userId)
                 .stream()
-                .map(follow -> new UserDTO(follow.getFollower().getId(), follow.getFollower().getName()))
+                .map(follow -> new UserDTO(follow.getFollower().getId(), follow.getFollower().getUsername()))
                 .toList());
 
-        followList = orderList(followList, order, Comparator.comparing(UserDTO::getUserName));
+        orderList(followList, order, Comparator.comparing(UserDTO::getUserName));
 
         return new ListFollowersDTO(user.getId(), user.getUsername(), followList);
     }
@@ -186,12 +186,15 @@ public class FollowServiceImpl implements IFollowService {
      * @return the ordered list
      */
     private <T> List<T> orderList(List<T> list, String order, Comparator<T> comparator) {
-        if (Objects.nonNull(order)) {
-            if (order.equals(OrderType.ASC.getOrderType())) {
-                list.sort(comparator);
-            } else if (order.equals(OrderType.DESC.getOrderType())) {
-                list.sort(comparator.reversed());
-            }
+        if (Objects.isNull(order)) {
+            return list;
+        }
+        if (order.equals(OrderType.ASC.getOrderType())) {
+            list.sort(comparator);
+        } else if (order.equals(OrderType.DESC.getOrderType())) {
+            list.sort(comparator.reversed());
+        } else {
+            throw new BadRequestException(Messages.ORDER_DOES_NOT_EXIST);
         }
         return list;
     }

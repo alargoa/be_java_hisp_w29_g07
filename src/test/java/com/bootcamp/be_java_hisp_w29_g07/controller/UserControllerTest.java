@@ -2,7 +2,9 @@ package com.bootcamp.be_java_hisp_w29_g07.controller;
 
 import com.bootcamp.be_java_hisp_w29_g07.constants.Messages;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListFollowedDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListFollowersDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.MessageDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.UserDTO;
 import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 import com.bootcamp.be_java_hisp_w29_g07.service.IFollowService;
 import com.bootcamp.be_java_hisp_w29_g07.util.UtilUserFactory;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -46,7 +49,7 @@ public class UserControllerTest {
      * the appropriate success ResponseEntity with the message is returned.
      */
     @Test
-    public void givenExistingFollow_whenUnfollowUserById_thenReturnSuccessResponseEntity(){
+    public void givenExistingFollow_whenUnfollowUserById_thenReturnSuccessResponseEntity() {
         Integer userIdFollower = 1;
         Integer userIdFollowed = 2;
         MessageDTO messageDTO = new MessageDTO(String.format(Messages.USER_HAS_UNFOLLOWED_USER, userIdFollower, userIdFollowed));
@@ -66,7 +69,7 @@ public class UserControllerTest {
      * the appropriate success ResponseEntity with the message is returned.
      */
     @Test
-    public void givenUserFollowSeller_whenAddFollow_thenReturnSuccessResponseEntity(){
+    public void givenUserFollowSeller_whenAddFollow_thenReturnSuccessResponseEntity() {
         User user = UtilUserFactory.getUser("jfeo");
         User userToFollow = UtilUserFactory.getUser("alargo");
         MessageDTO message = new MessageDTO(String.format(Messages.USER_FOLLOW_SELLER, user.getName(), userToFollow.getName()));
@@ -75,7 +78,8 @@ public class UserControllerTest {
         ResponseEntity<MessageDTO> response = userController.addFollow(user.getId(), userToFollow.getId());
 
         assertEquals(message, response.getBody());
-        }
+    }
+
     /**
      * Unit Test to verify that when a user requests the list of users they are following,
      * the appropriate ResponseEntity containing the ListFollowedDTO is returned.
@@ -99,5 +103,109 @@ public class UserControllerTest {
         verify(followService).findListFollowedByUserId(userId,order);
     }
 
+    /**
+     * Unit test to verify that the list of followed users is correctly ordered by username in ascending order
+     * when the "name_asc" order parameter is provided.
+     */
+    @Test
+    public void givenUserIdAndOrderAsc_whenFindListFollowed_thenReturnSuccessListOrdered() {
+        Integer userId = 1;
+        String userName = "alargo";
+        String order = "name_asc";
+        ListFollowedDTO followedDTO = new ListFollowedDTO(userId,userName,
+                Arrays.asList(
+                        new UserDTO(2, "cmorales"),
+                        new UserDTO(4, "jfeo")
+                ));
 
+        when(followService.findListFollowedByUserId(userId, order)).thenReturn(followedDTO);
+
+        ResponseEntity<ListFollowedDTO> response = userController.findListFollowedByUserId(userId ,order);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(followedDTO, response.getBody());
+        assertNotNull(response.getBody());
+        assertEquals(followedDTO.getFollowed().getFirst().getUserName(), response.getBody().getFollowed().getFirst().getUserName());
+        assertEquals(followedDTO.getFollowed().get(1).getUserName(), response.getBody().getFollowed().get(1).getUserName());
+    }
+
+    /**
+     * Unit test to verify that the list of followed users is correctly ordered by username in descending order
+     * when the "name_asc" order parameter is provided.
+     */
+    @Test
+    public void givenUserIdAndOrderDesc_whenFindListFollowed_thenReturnSuccessListOrdered() {
+        Integer userId = 1;
+        String userName = "alargo";
+        String order = "name_desc";
+        ListFollowedDTO followedDTO = new ListFollowedDTO(userId,userName,
+                Arrays.asList(
+                        new UserDTO(4, "jfeo"),
+                        new UserDTO(2, "cmorales")
+                ));
+
+        when(followService.findListFollowedByUserId(userId, order)).thenReturn(followedDTO);
+
+        ResponseEntity<ListFollowedDTO> response = userController.findListFollowedByUserId(userId ,order);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(followedDTO, response.getBody());
+        assertNotNull(response.getBody());
+        assertEquals(followedDTO.getFollowed().getFirst().getUserName(), response.getBody().getFollowed().getFirst().getUserName());
+        assertEquals(followedDTO.getFollowed().get(1).getUserName(), response.getBody().getFollowed().get(1).getUserName());
+    }
+
+    /**
+     * Unit test to verify that the list of followers users is correctly ordered by username in ascending order
+     * when the "name_asc" order parameter is provided.
+     */
+    @Test
+    public void givenUserIdAndOrderAsc_whenFindListFollowers_thenReturnSuccessListOrdered() {
+        Integer userId = 2;
+        String userName = "cmorales";
+        String order = "name_asc";
+        ListFollowersDTO followersDTO = new ListFollowersDTO(userId,userName,
+                Arrays.asList(
+                        new UserDTO(3, "acano"),
+                        new UserDTO(1, "alargo"),
+                        new UserDTO(5, "bsanchez")
+                ));
+
+        when(followService.findListFollowersByUserId(userId, order)).thenReturn(followersDTO);
+
+        ResponseEntity<ListFollowersDTO> response = userController.findListFollowersByUserId(userId ,order);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(followersDTO, response.getBody());
+        assertNotNull(response.getBody());
+        assertEquals(followersDTO.getFollowers().getFirst().getUserName(), response.getBody().getFollowers().getFirst().getUserName());
+        assertEquals(followersDTO.getFollowers().get(1).getUserName(), response.getBody().getFollowers().get(1).getUserName());
+    }
+
+    /**
+     * Unit test to verify that the list of followers users is correctly ordered by username in descending order
+     * when the "name_asc" order parameter is provided.
+     */
+    @Test
+    public void givenUserIdAndOrderDesc_whenFindListFollowers_thenReturnSuccessListOrdered() {
+        Integer userId = 2;
+        String userName = "cmorales";
+        String order = "name_asc";
+        ListFollowersDTO followersDTO = new ListFollowersDTO(userId,userName,
+                Arrays.asList(
+                        new UserDTO(5, "bsanchez"),
+                        new UserDTO(1, "alargo"),
+                        new UserDTO(3, "acano")
+                ));
+
+        when(followService.findListFollowersByUserId(userId, order)).thenReturn(followersDTO);
+
+        ResponseEntity<ListFollowersDTO> response = userController.findListFollowersByUserId(userId ,order);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(followersDTO, response.getBody());
+        assertNotNull(response.getBody());
+        assertEquals(followersDTO.getFollowers().getFirst().getUserName(), response.getBody().getFollowers().getFirst().getUserName());
+        assertEquals(followersDTO.getFollowers().get(1).getUserName(), response.getBody().getFollowers().get(1).getUserName());
+    }
 }

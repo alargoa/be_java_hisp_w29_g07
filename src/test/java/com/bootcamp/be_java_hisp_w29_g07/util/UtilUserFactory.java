@@ -20,6 +20,23 @@ public class UtilUserFactory {
         return new User(9999, username, "userName", "userLastName", "test@mercadolibre.com", UserType.USER);
     }
 
+    /**
+     * Creates a new instance of {@link User} with a predefined set of values.
+     *
+     * @param id the id to assign to the new user.
+     * @return a {@link User} object with the specified id and default values for other fields.
+     */
+    public static User getUser(Integer id) {
+        return new User(id, "username", "userName", "userLastName", "test@mercadolibre.com", UserType.USER);
+    }
+
+    /**
+     * Creates a new instance of {@link User} with a predefined set of values.
+     *
+     * @param username the username to assign to the new user.
+     * @param id the id to assign to the new user.
+     * @return a {@link User} object with the specified username and id and default values for other fields.
+     */
     public static User getUser(String username, Integer id) {
         return new User(id, username, "userName", "userLastName", "test@mercadolibre.com", UserType.USER);
     }

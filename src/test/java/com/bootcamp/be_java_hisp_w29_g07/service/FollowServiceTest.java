@@ -3,20 +3,14 @@ package com.bootcamp.be_java_hisp_w29_g07.service;
 import com.bootcamp.be_java_hisp_w29_g07.Enum.UserType;
 import com.bootcamp.be_java_hisp_w29_g07.constants.Messages;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListFollowedDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListFollowersDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.MessageDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.SellerFollowerCountDTO;
 import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 import com.bootcamp.be_java_hisp_w29_g07.exception.BadRequestException;
 import com.bootcamp.be_java_hisp_w29_g07.entity.Follow;
-import com.bootcamp.be_java_hisp_w29_g07.entity.User;
-import com.bootcamp.be_java_hisp_w29_g07.exception.BadRequestException;
-import com.bootcamp.be_java_hisp_w29_g07.entity.Follow;
-import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 import com.bootcamp.be_java_hisp_w29_g07.exception.NotFoundException;
 import com.bootcamp.be_java_hisp_w29_g07.repository.IFollowRepository;
-import com.bootcamp.be_java_hisp_w29_g07.util.UtilFollowFactory;
-import com.bootcamp.be_java_hisp_w29_g07.util.UtilUserFactory;
-import com.bootcamp.be_java_hisp_w29_g07.util.UtilUserFactory;
 import com.bootcamp.be_java_hisp_w29_g07.util.UtilFollowFactory;
 import com.bootcamp.be_java_hisp_w29_g07.util.UtilUserFactory;
 import org.junit.jupiter.api.Test;
@@ -341,6 +335,102 @@ class FollowServiceTest {
 
     @Test
     void findListFollowersByUserId() {
+    }
+
+    /**
+     * Unit test to verify that the list of followed users is correctly ordered by username in ascending order
+     * when the "name_asc" order parameter is provided.
+     */
+    @Test
+    void givenUserIdAndOrderAsc_whenFindListFollowed_thenOrderListByOrder() {
+        Integer userId = 1;
+        String order = "name_asc";
+        User user = UtilUserFactory.getUser(userId);
+        when(userService.findUserById(userId)).thenReturn(user);
+
+        List<Follow> followList = UtilFollowFactory.getFollowedListOrderAsc(user);
+        when(followRepository.findFollowedByUserId(userId)).thenReturn(followList);
+
+        ListFollowedDTO result = followService.findListFollowedByUserId(userId, order);
+
+        assertEquals(user.getId(), result.getId());
+        assertEquals(user.getUsername(), result.getUserName());
+        assertEquals(followList.size(), result.getFollowed().size());
+
+        assertEquals(followList.getFirst().getFollowed().getUsername(), result.getFollowed().getFirst().getUserName());
+        assertEquals(followList.get(1).getFollowed().getUsername(), result.getFollowed().get(1).getUserName());
+    }
+
+    /**
+     * Unit test to verify that the list of followed users is correctly ordered by username in ascending order
+     * when the "name_desc" order parameter is provided.
+     */
+    @Test
+    void givenUserIdAndOrderDesc_whenFindListFollowed_thenOrderListByOrder() {
+        Integer userId = 1;
+        String order = "name_desc";
+        User user = UtilUserFactory.getUser(userId);
+        when(userService.findUserById(userId)).thenReturn(user);
+
+        List<Follow> followList = UtilFollowFactory.getFollowedListOrderDesc(user);
+        when(followRepository.findFollowedByUserId(userId)).thenReturn(followList);
+
+        ListFollowedDTO result = followService.findListFollowedByUserId(userId, order);
+
+        assertEquals(user.getId(), result.getId());
+        assertEquals(user.getUsername(), result.getUserName());
+        assertEquals(followList.size(), result.getFollowed().size());
+
+        assertEquals(followList.getFirst().getFollowed().getUsername(), result.getFollowed().getFirst().getUserName());
+        assertEquals(followList.get(1).getFollowed().getUsername(), result.getFollowed().get(1).getUserName());
+    }
+
+    /**
+     * Unit test to verify that the list of followers users is correctly ordered by username in ascending order
+     * when the "name_asc" order parameter is provided.
+     */
+    @Test
+    void givenUserIdAndOrderAsc_whenFindListFollowers_thenOrderListByOrder() {
+        Integer userId = 1;
+        String order = "name_asc";
+        User user = UtilUserFactory.getUser(userId);
+        when(userService.findUserById(userId)).thenReturn(user);
+
+        List<Follow> followersList = UtilFollowFactory.getFollowersListOrderAsc(user);
+        when(followRepository.findFollowersByUserId(userId)).thenReturn(followersList);
+
+        ListFollowersDTO result = followService.findListFollowersByUserId(userId, order);
+
+        assertEquals(user.getId(), result.getUser_id());
+        assertEquals(user.getUsername(), result.getUser_name());
+        assertEquals(followersList.size(), result.getFollowers().size());
+
+        assertEquals(followersList.getFirst().getFollower().getUsername(), result.getFollowers().getFirst().getUserName());
+        assertEquals(followersList.get(1).getFollower().getUsername(), result.getFollowers().get(1).getUserName());
+    }
+
+    /**
+     * Unit test to verify that the list of followers users is correctly ordered by username in ascending order
+     * when the "name_asc" order parameter is provided.
+     */
+    @Test
+    void givenUserIdAndOrderDesc_whenFindListFollowers_thenOrderListByOrder() {
+        Integer userId = 1;
+        String order = "name_desc";
+        User user = UtilUserFactory.getUser(userId);
+        when(userService.findUserById(userId)).thenReturn(user);
+
+        List<Follow> followersList = UtilFollowFactory.getFollowersListOrderDesc(user);
+        when(followRepository.findFollowersByUserId(userId)).thenReturn(followersList);
+
+        ListFollowersDTO result = followService.findListFollowersByUserId(userId, order);
+
+        assertEquals(user.getId(), result.getUser_id());
+        assertEquals(user.getUsername(), result.getUser_name());
+        assertEquals(followersList.size(), result.getFollowers().size());
+
+        assertEquals(followersList.getFirst().getFollower().getUsername(), result.getFollowers().getFirst().getUserName());
+        assertEquals(followersList.get(1).getFollower().getUsername(), result.getFollowers().get(1).getUserName());
     }
 
     @Test
