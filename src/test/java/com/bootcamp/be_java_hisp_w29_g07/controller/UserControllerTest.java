@@ -222,6 +222,7 @@ public class UserControllerTest {
         when(followService.findListFollowedByUserId(userId,order)).thenThrow(BadRequestException.class);
 
         assertThrows(BadRequestException.class, () -> userController.findListFollowedByUserId(userId, order));
+        verify(followService, atLeastOnce()).findListFollowedByUserId(userId, order);
     }
 
     /**
@@ -238,5 +239,6 @@ public class UserControllerTest {
         when(followService.findListFollowersByUserId(userId,order)).thenThrow(BadRequestException.class);
 
         assertThrows(BadRequestException.class, () -> userController.findListFollowersByUserId(userId, order));
+        verify(followService, atLeastOnce()).findListFollowersByUserId(userId, order);
     }
 }
