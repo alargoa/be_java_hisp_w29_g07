@@ -2,9 +2,11 @@ package com.bootcamp.be_java_hisp_w29_g07.integration;
 
 import com.bootcamp.be_java_hisp_w29_g07.controller.PostController;
 import com.bootcamp.be_java_hisp_w29_g07.entity.Post;
+import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 import com.bootcamp.be_java_hisp_w29_g07.repository.IFollowRepository;
 import com.bootcamp.be_java_hisp_w29_g07.repository.IPostRepository;
 import com.bootcamp.be_java_hisp_w29_g07.util.UtilPostFactory;
+import com.bootcamp.be_java_hisp_w29_g07.util.UtilUserFactory;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,17 +57,14 @@ public class PostControllerIntegrationTest {
      * </p>
      */
     @Test
-    void givenFollowedUsers_whenFindListUsersFollowedPosts_thenReturnPostsOrderedByDateDesc() throws Exception {
-        Integer userFollowerId = 1;
-        Integer followedSellerId1 = 2;
-        Integer followedSellerId2 = 4;
+        void givenExistingUnorderedPosts_whenFindListUsersFollowedPosts_thenReturnPostsOrderedByDateDesc() throws Exception {
+        User userFollower = UtilUserFactory.getUser("user1", 1);
+        User followedSeller1 = UtilUserFactory.createUserSeller(2);
+        User followedSeller2 = UtilUserFactory.createUserSeller(4);
         String order = "date_desc";
 
-        // Follow users and create posts
-        mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}", userFollowerId, followedSellerId1))
-                .andExpect(status().isOk());
-        mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}", userFollowerId, followedSellerId2))
-                .andExpect(status().isOk());
+        followRepository.saveFollow(userFollower, followedSeller1);
+        followRepository.saveFollow(userFollower, followedSeller2);
 
         List<Post> posts = UtilPostFactory.createUnorderedPosts();
         posts.forEach(post -> postRepository.savePost(post));
@@ -73,7 +72,7 @@ public class PostControllerIntegrationTest {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 
-        mockMvc.perform(get("/products/followed/{userId}/list", userFollowerId)
+        mockMvc.perform(get("/products/followed/{userId}/list", userFollower.getId())
                         .param("order", order))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -103,25 +102,20 @@ public class PostControllerIntegrationTest {
      * </p>
      */
     @Test
-    void givenFollowedUsers_whenFindListUsersFollowedPosts_thenReturnPostsOrderedByDateAsc() throws Exception {
-        Integer userFollowerId = 1;
-        Integer followedSellerId1 = 2;
-        Integer followedSellerId2 = 4;
+    void givenExistingUnorderedPosts_whenFindListUsersFollowedPosts_thenReturnPostsOrderedByDateAsc() throws Exception {
+        User userFollower = UtilUserFactory.getUser("user1", 1);
+        User followedSeller1 = UtilUserFactory.createUserSeller(2);
+        User followedSeller2 = UtilUserFactory.createUserSeller(4);
         String order = "date_asc";
-
-        // Follow users and create posts
-        mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}", userFollowerId, followedSellerId1))
-                .andExpect(status().isOk());
-        mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}", userFollowerId, followedSellerId2))
-                .andExpect(status().isOk());
+        followRepository.saveFollow(userFollower, followedSeller1);
+        followRepository.saveFollow(userFollower, followedSeller2);
 
         List<Post> posts = UtilPostFactory.createUnorderedPosts();
         posts.forEach(post -> postRepository.savePost(post));
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-
-        mockMvc.perform(get("/products/followed/{userId}/list", userFollowerId)
+        mockMvc.perform(get("/products/followed/{userId}/list", userFollower.getId())
                         .param("order", order))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
