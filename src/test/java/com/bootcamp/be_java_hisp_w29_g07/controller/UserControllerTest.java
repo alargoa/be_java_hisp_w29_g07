@@ -103,6 +103,27 @@ public class UserControllerTest {
     }
 
     /**
+     * Unit Test to verify that when a user requests the list of followers,
+     * the appropriate ResponseEntity containing the ListFollowersDTO is returned.
+     */
+    @Test
+    public void givenExistingUser_whenFindListFollowersByUserId_thenReturnListFollowersDTO()
+    {
+        Integer userId = 1;
+
+        ListFollowersDTO mockResponse = new ListFollowersDTO(userId,"bsanchez", new ArrayList<>());
+
+        when(followService.findListFollowersByUserId(userId, null)).thenReturn(mockResponse);
+
+        ResponseEntity<ListFollowersDTO> response = userController.findListFollowersByUserId(userId, null);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(mockResponse,response.getBody());
+        assertNotNull(response.getBody());
+
+        verify(followService).findListFollowersByUserId(userId, null);
+    }
+    /**
      * Unit test to verify that the list of followed users is correctly ordered by username in ascending order
      * when the "name_asc" order parameter is provided.
      */
