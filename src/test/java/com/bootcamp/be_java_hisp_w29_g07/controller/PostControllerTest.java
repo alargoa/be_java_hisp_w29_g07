@@ -59,4 +59,22 @@ public class PostControllerTest {
         assertEquals(listPostDTO, response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
+
+    /**
+     * Unit Test to verify that when a valid post ID is provided,
+     * the controller returns a ResponseEntity containing the expected PostDTO with HTTP status OK.
+     */
+    @Test
+    public void givenExistingPosId_WhenFindPostById_ThenReturnSuccessResponseEntity(){
+        Integer postId = 1;
+        PostDTO postDTO = UtilPostFactory.getPostDTO(1);
+        when(postService.findPostById(postId)).thenReturn(postDTO);
+
+        ResponseEntity<?> response = postController.findPostById(postId);
+
+        verify(postService, atLeastOnce()).findPostById(postId);
+        assertNotNull(response.getBody());
+        assertEquals(postDTO, response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
 }
