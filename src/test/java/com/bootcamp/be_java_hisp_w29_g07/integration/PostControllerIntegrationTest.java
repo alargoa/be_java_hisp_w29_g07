@@ -358,4 +358,20 @@ public class PostControllerIntegrationTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message").value(String.format(Messages.NO_POST_FOUND, 2)));
     }
+
+
+    @Test
+    void givenNewPost_whenAddPost_thenReturnNewPost() throws Exception {
+        List<Post> posts = UtilPostFactory.createUnorderedPosts();
+        posts.forEach(post -> postRepository.savePost(post));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        mockMvc.perform(get("/products/post/findAll"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", org.hamcrest.Matchers.hasSize(3)))
+                .andExpect(jsonPath("$[0].post_id").value(posts.getFirst().getId()))
+                .andExpect(jsonPath("$[1].post_id").value(posts.get(1).getId()))
+                .andExpect(jsonPath("$[2].post_id").value(posts.get(2).getId()));
+    }
+
 }

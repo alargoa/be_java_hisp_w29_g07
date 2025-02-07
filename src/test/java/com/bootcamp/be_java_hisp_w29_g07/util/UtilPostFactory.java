@@ -144,5 +144,29 @@ public class UtilPostFactory {
         promoPost.setDiscount(2.0);
         return promoPost;
     }
+    public static PostDTO getPostDto() {
+        Product product = new Product(
+                1,
+                "Laptop",
+                "Electronics",
+                "Dell",
+                "Black",
+                "15-inch screen, Intel i7"
+        );
+
+        return new PostDTO(
+                1,
+                2,
+                LocalDate.of(2024, 2, 6),
+                product,
+                5,
+                200.0,
+                false,
+                0.0
+        );
+    }
+
+
+
 }
 

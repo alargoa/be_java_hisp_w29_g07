@@ -454,7 +454,39 @@ class PostServiceTest {
         verify(userService).findUserById(user.getId());
     }
 
+    /**
+     * Unit Test to verify that when findAll is called on the PostService,
+     * it returns a list of PostDTOs correctly mapped from the Post entities in the repository.
+     * <p>
+     * This test simulates a scenario where two posts are created and saved in the repository.
+     * It verifies that the service returns a non-null list of PostDTOs,
+     * with the expected size and correct user IDs and product names for each post.
+     * </p>
+     */
     @Test
-    void findAllPostBySellerId() {
+    void whenFindAll_thenReturnListOfPostDTOs() {
+        List<Post> posts = new ArrayList<>();
+
+        Post post1 = UtilPostFactory.getPost();
+        Post post2 = UtilPostFactory.getPost();
+        post1.setUserId(1);
+        post2.setId(2);
+        post2.getProduct().setName("cars");
+
+        posts.add(post1);
+        posts.add(post2);
+
+        when(postRepository.findAll()).thenReturn(posts);
+
+        List<PostDTO> result = postService.findAll();
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(1, result.getFirst().getUser_id());
+        assertEquals(2, result.get(1).getUser_id());
+        assertEquals("Laptop", result.getFirst().getProduct().getName());
+        assertEquals("cars", result.get(1).getProduct().getName());
+
+        verify(postRepository).findAll();
     }
 }
