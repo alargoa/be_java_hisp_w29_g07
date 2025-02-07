@@ -31,7 +31,7 @@ public class PromoPostDTOIn{
      * The date when the post was created.
      * This field stores the date of the post, formatted as "dd-MM-yyyy".
      */
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(pattern = ValidationValues.DATE_PATTERN)
     @NotNull(message= ValidationMessages.DATE_CANNOT_BE_EMPTY)
     private LocalDate date;
     /**

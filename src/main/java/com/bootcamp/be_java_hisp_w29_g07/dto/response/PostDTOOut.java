@@ -1,5 +1,6 @@
 package com.bootcamp.be_java_hisp_w29_g07.dto.response;
 
+import com.bootcamp.be_java_hisp_w29_g07.constants.ValidationValues;
 import com.bootcamp.be_java_hisp_w29_g07.entity.Product;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,7 @@ public class PostDTOOut {
      * The date when the post was created.
      * This field stores the date of the post, formatted as "dd-MM-yyyy".
      */
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(pattern = ValidationValues.DATE_PATTERN)
     private LocalDate date;
 
     /**
