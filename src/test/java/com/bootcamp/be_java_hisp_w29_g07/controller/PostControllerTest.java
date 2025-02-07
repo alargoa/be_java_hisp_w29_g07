@@ -4,6 +4,7 @@ import com.bootcamp.be_java_hisp_w29_g07.dto.PostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListPostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.service.IPostService;
 import com.bootcamp.be_java_hisp_w29_g07.util.UtilPostFactory;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,7 +17,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Unit test class for {@link PostController}.
@@ -53,6 +54,7 @@ public class PostControllerTest {
 
         ResponseEntity<ListPostDTO> response = postController.findListUsersFollowedPosts(userIdA, null);
 
+        verify(postService, atLeastOnce()).findListUsersFollowedPostsByUserId(userIdA, null);
         assertNotNull(response.getBody());
         assertEquals(listPostDTO, response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
