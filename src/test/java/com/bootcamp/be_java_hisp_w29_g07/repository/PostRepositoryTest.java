@@ -2,17 +2,23 @@ package com.bootcamp.be_java_hisp_w29_g07.repository;
 
 import com.bootcamp.be_java_hisp_w29_g07.entity.Post;
 import com.bootcamp.be_java_hisp_w29_g07.util.UtilPostFactory;
+import com.bootcamp.be_java_hisp_w29_g07.util.UtilUserFactory;
 import org.junit.jupiter.api.Assertions;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 class PostRepositoryTest {
     /**
@@ -33,17 +39,50 @@ class PostRepositoryTest {
         postRepository.deleteAll();
     }
 
-
+    /**
+     * Test that checks if the correct count of promotional posts is returned for a given user.
+     * <p>
+     * This test creates a post associated with an existing user, marks it as a promotional post,
+     * and then checks if the method `findPromoPostCountByUserId` returns the correct number of
+     * promotional posts for that user.
+     * </p>
+     */
     @Test
-    void findPromoPostCountByUserId() {
+     void givenExistingUserId_whenFindPromoPost_thenReturnPromoPostCount() {
+        Integer userId = 4;
+        Long expected = 1L;
+        Post postA = UtilPostFactory.getPostByUser(userId, 1);
+        postA.setHasPromo(true);
+        postRepository.savePost(postA);
+
+        Long response = postRepository.findPromoPostCountByUserId(userId);
+
+        assertEquals(expected, response);
+    }
+
+    /**
+     * Test that checks if the correct count of non-promotional posts is returned for a given user.
+     * <p>
+     * This test creates a post associated with an existing user, marks it as a non-promotional post,
+     * and then checks if the method `findPromoPostCountByUserId` returns the correct count of
+     * promotional posts (which should be zero in this case).
+     * </p>
+     */
+    @Test
+    void givenExistingUserId_whenFindPromoPost_thenReturnNonPromoPostCount() {
+        Integer userId = 4;
+        Long expected = 0L;
+        Post postA = UtilPostFactory.getPostByUser(userId, 1);
+        postA.setHasPromo(false);
+        postRepository.savePost(postA);
+
+        Long response = postRepository.findPromoPostCountByUserId(userId);
+
+        assertEquals(expected, response);
     }
 
     @Test
     void savePost() {
-    }
-
-    @Test
-    void findPostById() {
     }
 
     @Test
@@ -76,7 +115,7 @@ class PostRepositoryTest {
         List<Post> postList = postRepository.findPostsByUserIdsAndLastTwoWeeks(usersFollowing);
 
         Assertions.assertNotNull(postList);
-        Assertions.assertEquals(2, postList.size());
+        assertEquals(2, postList.size());
         assertThat(postList)
                 .allSatisfy(post -> assertThat(post.getDate()).isBefore(LocalDate.now()));
     }
@@ -146,5 +185,35 @@ class PostRepositoryTest {
         List<Post> postsActual = postRepository.findAllPostsByUserId(1);
 
         assertTrue(postsActual.isEmpty());
+    }
+
+    /**
+     * Unit Test to verify that when an existing post ID is provided,
+     * the repository returns an Optional containing the post with the matching ID.
+     */
+     void givenExistingUserId_WhenFindPostById_ThenReturnOptional() {
+        Integer postId = 1;
+        Post post = UtilPostFactory.getPostByUser(1, 1);
+        postRepository.savePost(post);
+
+        Optional<Post> optionalPost = postRepository.findPostById(postId);
+
+        Assertions.assertTrue(optionalPost.isPresent());
+        Assertions.assertEquals(postId, optionalPost.get().getId());
+    }
+
+    /**
+     * Unit Test to verify that when a non-existing post ID is provided,
+     * the repository returns an Optional.
+     */
+    @Test
+    void givenNonExistentUserId_WhenFindPostById_ThenReturnOptional() {
+        Integer postId = 10;
+        Post post = UtilPostFactory.getPostByUser(1, 1);
+        postRepository.savePost(post);
+
+        Optional<Post> optionalPost = postRepository.findPostById(postId);
+
+        Assertions.assertTrue(optionalPost.isEmpty());
     }
 }

@@ -252,6 +252,117 @@ public class PostControllerIntegrationTest {
                 .andExpect(jsonPath("$.message").value(Messages.DATE_ORDER_INVALID));
     }
 
+    /**
+     * Integration Test to verify that when an existing post ID is provided,
+     * the endpoint returns a successful JSON response containing the expected post data.
+     * The test checks that the response status is OK, the content type is JSON,
+     * and that the response content contains the post's ID.
+     */
+    @Test
+    public void givenExistingPostId_WhenFindPostById_ThenReturnSuccess() throws Exception {
+        Post post = UtilPostFactory.getPostByUser(1,1);
+        postRepository.savePost(post);
+
+        String responseContent = mockMvc.perform(get("/products/findPost/{id}", post.getId()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse().getContentAsString();
+        assertTrue(responseContent.contains(post.getId().toString()));
+    }
+
+    /**
+     * Integration Test to verify that when a non-existent post ID is provided,
+     * the endpoint returns a Not Found (404) response with a JSON error message indicating that no post was found.
+     * The test validates the response status, content type, and that the error message matches the expected value.
+     */
+    @Test
+    public void givenNonExistentPostId_WhenFindPostById_ThenReturnNotFound() throws Exception {
+        mockMvc.perform(get("/products/findPost/{id}", 100))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value(Messages.NO_POST_FOUND));
+    }
+
+    /**
+     * Test that verifies the successful retrieval of the promotional post count for an existing user.
+     * <p>
+     * This test simulates the scenario where an existing user has one promotional post. It sends a GET request
+     * to retrieve the promotional post count for the user and verifies that the response returns a `200 OK` status
+     * with the correct promotional post count in the response body.
+     * </p>
+     */
+    @Test
+    void givenExistingUserId_whenFindPromoPost_thenReturnSuccessPromoPostCount() throws Exception {
+        String userId = "2";
+
+        Post newPost = UtilPostFactory.getPromoPost();
+        newPost.setUserId(2);
+        postRepository.savePost(newPost);
+
+        mockMvc.perform(get("/products/promo-post/count")
+                        .param("user_id", userId))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.promo_products_count").value(1));
+    }
+
+    /**
+     * Test that verifies the behavior when trying to retrieve the promotional post count for a non-existing user.
+     * <p>
+     * This test simulates the case where a non-existing user is requested by sending a GET request for the
+     * promotional post count. It verifies that the response returns a `404 Not Found` status, with a message
+     * indicating the user was not found.
+     * </p>
+     */
+    @Test
+    void givenNotExistingUserId_whenFindPromoPost_thenReturnUserException() throws Exception {
+        String userId = "10";
+        mockMvc.perform(get("/products/promo-post/count")
+                        .param("user_id", userId))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value(String.format(Messages.USER_NOT_FOUND_MSG, 10)));
+    }
+
+    /**
+     * Test that verifies the behavior when trying to retrieve the promotional post count for a non-seller user.
+     * <p>
+     * This test simulates the case where a user exists, but is not of type SELLER. It sends a GET request
+     * to fetch the promotional post count for the user and ensures that the response returns a `400 Bad Request`
+     * status with a message indicating the user is not a seller.
+     * </p>
+     */
+    @Test
+    void givenExistingNotSellerUserId_whenFindPromoPost_thenReturnUserException() throws Exception {
+        String userId = "1";
+        mockMvc.perform(get("/products/promo-post/count")
+                        .param("user_id", userId))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value(Messages.USER_NOT_SELLER_MSG));
+    }
+
+    /**
+     * Test that verifies the behavior when trying to retrieve the promotional post count for a user with no promotional posts.
+     * <p>
+     * This test simulates the case where an existing user has no promotional posts. It sends a GET request
+     * to fetch the promotional post count for the user and ensures that the response returns a `404 Not Found`
+     * status with a message indicating that no promotional posts were found for the user.
+     * </p>
+     */
+    @Test
+    void givenExistingUserId_whenFindPromoPost_thenReturnNoPromoPostException() throws Exception {
+        String userId = "2";
+        mockMvc.perform(get("/products/promo-post/count")
+                        .param("user_id", userId))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value(String.format(Messages.NO_POST_FOUND, 2)));
+    }
 
     /**
      * Integration Test to verify that when existing posts are retrieved by user ID,
