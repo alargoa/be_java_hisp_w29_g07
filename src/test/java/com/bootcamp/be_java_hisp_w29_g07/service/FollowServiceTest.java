@@ -214,6 +214,10 @@ class FollowServiceTest {
         verify(userService).findUserById(user.getId());
     }
 
+    /**
+     * Unit Test to verify that when a non-existent seller tries to follow another user,
+     * a NotFoundException is thrown indicating the seller to follow cannot be found.
+     */
     @Test
     void givenNonExistentSeller_whenSaveFollow_thenThrowsNotFoundException() {
         User user = UtilUserFactory.getUser("alargo",20);
