@@ -49,6 +49,7 @@ You can access the API documentation through the following URL:
 ## 📝Functional Requirements
 
 - **[Functional Requirements Document](./src/main/resources/functional_requirements.docx)**
+- **[Testing Requirements Document](./src/main/resources/testing_requirements.docx)**
 
 ---
 
