@@ -47,17 +47,18 @@ class PostServiceTest {
     private IPostRepository postRepository;
 
     /**
-     * Injected instance of {@link PostServiceImpl} with mocked dependencies.
-     */
-    @InjectMocks
-    private PostServiceImpl postService;
-
-    /**
      * Mocked instance of {@link IFollowService} used for testing the follow service without
      * interacting with the actual repository implementation.
      */
     @Mock
     private IFollowService followService;
+
+    /**
+     * Injected instance of {@link PostServiceImpl} with mocked dependencies.
+     */
+    @InjectMocks
+    private PostServiceImpl postService;
+    
     @Test
     void addPost() {
     }
