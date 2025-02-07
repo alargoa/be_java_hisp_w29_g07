@@ -19,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -444,6 +445,9 @@ class FollowServiceTest {
         Integer userId = 1;
         String order = "asc";
 
+        when(userService.findUserById(userId)).thenReturn(new User());
+        when(followRepository.findFollowersByUserId(userId)).thenReturn(new ArrayList<>());
+
         assertThrows(BadRequestException.class, () -> followService.findListFollowersByUserId(userId, order));
         verify(userService, atLeastOnce()).findUserById(userId);
         verify(followRepository, atLeastOnce()).findFollowersByUserId(userId);
@@ -459,6 +463,9 @@ class FollowServiceTest {
     void givenUserIdAndNotExistingOrder_whenFindListFollowed_thenReturnException() {
         Integer userId = 1;
         String order = "desc";
+
+        when(userService.findUserById(userId)).thenReturn(new User());
+        when(followRepository.findFollowedByUserId(userId)).thenReturn(new ArrayList<>());
 
         assertThrows(BadRequestException.class, () -> followService.findListFollowedByUserId(userId, order));
         verify(userService, atLeastOnce()).findUserById(userId);
