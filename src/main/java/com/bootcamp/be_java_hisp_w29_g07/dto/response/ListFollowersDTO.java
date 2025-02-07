@@ -2,6 +2,7 @@ package com.bootcamp.be_java_hisp_w29_g07.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 public class ListFollowersDTO {
     /**
      * The unique identifier for the user.

@@ -2,6 +2,7 @@ package com.bootcamp.be_java_hisp_w29_g07.controller;
 
 import com.bootcamp.be_java_hisp_w29_g07.constants.Messages;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListFollowedDTO;
+import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListFollowersDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.MessageDTO;
 import com.bootcamp.be_java_hisp_w29_g07.entity.User;
 import com.bootcamp.be_java_hisp_w29_g07.service.IFollowService;
@@ -99,5 +100,26 @@ public class UserControllerTest {
         verify(followService).findListFollowedByUserId(userId,order);
     }
 
+    /**
+     * Unit Test to verify that when a user requests the list of followers,
+     * the appropriate ResponseEntity containing the ListFollowersDTO is returned.
+     */
+    @Test
+    public void givenExistingUser_whenFindListFollowersByUserId_thenReturnListFollowersDTO()
+    {
+        Integer userId = 1;
+
+        ListFollowersDTO mockResponse = new ListFollowersDTO(userId,"bsanchez", new ArrayList<>());
+
+        when(followService.findListFollowersByUserId(userId, null)).thenReturn(mockResponse);
+
+        ResponseEntity<ListFollowersDTO> response = userController.findListFollowersByUserId(userId, null);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(mockResponse,response.getBody());
+        assertNotNull(response.getBody());
+
+        verify(followService).findListFollowersByUserId(userId, null);
+    }
 
 }
