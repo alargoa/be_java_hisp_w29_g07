@@ -17,8 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PostServiceTest {
@@ -27,10 +26,10 @@ class PostServiceTest {
     private IPostRepository postRepository;
 
     @Mock
-    private IFollowService followService;
+    private IUserService userService;
 
     @Mock
-    private  IUserService userService;
+    private IFollowService followService;
 
     @InjectMocks
     private PostServiceImpl postService;
@@ -47,6 +46,64 @@ class PostServiceTest {
 
     @Test
     void findAll() {
+    }
+
+    /**
+     * Unit Test to verify that posts from followed users are returned in descending order by date.
+     * <p>
+     * This test mocks the retrieval of followed users and their posts.
+     * It verifies that the posts are sorted in descending order (newest first).
+     * </p>
+     */
+    @Test
+    void givenExistingUnorderedPosts_whenFindListUsersFollowedPostsByUserId_thenReturnPostsOrderedByDateDesc() {
+        Integer userId = 1;
+        String order = "date_desc";
+        List<Integer> followedUserIds = List.of(2, 4);
+        List<Post> posts = UtilPostFactory.createUnorderedPosts();
+
+        when(userService.verifyUserExists(userId)).thenReturn(true);
+        when(followService.findFollowedByUserId(userId)).thenReturn(followedUserIds);
+        when(postRepository.findPostsByUserIdsAndLastTwoWeeks(followedUserIds)).thenReturn(posts);
+
+        ListPostDTO result = postService.findListUsersFollowedPostsByUserId(userId, order);
+
+        assertNotNull(result);
+        assertEquals(3, result.getPosts().size());
+        assertTrue(result.getPosts().get(0).getDate().isAfter(result.getPosts().get(1).getDate()));
+        assertTrue(result.getPosts().get(1).getDate().isAfter(result.getPosts().get(2).getDate()));
+
+        verify(postRepository, times(1)).findPostsByUserIdsAndLastTwoWeeks(followedUserIds);
+
+    }
+
+    /**
+     * Unit Test to verify that posts from followed users are returned in ascending order by date.
+     * <p>
+     * This test mocks the retrieval of followed users and their posts.
+     * It verifies that the posts are sorted in ascending order (oldest first).
+     * </p>
+     */
+    @Test
+    void givenExistingUnorderedPosts_whenFindListUsersFollowedPostsByUserId_thenReturnPostsOrderedByDateAsc() {
+        Integer userId = 1;
+        String order = "date_asc";
+        List<Integer> followedUserIds = List.of(2, 4);
+        List<Post> posts = UtilPostFactory.createUnorderedPosts();
+
+        when(userService.verifyUserExists(userId)).thenReturn(true);
+        when(followService.findFollowedByUserId(userId)).thenReturn(followedUserIds);
+        when(postRepository.findPostsByUserIdsAndLastTwoWeeks(followedUserIds)).thenReturn(posts);
+
+        ListPostDTO result = postService.findListUsersFollowedPostsByUserId(userId, order);
+
+        assertNotNull(result);
+        assertEquals(3, result.getPosts().size());
+        assertTrue(result.getPosts().get(0).getDate().isBefore(result.getPosts().get(1).getDate()));
+        assertTrue(result.getPosts().get(1).getDate().isBefore(result.getPosts().get(2).getDate()));
+
+        verify(postRepository, times(1)).findPostsByUserIdsAndLastTwoWeeks(followedUserIds);
+
     }
 
     @Test
