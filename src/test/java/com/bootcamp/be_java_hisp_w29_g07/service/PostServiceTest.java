@@ -50,7 +50,7 @@ class PostServiceTest {
      * </p>
      */
     @Test
-    void givenPosts_whenFindListUsersFollowedPostsByUserId_thenReturnPostsOrderedByDateDesc() {
+    void givenExistingUnorderedPosts_whenFindListUsersFollowedPostsByUserId_thenReturnPostsOrderedByDateDesc() {
         Integer userId = 1;
         String order = "date_desc";
         List<Integer> followedUserIds = List.of(2, 4);
@@ -79,7 +79,7 @@ class PostServiceTest {
      * </p>
      */
     @Test
-    void givenPosts_whenFindListUsersFollowedPostsByUserId_thenReturnPostsOrderedByDateAsc() {
+    void givenExistingUnorderedPosts_whenFindListUsersFollowedPostsByUserId_thenReturnPostsOrderedByDateAsc() {
         Integer userId = 1;
         String order = "date_asc";
         List<Integer> followedUserIds = List.of(2, 4);
