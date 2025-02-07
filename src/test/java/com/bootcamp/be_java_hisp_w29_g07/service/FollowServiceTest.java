@@ -214,6 +214,17 @@ class FollowServiceTest {
         verify(userService).findUserById(user.getId());
     }
 
+    @Test
+    void givenNonExistentSeller_whenSaveFollow_thenThrowsNotFoundException() {
+        User user = UtilUserFactory.getUser("alargo",20);
+        User userToFollow = UtilUserFactory.getUser("cmorales",21);
+        when(userService.findUserById(user.getId())).thenReturn(user);
+        when(userService.findUserById(userToFollow.getId())).thenThrow(NotFoundException.class);
+
+        assertThrows(NotFoundException.class, () -> followService.saveFollow(user.getId(), userToFollow.getId()));
+        verify(userService).findUserById(userToFollow.getId());
+    }
+
     /**
      * Unit Test to verify that when a user attempts to follow another regular user,
      * a BadRequestException is thrown, as regular users cannot follow each other.
