@@ -17,4 +17,5 @@ public interface IPostRepository {
     Integer findNextId();
     List<Post> findPostsByUserIdsAndLastTwoWeeks(List<Integer> userFollowing);
     List<Post> findAllPostsByUserId(Integer userId);
+    void deleteAll();
 }

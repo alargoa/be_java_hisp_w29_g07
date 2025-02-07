@@ -19,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -395,6 +396,140 @@ class FollowServiceTest {
         when(userService.findUserById(userId)).thenThrow( NotFoundException.class);
         assertThrows(NotFoundException.class, () -> followService.findListFollowersByUserId(userId,null));
         verify(userService).findUserById(userId);
+    }
+
+    /**
+     * Unit test to verify that the list of followed users is correctly ordered by username in ascending order
+     * when the "name_asc" order parameter is provided.
+     */
+    @Test
+    void givenUserIdAndOrderAsc_whenFindListFollowed_thenOrderListByOrder() {
+        Integer userId = 1;
+        String order = "name_asc";
+        User user = UtilUserFactory.getUser(userId);
+        when(userService.findUserById(userId)).thenReturn(user);
+
+        List<Follow> followList = UtilFollowFactory.getFollowedListOrderAsc(user);
+        when(followRepository.findFollowedByUserId(userId)).thenReturn(followList);
+
+        ListFollowedDTO result = followService.findListFollowedByUserId(userId, order);
+
+        assertEquals(user.getId(), result.getId());
+        assertEquals(user.getUsername(), result.getUserName());
+        assertEquals(followList.size(), result.getFollowed().size());
+
+        assertEquals(followList.getFirst().getFollowed().getUsername(), result.getFollowed().getFirst().getUserName());
+        assertEquals(followList.get(1).getFollowed().getUsername(), result.getFollowed().get(1).getUserName());
+    }
+
+    /**
+     * Unit test to verify that the list of followed users is correctly ordered by username in ascending order
+     * when the "name_desc" order parameter is provided.
+     */
+    @Test
+    void givenUserIdAndOrderDesc_whenFindListFollowed_thenOrderListByOrder() {
+        Integer userId = 1;
+        String order = "name_desc";
+        User user = UtilUserFactory.getUser(userId);
+        when(userService.findUserById(userId)).thenReturn(user);
+
+        List<Follow> followList = UtilFollowFactory.getFollowedListOrderDesc(user);
+        when(followRepository.findFollowedByUserId(userId)).thenReturn(followList);
+
+        ListFollowedDTO result = followService.findListFollowedByUserId(userId, order);
+
+        assertEquals(user.getId(), result.getId());
+        assertEquals(user.getUsername(), result.getUserName());
+        assertEquals(followList.size(), result.getFollowed().size());
+
+        assertEquals(followList.getFirst().getFollowed().getUsername(), result.getFollowed().getFirst().getUserName());
+        assertEquals(followList.get(1).getFollowed().getUsername(), result.getFollowed().get(1).getUserName());
+    }
+
+    /**
+     * Unit test to verify that the list of followers users is correctly ordered by username in ascending order
+     * when the "name_asc" order parameter is provided.
+     */
+    @Test
+    void givenUserIdAndOrderAsc_whenFindListFollowers_thenOrderListByOrder() {
+        Integer userId = 1;
+        String order = "name_asc";
+        User user = UtilUserFactory.getUser(userId);
+        when(userService.findUserById(userId)).thenReturn(user);
+
+        List<Follow> followersList = UtilFollowFactory.getFollowersListOrderAsc(user);
+        when(followRepository.findFollowersByUserId(userId)).thenReturn(followersList);
+
+        ListFollowersDTO result = followService.findListFollowersByUserId(userId, order);
+
+        assertEquals(user.getId(), result.getUser_id());
+        assertEquals(user.getUsername(), result.getUser_name());
+        assertEquals(followersList.size(), result.getFollowers().size());
+
+        assertEquals(followersList.getFirst().getFollower().getUsername(), result.getFollowers().getFirst().getUserName());
+        assertEquals(followersList.get(1).getFollower().getUsername(), result.getFollowers().get(1).getUserName());
+    }
+
+    /**
+     * Unit test to verify that the list of followers users is correctly ordered by username in ascending order
+     * when the "name_asc" order parameter is provided.
+     */
+    @Test
+    void givenUserIdAndOrderDesc_whenFindListFollowers_thenOrderListByOrder() {
+        Integer userId = 1;
+        String order = "name_desc";
+        User user = UtilUserFactory.getUser(userId);
+        when(userService.findUserById(userId)).thenReturn(user);
+
+        List<Follow> followersList = UtilFollowFactory.getFollowersListOrderDesc(user);
+        when(followRepository.findFollowersByUserId(userId)).thenReturn(followersList);
+
+        ListFollowersDTO result = followService.findListFollowersByUserId(userId, order);
+
+        assertEquals(user.getId(), result.getUser_id());
+        assertEquals(user.getUsername(), result.getUser_name());
+        assertEquals(followersList.size(), result.getFollowers().size());
+
+        assertEquals(followersList.getFirst().getFollower().getUsername(), result.getFollowers().getFirst().getUserName());
+        assertEquals(followersList.get(1).getFollower().getUsername(), result.getFollowers().get(1).getUserName());
+    }
+
+    /**
+     * Test to verify that an exception is thrown when an invalid order parameter is provided
+     * while trying to retrieve the list of followers. It checks that a `BadRequestException`
+     * is thrown when the order is neither "name_asc" nor "name_desc", and verifies that the
+     * appropriate methods are called.
+     */
+    @Test
+    void givenUserIdAndNotExistingOrder_whenFindListFollowers_thenReturnException() {
+        Integer userId = 1;
+        String order = "asc";
+
+        when(userService.findUserById(userId)).thenReturn(new User());
+        when(followRepository.findFollowersByUserId(userId)).thenReturn(new ArrayList<>());
+
+        assertThrows(BadRequestException.class, () -> followService.findListFollowersByUserId(userId, order));
+        verify(userService, atLeastOnce()).findUserById(userId);
+        verify(followRepository, atLeastOnce()).findFollowersByUserId(userId);
+    }
+
+    /**
+     * Test to verify that an exception is thrown when an invalid order parameter is provided
+     * while trying to retrieve the list of followed. It checks that a `BadRequestException`
+     * is thrown when the order is neither "name_asc" nor "name_desc", and verifies that the
+     * appropriate methods are called.
+     */
+    @Test
+    void givenUserIdAndNotExistingOrder_whenFindListFollowed_thenReturnException() {
+        Integer userId = 1;
+        String order = "desc";
+
+        when(userService.findUserById(userId)).thenReturn(new User());
+        when(followRepository.findFollowedByUserId(userId)).thenReturn(new ArrayList<>());
+
+        assertThrows(BadRequestException.class, () -> followService.findListFollowedByUserId(userId, order));
+        verify(userService, atLeastOnce()).findUserById(userId);
+        verify(followRepository, atLeastOnce()).findFollowedByUserId(userId);
     }
 
     @Test
