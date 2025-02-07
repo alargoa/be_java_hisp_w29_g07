@@ -216,4 +216,36 @@ class PostRepositoryTest {
 
         Assertions.assertTrue(optionalPost.isEmpty());
     }
+
+    /**
+     * Unit Test to verify that when findAll is called,
+     * it returns a list of posts currently in the repository with correct user and product details.
+     * <p>
+     * This test creates two posts with specified user IDs and product names,
+     * saves them to the repository, and verifies that the repository returns
+     * the correct number of posts along with their expected attributes.
+     * </p>
+     */
+    @Test
+    void givenExistingPost_whenFindAll_thenReturnListOfPosts() {
+        List<Post> posts = new ArrayList<>();
+        Post post1 = UtilPostFactory.getPost();
+        Post post2 = UtilPostFactory.getPost();
+
+        post1.setUserId(1);
+        post2.setId(2);
+        post2.getProduct().setName("cars");
+
+        posts.add(post1);
+        posts.add(post2);
+
+        posts.forEach(post -> postRepository.savePost(post));
+        List<Post> result = postRepository.findAll();
+
+        assertEquals(posts.size(), result.size());
+        assertEquals(1, result.getFirst().getUserId());
+        assertEquals("Laptop", result.getFirst().getProduct().getName());
+        assertEquals("cars", result.get(1).getProduct().getName());
+    }
+
 }

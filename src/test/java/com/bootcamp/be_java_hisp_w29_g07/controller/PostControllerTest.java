@@ -21,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -205,5 +206,36 @@ public class PostControllerTest {
         assertNotNull(responseEntity.getBody());
         assertThat(responseEntity.getBody().getPosts()).containsExactlyInAnyOrderElementsOf(postDTOList);
         assertEquals(userIdSeller, responseEntity.getBody().getUser_id());
+    }
+
+    /**
+     * Unit Test to verify that when the getAll endpoint is called,
+     * it returns a list of PostDTOs with HTTP status OK.
+     * <p>
+     * This test simulates a request to retrieve all posts.
+     * It verifies that the response body is not null, that the HTTP status
+     * is 200 OK, and that the returned list of PostDTOs matches the expected data.
+     * </p>
+     */
+    @Test
+    public void givenExistingPost_whenGetAll_thenReturnListOfPostDTOs()
+    {
+        List<PostDTO> mockResponse = new ArrayList<>();
+        PostDTO post1 = UtilPostFactory.getPostDto();
+        PostDTO post2 = UtilPostFactory.getPostDto();
+        post1.setUser_id(1);
+        post2.setUser_id(2);
+        post2.getProduct().setName("cars");
+
+        mockResponse.add(post1);
+        mockResponse.add(post2);
+
+        when(postService.findAll()).thenReturn(mockResponse);
+
+        ResponseEntity<List<PostDTO>> response = postController.getAll();
+
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(mockResponse,response.getBody());
     }
 }

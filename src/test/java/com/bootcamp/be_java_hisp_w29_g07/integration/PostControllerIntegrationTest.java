@@ -395,4 +395,29 @@ public class PostControllerIntegrationTest {
         Assertions.assertThat(listPostDTORes.getPosts()).containsExactlyInAnyOrderElementsOf(postsDTOExpected);
         assertEquals(userIdSeller, listPostDTORes.getUser_id());
     }
+
+
+    /**
+     * Integration Test to verify that when new posts are added to the repository,
+     * the findAll endpoint returns the correct list of posts.
+     * <p>
+     * This test simulates the addition of new posts into the repository using a utility factory.
+     * It then performs a GET request to retrieve all posts and verifies that the response contains
+     * the correct number of posts along with the appropriate post IDs.
+     * </p>
+     */
+    @Test
+    void givenNewPost_whenAddPost_thenReturnNewPost() throws Exception {
+        List<Post> posts = UtilPostFactory.createUnorderedPosts();
+        posts.forEach(post -> postRepository.savePost(post));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ValidationValues.DATE_PATTERN);
+        mockMvc.perform(get("/products/post/findAll"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", org.hamcrest.Matchers.hasSize(3)))
+                .andExpect(jsonPath("$[0].post_id").value(posts.getFirst().getId()))
+                .andExpect(jsonPath("$[1].post_id").value(posts.get(1).getId()))
+                .andExpect(jsonPath("$[2].post_id").value(posts.get(2).getId()));
+    }
+
 }
