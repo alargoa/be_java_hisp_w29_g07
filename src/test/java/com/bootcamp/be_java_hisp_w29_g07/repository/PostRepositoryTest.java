@@ -247,7 +247,7 @@ class PostRepositoryTest {
      * </p>
      */
     @Test
-    void givenExistentPost_whenAddPost_thenReturnNewPost() {
+    void givenExistentPost_whenSavePost_thenReturnNewPost() {
         Post expectedPost = UtilPostFactory.getPost();
 
         Post responsePost = postRepository.savePost(expectedPost);

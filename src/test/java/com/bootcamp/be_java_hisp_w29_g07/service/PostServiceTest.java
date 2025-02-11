@@ -712,7 +712,7 @@ class PostServiceTest {
      * </p>
      */
     @Test
-    void givenPostWithNullDiscount_whenSavePost_thenReturnPostSaveDTO() {
+    void givenPostWithNullDiscount_whenAddPost_thenReturnPostSaveDTO() {
         User userSeller = UtilUserFactory.getSeller(1);
         PostDTO postDTO = UtilPostFactory.getPostDTO(userSeller.getId());
         postDTO.setDiscount(null);
