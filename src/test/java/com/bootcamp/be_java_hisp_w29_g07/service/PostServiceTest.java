@@ -706,13 +706,13 @@ class PostServiceTest {
      * a BadRequestException is thrown.
      * <p>
      * This test simulates a scenario where a valid seller user is created and a PostDTO
-     * is set up with a null discount value. It mocks the response from userService 
+     * is set up with a null discount value. It mocks the response from userService
      * it checks that a BadRequestException is thrown with the expected error message.
      * Additionally, it verifies that the postRepository's savePost method was never invoked.
      * </p>
      */
     @Test
-    void givenPostWithNullDiscount_whenAddPost_thenReturnPostSaveDTO() {
+    void givenPostWithNullDiscount_whenSavePost_thenReturnPostSaveDTO() {
         User userSeller = UtilUserFactory.getSeller(1);
         PostDTO postDTO = UtilPostFactory.getPostDTO(userSeller.getId());
         postDTO.setDiscount(null);
