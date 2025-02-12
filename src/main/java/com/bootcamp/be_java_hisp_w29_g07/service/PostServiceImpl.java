@@ -35,10 +35,6 @@ public class PostServiceImpl implements IPostService {
      */
     private final IPostRepository postRepository;
     /**
-     * The User repository for managing user-related operations.
-     */
-    private final IUserRepository userRepository;
-    /**
      * The Follow repository for managing follow-related operations.
      */
     private final IFollowService followService;
@@ -56,18 +52,14 @@ public class PostServiceImpl implements IPostService {
      * the {@link ObjectMapper} to handle date and time serialization.
      *
      * @param postRepository   the post repository
-     * @param userRepository   the user repository
-     * @param followRepository the follow repository
      * @param userService      the user service
      */
     public PostServiceImpl(
             IPostRepository postRepository,
-            IUserRepository userRepository,
             IFollowService followService,
             IUserService userService
     ) {
         this.postRepository = postRepository;
-        this.userRepository = userRepository;
         this.followService = followService;
         this.mapper = new ObjectMapper();
         this.mapper.registerModule(new JavaTimeModule());
@@ -141,6 +133,10 @@ public class PostServiceImpl implements IPostService {
     @Override
     public ListPostDTO findListUsersFollowedPostsByUserId(Integer userId, String order) {
 
+        if (!isValidDateOrder(order)) {
+            throw new BadRequestException(Messages.DATE_ORDER_INVALID);
+        }
+
         userService.verifyUserExists(userId);
 
         List<Integer> userFollowing = followService.findFollowedByUserId(userId);
@@ -179,6 +175,18 @@ public class PostServiceImpl implements IPostService {
                     .toList();
             default -> posts;
         };
+    }
+
+
+    /**
+     * Validates whether the given order string represents a valid date sorting order.
+     *
+     * @param order the order string to validate; it can be {@code null}, "date_asc", or "date_desc".
+     * @return {@code true} if the order is {@code null} or matches "date_asc" or "date_desc";
+     *         otherwise, returns {@code false}.
+     */
+    private boolean isValidDateOrder(String order) {
+        return Objects.isNull(order) || order.equals("date_asc") || order.equals("date_desc");
     }
 
     /**

@@ -98,14 +98,20 @@ public class FollowRepositoryImpl implements IFollowRepository {
                 .toList();
     }
 
+    @Override
+    public void deleteAll() {
+        this.followList.clear();
+    }
+
     /**
-     *Attempts to delete a follow relationship between a user and another user.
+     * Attempts to delete a follow relationship between a user and another user.
+     *
      * @param userId           the user id of the follower
      * @param userIdToUnfollow the user id of the user to unfollow
-     * @return true if the follow relationship was deleted, otherwise false
+     * @return the number of follows deleted (0 if the follow did not exist)
      */
     @Override
-    public Boolean deleteFollowUserById(Integer userId, Integer userIdToUnfollow) {
+    public Integer deleteFollowUserById(Integer userId, Integer userIdToUnfollow) {
         Optional<Follow> optionalFollow = followList.stream()
                 .filter(
                         f -> f.getFollower().getId().equals(userId)
@@ -113,11 +119,11 @@ public class FollowRepositoryImpl implements IFollowRepository {
                 .findFirst();
 
         if (optionalFollow.isEmpty()) {
-            return false;
+            return 0;
         }
 
         followList.remove(optionalFollow.get());
-        return true;
+        return 1;
     }
 
 }

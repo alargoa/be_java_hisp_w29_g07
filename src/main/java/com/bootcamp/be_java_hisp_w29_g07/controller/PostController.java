@@ -6,10 +6,14 @@ import com.bootcamp.be_java_hisp_w29_g07.dto.response.ListPostDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.PostSaveDTO;
 import com.bootcamp.be_java_hisp_w29_g07.dto.response.PromoPostDTOOut;
 import com.bootcamp.be_java_hisp_w29_g07.service.IPostService;
+import com.bootcamp.be_java_hisp_w29_g07.validation.ValidID;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,7 +48,7 @@ public class PostController {
      */
     @Operation(summary = "Count the number of posts a user has")
     @GetMapping("promo-post/count")
-    private ResponseEntity<?> getPromoPostCountById(@RequestParam("user_id") Integer userId) {
+    public ResponseEntity<?> getPromoPostCountById(@RequestParam("user_id")  Integer userId) {
         return new ResponseEntity<>(postService.findPromoPostCountByUserId(userId), HttpStatus.OK);
     }
 
@@ -79,7 +83,7 @@ public class PostController {
      */
     @Operation(summary = "Add new post")
     @PostMapping("/post")
-    public ResponseEntity<PostSaveDTO> addPost(@RequestBody PostDTO posDto) {
+    public ResponseEntity<PostSaveDTO> addPost(@Valid @RequestBody PostDTO posDto) {
         return new ResponseEntity<>(postService.addPost(posDto), HttpStatus.OK);
     }
 
@@ -91,7 +95,7 @@ public class PostController {
      */
     @Operation(summary = "Add new promo post")
     @PostMapping("/promo-post")
-    private ResponseEntity<PromoPostDTOOut> createPromoPost(@RequestBody PromoPostDTOIn promoPostDTOIn) {
+    public ResponseEntity<PromoPostDTOOut> createPromoPost(@Valid @RequestBody PromoPostDTOIn promoPostDTOIn) {
         return new ResponseEntity<>(postService.createPromoPost(promoPostDTOIn), HttpStatus.OK);
     }
 
@@ -119,7 +123,7 @@ public class PostController {
      */
     @Operation(summary = "List posts by seller")
     @GetMapping("/posts/{userId}")
-    private ResponseEntity<ListPostDTO> findAllPostsBySellerId(@PathVariable(name="userId") Integer sellerId) {
+    public ResponseEntity<ListPostDTO> findAllPostsBySellerId(@PathVariable(name="userId") Integer sellerId) {
         return new ResponseEntity<>(postService.findAllPostBySellerId(sellerId), HttpStatus.OK);
     }
 
